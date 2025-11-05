@@ -1,31 +1,42 @@
-# AI Photo Generator
+# Wedding Photobooth
 
-An application that uses artificial intelligence to swap faces with avatars in real-time.
+A browser-based photobooth optimized for events. Capture a portrait photo, add props and frames, preview the result, print a 4x6 postcard via PrintNode, or share/download via QR code.
 
 ## Overview
 
-AI Photo Generator leverages cutting-edge AI models to allow users to swap their faces with pre-defined avatars. Users can take a photo using their camera and choose from 6 male and 6 female avatars to see their face swapped onto the selected avatar.
+This app opens the device camera and captures an image cropped to a 2:3 portrait ratio (postcard). After capture, guests can add draggable/resizable props and apply themed frames. The final image can be:
+
+- Printed to a connected printer using PrintNode
+- Shared/downloaded by scanning a QR code
+- Saved locally for later viewing
 
 ## Features
 
-- Real-time face swapping
-- 6 male and 6 female avatars to choose from
-- Camera integration for capturing user images
-- High-quality AI-based face blending
-- Image download options
+- Camera capture with countdown
+- Postcard aspect ratio (2:3 portrait)
+- Draggable/resizable props overlay
+- Themed frames
+- Animated, touch-friendly UI (Framer Motion)
+- Preview page with actions
+- Print via PrintNode (PDF base64)
+- QR code modal for quick sharing
 
 ## Tech Stack
 
-- Frontend: React
-- Backend: PHP
+- Frontend: React (Vite)
+- Styling: Tailwind CSS (utility classes visible in JSX)
+- Libraries: framer-motion, pdf-lib, qrcode.react, react-icons, react-router
+- Backend: Not required (PrintNode is called directly from the client)
 
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
-- Node.js (v14 or higher)
+- Node.js (v16 or higher recommended)
 - npm or yarn
 - Git
+
+To use printing, you need a PrintNode account with an active computer and printer configured.
 
 ## Getting Started
 
@@ -34,8 +45,8 @@ Follow these steps to set up the project locally:
 ### Clone the repository
 
 ```bash
-git clone https://github.com/yourorganization/AI-Photo-Generator.git
-cd AI-Photo-Generator
+git clone <your-repo-url>
+cd wedding-photobooth
 ```
 
 ### Install dependencies
@@ -48,14 +59,17 @@ yarn install
 
 ### Configure environment variables
 
-1. Create a `.env` file in the root directory
-2. Add the following variables:
+Create a `.env` file in the project root and add:
 
 ```
-VITE_PRINTNODE_API_KEY=YOUR_API_KEY
+VITE_PRINTNODE_API_KEY=YOUR_PRINTNODE_API_KEY
 VITE_PRINTNODE_PRINTER_ID=YOUR_PRINTER_ID
-VITE_API_URL=API_URL
 ```
+
+Notes:
+
+- These are only required if you plan to use the print feature on the Preview page.
+- The app prints a 4x6 postcard by generating a PDF on the client with `pdf-lib` and sending it to PrintNode as `pdf_base64`.
 
 ### Run the development server
 
@@ -74,3 +88,19 @@ npm run build
 # or
 yarn build
 ```
+
+## Usage
+
+1. Open the app on a device with a camera and grant camera permissions.
+2. Tap Capture and wait for the countdown.
+3. Swipe up to open the bottom sheet and add Props or Frames.
+4. Submit to proceed to Preview.
+5. From Preview, either:
+   - Print (requires valid PrintNode credentials and a reachable printer), or
+   - Open QR and scan to download/share the image.
+
+## Troubleshooting
+
+- Camera access denied: Check browser permissions and OS privacy settings.
+- PrintNode errors: Verify API key, printer ID, and that the PrintNode client is online.
+- Wrong print size: Printing targets 4x6 inches (288x432 pts). Ensure the printer media matches 4x6.
