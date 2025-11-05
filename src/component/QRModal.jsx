@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import PropTypes from "prop-types";
 import { IoMdClose } from "react-icons/io";
-import blackLogo from "../assets/images/home/SH-Logo.svg";
+import shlogo from "../assets/images/home/SH-Logo.svg";
 
 const QRModal = ({ isOpen, onClose, data }) => {
   useEffect(() => {
@@ -48,7 +48,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
               fgColor="#e91e63"
               bgColor="#e1e1e1"
               imageSettings={{
-                src: blackLogo,
+                src: shlogo,
                 x: undefined,
                 y: undefined,
                 height: 90,
