@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Dynalight";
+  src: url("./assets/fonts/Dynalight-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Krylon";
+  src: url("./assets/fonts/Krylon-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DMSerifDisplay";
+  src: url("./assets/fonts/DMSerifDisplay-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "DMSerifDisplay";
+  src: url("./assets/fonts/DMSerifDisplay-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@theme {
+  --font-family-dynalight: "Dynalight", sans-serif;
+  --font-family-krylon: "Krylon", sans-serif;
+  --font-family-dm-serif: "DMSerifDisplay", serif;
+  --color-primary: #e91e63;
+}
+
+/* Font utility classes */
+@layer utilities {
+  .font-dynalight {
+    font-family: "Dynalight", sans-serif;
+  }
+
+  .font-krylon {
+    font-family: "Krylon", sans-serif;
+  }
+
+  .font-dm-serif {
+    font-family: "DMSerifDisplay", serif;
+  }
+
+  .text-primary {
+    color: #e91e63;
+  }
+
+  .bg-primary {
+    background-color: #e91e63;
+  }
+
+  .border-primary {
+    border-color: #e91e63;
+  }
+}
+
+body {
+  
+  /* cursor: none !important; */
+  user-select: none;
+}
+/* styles.css or global.css */
+/* button, a, [role="button"], input, * {
+  cursor: none !important;
+} */
+@keyframes float-scale {
+  0%,
+  100% {
+    transform: translateY(0) scale(0.8);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+  }
+}
+
+.animate-float-scale {
+  animation: float-scale 4s ease-in-out infinite;
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
