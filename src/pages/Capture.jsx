@@ -153,17 +153,46 @@ function Capture() {
     setLoading(true);
     setCountdown(5);
   };
+  const submitImage = async () => {
+    console.log("Submitting image...");
 
-  const submitImage = () => {
-    stopVideo();
-    const imageToSave = finalImage || capturedImage;
-    saveData("capturedImage", imageToSave);
-    // Navigate to preview with the final edited image
-    navigate("/preview", { state: { resultUrl: imageToSave } });
+    await new Promise((resolve) => {
+      const onComposed = () => {
+        if (compositeCanvasRef.current) {
+          const composed = compositeCanvasRef.current.toDataURL("image/png");
+          resolve(composed);
+        } else {
+          resolve(null);
+        }
+      };
+
+      composeFinalImage(); // triggers async image drawing
+      // Wait a bit to ensure props are drawn (or chain inside composeFinalImage)
+      setTimeout(onComposed, 400); // adjust delay if needed
+    }).then((imageToSave) => {
+      if (!imageToSave) return;
+      stopVideo();
+      saveData("capturedImage", imageToSave);
+      navigate("/preview", { state: { resultUrl: imageToSave } });
+    });
   };
 
+  // const submitImage = () => {
+  //   console.log("in submit Image function");
+  //   composeFinalImage();
+  //   stopVideo();
+  //   const imageToSave = finalImage || capturedImage;
+  //   saveData("capturedImage", imageToSave);
+  //   // Navigate to preview with the final edited image
+  //   navigate("/preview", { state: { resultUrl: imageToSave } });
+  // };
+
   const updateFinalImage = useCallback(() => {
+    console.log(
+      "in update Final Image function in update Final Image function"
+    );
     if (!compositeCanvasRef.current) return;
+    console.log("in update Final Image function");
     const image = compositeCanvasRef.current.toDataURL("image/png");
     setFinalImage(image);
   }, []);
@@ -174,9 +203,13 @@ function Capture() {
     const canvas = compositeCanvasRef.current;
     const img = new Image();
     img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = img.width * dpr;
+      canvas.height = img.height * dpr;
+      // canvas.width = img.width;
+      // canvas.height = img.height;
       const ctx = canvas.getContext("2d");
+      ctx.scale(dpr, dpr);
 
       // Draw base image
       ctx.drawImage(img, 0, 0);
@@ -202,6 +235,7 @@ function Capture() {
   }, [renderCompositeImage, selectedFrame]);
 
   const addProp = (prop) => {
+    console.log("in add Prop function", prop);
     const container = imageContainerRef.current;
     if (!container) return;
 
@@ -209,7 +243,18 @@ function Capture() {
     const newProp = {
       ...prop,
       id: `prop-${nextPropId}`,
-      position: { x: rect.width / 2 - 50, y: rect.height / 2 - 50 },
+      position: {
+        x: rect.width / 2 - 50,
+        y: rect.height / 2 - 50,
+      },
+
+      // position: {
+      //   x: (rect.width / 2 - 50) * (imageRef.current.naturalWidth / rect.width),
+      //   y:
+      //     (rect.height / 2 - 50) *
+      //     (imageRef.current.naturalHeight / rect.height),
+      // },
+      // position: { x: rect.width / 2 - 50, y: rect.height / 2 - 50 },
       size: { width: 100, height: 100 },
       rotation: 0,
     };
@@ -236,15 +281,19 @@ function Capture() {
   };
 
   const composeFinalImage = useCallback(() => {
+    console.log("in compose Final Image function");
     if (!capturedImage || !compositeCanvasRef.current) return;
 
     const canvas = compositeCanvasRef.current;
     const img = new Image();
     img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = img.width * dpr;
+      canvas.height = img.height * dpr;
+      // canvas.width = img.width;
+      // canvas.height = img.height;
       const ctx = canvas.getContext("2d");
-
+      ctx.scale(dpr, dpr);
       // Draw base image
       ctx.drawImage(img, 0, 0);
 
@@ -255,22 +304,10 @@ function Capture() {
         frameImg.onload = () => {
           ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
           // Draw props after frame
-          drawPropsOnCanvas(
-            ctx,
-            canvas.width,
-            canvas.height,
-            img.width,
-            img.height
-          );
+          drawPropsOnCanvas(ctx, img.width, img.height);
         };
         frameImg.onerror = () => {
-          drawPropsOnCanvas(
-            ctx,
-            canvas.width,
-            canvas.height,
-            img.width,
-            img.height
-          );
+          drawPropsOnCanvas(ctx, img.width, img.height);
         };
         frameImg.src = selectedFrame.url;
       } else {
@@ -287,8 +324,7 @@ function Capture() {
 
     const drawPropsOnCanvas = (
       ctx,
-      canvasWidth,
-      canvasHeight,
+
       imgWidth,
       imgHeight
     ) => {
@@ -296,10 +332,14 @@ function Capture() {
         updateFinalImage();
         return;
       }
+      console.log("in draw Props On Canvas function");
+      console.log("selectedProps", selectedProps);
+      // Compute ratios between DOM and natural for correct scaling
+      const domRect = imageRef.current.getBoundingClientRect();
 
-      const imgRect = imageRef.current.getBoundingClientRect();
-      const scaleX = imgWidth / imgRect.width;
-      const scaleY = imgHeight / imgRect.height;
+      // Finally compute how to scale prop coordinates for the canvas
+      const scaleX = imgWidth / domRect.width;
+      const scaleY = imgHeight / domRect.height;
 
       let loadedCount = 0;
       const totalProps = selectedProps.length;
@@ -317,6 +357,7 @@ function Capture() {
           const y = prop.position.y * scaleY;
           const width = prop.size.width * scaleX;
           const height = prop.size.height * scaleY;
+
           const rotation = prop.rotation || 0;
 
           // Save context state
@@ -336,12 +377,18 @@ function Capture() {
 
           loadedCount++;
           if (loadedCount === totalProps) {
+            console.log(
+              "in update Final Image function in draw Props On Canvas"
+            );
             updateFinalImage();
           }
         };
         propImg.onerror = () => {
           loadedCount++;
           if (loadedCount === totalProps) {
+            console.log(
+              "in update Final Image function in draw Props On Canvas onerror"
+            );
             updateFinalImage();
           }
         };
@@ -349,15 +396,6 @@ function Capture() {
       });
     };
   }, [capturedImage, selectedFrame, selectedProps, updateFinalImage]);
-
-  useEffect(() => {
-    if (capturedImage && (selectedProps.length > 0 || selectedFrame)) {
-      const timer = setTimeout(() => {
-        composeFinalImage();
-      }, 200);
-      return () => clearTimeout(timer);
-    }
-  }, [selectedProps, selectedFrame, capturedImage, composeFinalImage]);
 
   useEffect(() => {
     if (countdown === null) return;
@@ -408,7 +446,7 @@ function Capture() {
           postcardHeight // Destination height
         );
 
-        const image = canvas.toDataURL("image/png");
+        const image = canvas.toDataURL("image/png", 1.0);
         setCapturedImage(image);
         setFinalImage(image);
         // Don't auto-open bottom sheet, let user swipe up

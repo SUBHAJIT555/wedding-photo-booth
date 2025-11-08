@@ -167,7 +167,14 @@ function PropItem({
       <img
         src={prop.url}
         alt={prop.name}
-        className="object-contain w-full h-full pointer-events-none"
+        style={{
+          width: "100%",
+          height: "100%",
+          transform: `rotate(${prop.rotation}deg)`,
+          userSelect: "none",
+          pointerEvents: "none",
+          display: "block",
+        }}
         draggable={false}
       />
       {/* Resize handle */}
