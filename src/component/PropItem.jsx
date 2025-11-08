@@ -170,6 +170,7 @@ function PropItem({
         style={{
           width: "100%",
           height: "100%",
+          objectFit: "contain",
           transform: `rotate(${prop.rotation}deg)`,
           userSelect: "none",
           pointerEvents: "none",

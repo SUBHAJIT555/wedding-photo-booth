@@ -302,7 +302,8 @@ function Capture() {
         const frameImg = new Image();
         frameImg.crossOrigin = "anonymous";
         frameImg.onload = () => {
-          ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+          // ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+          ctx.drawImage(frameImg, 0, 0, img.width, img.height);
           // Draw props after frame
           drawPropsOnCanvas(ctx, img.width, img.height);
         };
@@ -322,12 +323,7 @@ function Capture() {
     };
     img.src = capturedImage;
 
-    const drawPropsOnCanvas = (
-      ctx,
-
-      imgWidth,
-      imgHeight
-    ) => {
+    const drawPropsOnCanvas = (ctx, imgWidth, imgHeight) => {
       if (!imageRef.current || selectedProps.length === 0) {
         updateFinalImage();
         return;
@@ -338,8 +334,12 @@ function Capture() {
       const domRect = imageRef.current.getBoundingClientRect();
 
       // Finally compute how to scale prop coordinates for the canvas
-      const scaleX = imgWidth / domRect.width;
-      const scaleY = imgHeight / domRect.height;
+      // const scaleX = imgWidth / domRect.width;
+      // const scaleY = imgHeight / domRect.height;
+
+      const dpr = window.devicePixelRatio || 1;
+      const scaleX = imgWidth / domRect.width / dpr;
+      const scaleY = imgHeight / domRect.height / dpr;
 
       let loadedCount = 0;
       const totalProps = selectedProps.length;
