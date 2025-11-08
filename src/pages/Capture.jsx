@@ -235,32 +235,53 @@ function Capture() {
   }, [renderCompositeImage, selectedFrame]);
 
   const addProp = (prop) => {
-    console.log("in add Prop function", prop);
     const container = imageContainerRef.current;
     if (!container) return;
 
     const rect = container.getBoundingClientRect();
+
     const newProp = {
       ...prop,
       id: `prop-${nextPropId}`,
       position: {
-        x: rect.width / 2 - 50,
-        y: rect.height / 2 - 50,
+        x: rect.width / 2,
+        y: rect.height / 2,
       },
-
-      // position: {
-      //   x: (rect.width / 2 - 50) * (imageRef.current.naturalWidth / rect.width),
-      //   y:
-      //     (rect.height / 2 - 50) *
-      //     (imageRef.current.naturalHeight / rect.height),
-      // },
-      // position: { x: rect.width / 2 - 50, y: rect.height / 2 - 50 },
-      size: { width: 100, height: 100 },
+      // no size yet
       rotation: 0,
     };
+
     setSelectedProps([...selectedProps, newProp]);
     setNextPropId(nextPropId + 1);
   };
+
+  // const addProp = (prop) => {
+  //   console.log("in add Prop function", prop);
+  //   const container = imageContainerRef.current;
+  //   if (!container) return;
+
+  //   const rect = container.getBoundingClientRect();
+  //   const newProp = {
+  //     ...prop,
+  //     id: `prop-${nextPropId}`,
+  //     position: {
+  //       x: rect.width / 2 - 50,
+  //       y: rect.height / 2 - 50,
+  //     },
+
+  //     // position: {
+  //     //   x: (rect.width / 2 - 50) * (imageRef.current.naturalWidth / rect.width),
+  //     //   y:
+  //     //     (rect.height / 2 - 50) *
+  //     //     (imageRef.current.naturalHeight / rect.height),
+  //     // },
+  //     // position: { x: rect.width / 2 - 50, y: rect.height / 2 - 50 },
+  //     size: { width: 100, height: 100 },
+  //     rotation: 0,
+  //   };
+  //   setSelectedProps([...selectedProps, newProp]);
+  //   setNextPropId(nextPropId + 1);
+  // };
 
   const updateProp = (updatedProp) => {
     setSelectedProps(
@@ -668,18 +689,19 @@ function Capture() {
                 {/* Props overlay - positioned absolutely over the image */}
                 {imageDimensions.width > 0 && (
                   <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{ borderRadius: "1rem" }}
+                    className="absolute inset-0"
+                    style={{ borderRadius: "1rem", pointerEvents: "none" }}
                   >
                     {selectedProps.map((prop) => (
-                      <PropItem
-                        key={prop.id}
-                        prop={prop}
-                        onUpdate={updateProp}
-                        onDelete={deleteProp}
-                        containerWidth={imageDimensions.width}
-                        containerHeight={imageDimensions.height}
-                      />
+                      <div key={prop.id} style={{ pointerEvents: "auto" }}>
+                        <PropItem
+                          prop={prop}
+                          onUpdate={updateProp}
+                          onDelete={deleteProp}
+                          containerWidth={imageDimensions.width}
+                          containerHeight={imageDimensions.height}
+                        />
+                      </div>
                     ))}
                   </div>
                 )}
