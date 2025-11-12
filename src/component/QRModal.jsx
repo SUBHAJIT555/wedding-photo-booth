@@ -7,9 +7,16 @@ import shlogo from "../assets/images/home/SH-Logo.svg";
 const QRModal = ({ isOpen, onClose, data }) => {
   const [error, setError] = useState(null);
   const [qrValue, setQrValue] = useState("");
+  const [copied, setCopied] = useState(false);
 
   // Maximum characters a QR code can hold (Version 40, alphanumeric mode)
   const MAX_QR_LENGTH = 4296;
+
+  // Check if data is a URL (http/https) or base64
+  const isUrl = (str) => {
+    if (!str) return false;
+    return str.startsWith("http://") || str.startsWith("https://");
+  };
 
   useEffect(() => {
     const handleEscape = (e) => {
@@ -20,13 +27,18 @@ const QRModal = ({ isOpen, onClose, data }) => {
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
       setError(null);
+      setCopied(false);
 
-      // Check if data is too long for QR code
-      if (data && data.length > MAX_QR_LENGTH) {
-        // If it's a base64 image, try to create a downloadable link
+      if (!data) {
+        setQrValue("");
+        setError(null);
+      } else if (isUrl(data)) {
+        // URLs are typically short enough for QR codes
+        setQrValue(data);
+        setError(null);
+      } else if (data.length > MAX_QR_LENGTH) {
+        // If it's a base64 image, show error with download option
         if (data.startsWith("data:image")) {
-          // Create a blob URL that can be shared
-          // For now, we'll show an error with download option
           setError(
             "Image data is too large for QR code. Please use the download option instead."
           );
@@ -36,7 +48,8 @@ const QRModal = ({ isOpen, onClose, data }) => {
           setQrValue("");
         }
       } else {
-        setQrValue(data || "");
+        // Data is short enough, use it
+        setQrValue(data);
         setError(null);
       }
     }
@@ -55,6 +68,18 @@ const QRModal = ({ isOpen, onClose, data }) => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    }
+  };
+
+  const handleCopyUrl = async () => {
+    if (qrValue) {
+      try {
+        await navigator.clipboard.writeText(qrValue);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error("Failed to copy:", err);
+      }
     }
   };
 
@@ -93,21 +118,36 @@ const QRModal = ({ isOpen, onClose, data }) => {
                 )}
               </div>
             ) : qrValue ? (
-              <QRCodeSVG
-                size={600}
-                value={qrValue}
-                fgColor="#e91e63"
-                bgColor="#e1e1e1"
-                imageSettings={{
-                  src: shlogo,
-                  x: undefined,
-                  y: undefined,
-                  height: 90,
-                  width: 90,
-                  opacity: 1,
-                  excavate: true,
-                }}
-              />
+              <>
+                <QRCodeSVG
+                  size={600}
+                  value={qrValue}
+                  fgColor="#e91e63"
+                  bgColor="#e1e1e1"
+                  imageSettings={{
+                    src: shlogo,
+                    x: undefined,
+                    y: undefined,
+                    height: 90,
+                    width: 90,
+                    opacity: 1,
+                    excavate: true,
+                  }}
+                />
+                {isUrl(qrValue) && (
+                  <div className="flex flex-col items-center space-y-2 mt-4">
+                    <button
+                      onClick={handleCopyUrl}
+                      className="px-4 py-2 bg-[#e91e63] text-white rounded-lg hover:bg-[#c2185b] transition-colors font-semibold text-sm"
+                    >
+                      {copied ? "Copied!" : "Copy URL"}
+                    </button>
+                    <p className="text-xs text-gray-600 text-center max-w-md break-all">
+                      {qrValue}
+                    </p>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="text-gray-600 text-center">No data available</div>
             )}

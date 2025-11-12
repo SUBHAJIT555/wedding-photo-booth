@@ -13,14 +13,19 @@ import { getData } from "../utils/localStorageDB";
 function Preview() {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const location = useLocation();
-  const { resultUrl } = location?.state || {};
+  const { resultUrl, shortUrl } = location?.state || {};
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [swaploader, setswaloader] = useState("none");
   const url = searchParams.get("resultUrl");
   const savedImage = getData("capturedImage");
+  const savedImageUrl = getData("capturedImageUrl");
+  const savedImageShortUrl = getData("capturedImageShortUrl");
 
-  const finalUrl = resultUrl || url || savedImage;
+  // Use URL if available, otherwise fall back to base64
+  const finalUrl = resultUrl || url || savedImageUrl || savedImage;
+  // Use short URL for QR code (much shorter for QR encoding)
+  const qrUrl = shortUrl || savedImageShortUrl || finalUrl;
   useEffect(() => {
     setswaloader(loading ? "block" : "none");
   }, [loading]);
@@ -298,7 +303,7 @@ function Preview() {
       <QRModal
         isOpen={isQRModalOpen}
         onClose={() => setIsQRModalOpen(false)}
-        data={finalUrl}
+        data={qrUrl}
       />
     </div>
   );

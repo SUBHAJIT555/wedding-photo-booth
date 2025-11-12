@@ -8,6 +8,7 @@ import BottomSheet from "../component/BottomSheet";
 import PropItem from "../component/PropItem";
 import { props as availableProps, frames } from "../constant/propsAndFrames";
 import { IoChevronUp } from "react-icons/io5";
+import { uploadImage } from "../utils/uploadImage";
 function Capture() {
   const videoRef = useRef(null);
   const navigate = useNavigate();
@@ -155,26 +156,57 @@ function Capture() {
   };
   const submitImage = async () => {
     console.log("Submitting image...");
+    setLoading(true);
 
-    await new Promise((resolve) => {
-      const onComposed = () => {
-        if (compositeCanvasRef.current) {
-          const composed = compositeCanvasRef.current.toDataURL("image/png");
-          resolve(composed);
-        } else {
-          resolve(null);
-        }
-      };
+    try {
+      // Get the composed image
+      const imageToSave = await new Promise((resolve) => {
+        const onComposed = () => {
+          if (compositeCanvasRef.current) {
+            const composed = compositeCanvasRef.current.toDataURL("image/png");
+            resolve(composed);
+          } else {
+            resolve(null);
+          }
+        };
 
-      composeFinalImage(); // triggers async image drawing
-      // Wait a bit to ensure props are drawn (or chain inside composeFinalImage)
-      setTimeout(onComposed, 400); // adjust delay if needed
-    }).then((imageToSave) => {
-      if (!imageToSave) return;
+        composeFinalImage(); // triggers async image drawing
+        // Wait a bit to ensure props are drawn (or chain inside composeFinalImage)
+        setTimeout(onComposed, 400); // adjust delay if needed
+      });
+
+      if (!imageToSave) {
+        setLoading(false);
+        alert("Failed to capture image. Please try again.");
+        return;
+      }
+
+      // Upload image to server
+      console.log("Uploading image to server...");
+      const uploadResult = await uploadImage(imageToSave);
+      console.log("Image uploaded:", uploadResult);
+
       stopVideo();
+      
+      // Save both the base64 (for local storage/backward compatibility) and the URL
       saveData("capturedImage", imageToSave);
-      navigate("/preview", { state: { resultUrl: imageToSave } });
-    });
+      saveData("capturedImageUrl", uploadResult.url);
+      saveData("capturedImageShortUrl", uploadResult.shortUrl);
+
+      // Navigate with the URL (short URL for QR code)
+      navigate("/preview", { 
+        state: { 
+          resultUrl: uploadResult.url,
+          shortUrl: uploadResult.shortUrl,
+          // Keep base64 for backward compatibility
+          base64Image: imageToSave,
+        } 
+      });
+    } catch (error) {
+      console.error("Error submitting image:", error);
+      setLoading(false);
+      alert(`Failed to upload image: ${error.message || "Unknown error"}. Please try again.`);
+    }
   };
 
   // const submitImage = () => {
