@@ -1,63 +1,11 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { IoMdClose } from "react-icons/io";
 
 function BottomSheet({ isOpen, onClose, activeTab, onTabChange, children }) {
   // activeTab and onTabChange are kept for API consistency
   void activeTab;
   void onTabChange;
-  const [dragY, setDragY] = useState(0);
-  const sheetRef = useRef(null);
-  const startY = useRef(0);
-  const currentY = useRef(0);
-  const isDragging = useRef(false);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleTouchStart = (e) => {
-      if (e.target.closest(".bottom-sheet-content")) return;
-      startY.current = e.touches[0].clientY;
-      isDragging.current = true;
-    };
-
-    const handleTouchMove = (e) => {
-      if (!isDragging.current) return;
-      currentY.current = e.touches[0].clientY;
-      const deltaY = currentY.current - startY.current;
-
-      // Only allow dragging down (positive deltaY)
-      if (deltaY > 0) {
-        setDragY(deltaY);
-      }
-    };
-
-    const handleTouchEnd = () => {
-      if (!isDragging.current) return;
-      isDragging.current = false;
-
-      // If dragged down more than 100px, close the sheet
-      if (dragY > 100) {
-        onClose();
-      }
-      setDragY(0);
-    };
-
-    const sheet = sheetRef.current;
-    if (sheet) {
-      sheet.addEventListener("touchstart", handleTouchStart, { passive: true });
-      sheet.addEventListener("touchmove", handleTouchMove, { passive: true });
-      sheet.addEventListener("touchend", handleTouchEnd, { passive: true });
-    }
-
-    return () => {
-      if (sheet) {
-        sheet.removeEventListener("touchstart", handleTouchStart);
-        sheet.removeEventListener("touchmove", handleTouchMove);
-        sheet.removeEventListener("touchend", handleTouchEnd);
-      }
-    };
-  }, [isOpen, dragY, onClose]);
 
   return (
     <AnimatePresence>
@@ -69,47 +17,48 @@ function BottomSheet({ isOpen, onClose, activeTab, onTabChange, children }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-black bg-opacity-50 z-[40]"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[40]"
             onClick={onClose}
           />
 
           {/* Bottom Sheet */}
           <motion.div
-            ref={sheetRef}
             initial={{ y: "100%" }}
-            animate={{
-              y: dragY > 0 ? `${dragY}px` : 0,
-            }}
+            animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{
               type: "spring",
               damping: 30,
               stiffness: 300,
             }}
-            drag="y"
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.2}
-            onDragEnd={(event, info) => {
-              if (info.offset.y > 100) {
-                onClose();
-              }
-            }}
-            className="fixed bottom-0 left-0 right-0 bg-[#faf9f6] rounded-t-3xl shadow-2xl z-[50] ml-6 mr-6"
+            className="fixed bottom-0 left-0 right-0 bg-gradient-to-b from-white via-[#faf9f6] to-white rounded-t-[2.5rem] shadow-2xl z-[50] mx-4"
             style={{
-              maxHeight: "70vh",
-              borderTop: "4px solid #e91e63",
-              borderLeft: "4px solid #e91e63",
-              borderRight: "4px solid #e91e63",
-              touchAction: "none",
+              maxHeight: "75vh",
+              boxShadow:
+                "0 -10px 40px rgba(0, 0, 0, 0.2), 0 -5px 15px rgba(233, 30, 99, 0.1)",
             }}
           >
-            {/* Drag Handle */}
-            <div className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing">
-              <div className="w-12 h-1 rounded-full bg-primary" />
+            {/* Decorative Top Border */}
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-transparent via-[#e91e63] to-transparent rounded-full" />
+
+            {/* Header with Close Button */}
+            <div className="flex relative justify-end items-start px-4 pt-4 pb-2">
+              <motion.button
+                onClick={onClose}
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-[#5d4037] text-white shadow-lg hover:bg-[#4a3329] transition-all duration-200 z-10"
+                style={{
+                  boxShadow:
+                    "0 4px 12px rgba(93, 64, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                }}
+              >
+                <IoMdClose className="text-lg" />
+              </motion.button>
             </div>
 
             {/* Content */}
-            <div className="flex overflow-hidden flex-col h-full bottom-sheet-content">
+            <div className="flex overflow-hidden flex-col px-4 pb-4 h-full">
               {children}
             </div>
           </motion.div>

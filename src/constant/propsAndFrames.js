@@ -6,12 +6,12 @@ import Prop04 from "../assets/images/Props/Props - 04.png";
 import Prop05 from "../assets/images/Props/Props - 05.png";
 import Prop06 from "../assets/images/Props/Props - 06.png";
 import Prop07 from "../assets/images/Props/Props - 07.png";
-import Frame01 from "../assets/images/Frames/Frames-01.png";
-import Frame02 from "../assets/images/Frames/Frames-02.png";
-import Frame03 from "../assets/images/Frames/Frames-03.png";
-import Frame04 from "../assets/images/Frames/Frames-04.png";
-import Frame05 from "../assets/images/Frames/Frames-05.png";
-import Frame06 from "../assets/images/Frames/Frames-06.png";
+import Frame01 from "../assets/images/Frames/Frame-01.png";
+import Frame02 from "../assets/images/Frames/Frame-02.png";
+import Frame03 from "../assets/images/Frames/Frame-03.png";
+import Frame04 from "../assets/images/Frames/Frame-04.png";
+import Frame05 from "../assets/images/Frames/Frame-05.png";
+import Frame06 from "../assets/images/Frames/Frame-06.png";
 
 export const props = [
   {
