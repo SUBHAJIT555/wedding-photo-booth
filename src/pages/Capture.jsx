@@ -7,8 +7,8 @@ import FlowerBgImage from "../assets/images/home/Flower-Bg.png";
 import BottomSheet from "../component/BottomSheet";
 import PropItem from "../component/PropItem";
 import { props as availableProps, frames } from "../constant/propsAndFrames";
-import { IoChevronUp } from "react-icons/io5";
 import { uploadImage } from "../utils/uploadImage";
+import { IoRefresh, IoImages, IoCheckmarkCircle } from "react-icons/io5";
 function Capture() {
   const videoRef = useRef(null);
   const navigate = useNavigate();
@@ -31,6 +31,7 @@ function Capture() {
     width: 0,
     height: 0,
   });
+  const [propsButtonClicked, setPropsButtonClicked] = useState(false);
 
   const startCamera = useCallback(async () => {
     try {
@@ -270,25 +271,49 @@ function Capture() {
     renderCompositeImage();
   }, [renderCompositeImage, selectedFrame]);
 
-  const addProp = (prop) => {
-    const container = imageContainerRef.current;
-    if (!container) return;
+  const toggleProp = (prop) => {
+    // Check if this prop type is already selected
+    // We need to check by the original prop's name or url since we're adding instances
+    const isSelected = selectedProps.some((p) => {
+      // Check if it's the same prop by comparing name and url
+      return p.name === prop.name && p.url === prop.url;
+    });
 
-    const rect = container.getBoundingClientRect();
+    if (isSelected) {
+      // Remove all instances of this prop type
+      setSelectedProps(
+        selectedProps.filter((p) => {
+          return !(p.name === prop.name && p.url === prop.url);
+        })
+      );
+    } else {
+      // Add new prop instance
+      const container = imageContainerRef.current;
+      if (!container) return;
 
-    const newProp = {
-      ...prop,
-      id: `prop-${nextPropId}`,
-      position: {
-        x: rect.width / 2,
-        y: rect.height / 2,
-      },
-      // no size yet
-      rotation: 0,
-    };
+      const rect = container.getBoundingClientRect();
 
-    setSelectedProps([...selectedProps, newProp]);
-    setNextPropId(nextPropId + 1);
+      const newProp = {
+        ...prop,
+        originalId: prop.id, // Store original prop id for tracking
+        id: `prop-${nextPropId}`, // Unique instance id for rendering
+        position: {
+          x: rect.width / 2,
+          y: rect.height / 2,
+        },
+        rotation: 0,
+      };
+
+      setSelectedProps([...selectedProps, newProp]);
+      setNextPropId(nextPropId + 1);
+    }
+  };
+
+  const isPropSelected = (prop) => {
+    return selectedProps.some((p) => {
+      // Check by name and url to identify the same prop type
+      return p.name === prop.name && p.url === prop.url;
+    });
   };
 
   const updateProp = (updatedProp) => {
@@ -478,6 +503,7 @@ function Capture() {
         const image = canvas.toDataURL("image/png", 1.0);
         setCapturedImage(image);
         setFinalImage(image);
+        setPropsButtonClicked(false); // Reset animation state for new image
         // Don't auto-open bottom sheet, let user swipe up
         // setShowBottomSheet(true);
       }
@@ -528,56 +554,6 @@ function Capture() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [capturedImage]);
-
-  // Swipe up gesture handler for bottom sheet - detect from anywhere on screen
-  useEffect(() => {
-    if (!capturedImage || showBottomSheet) return;
-
-    let startY = 0;
-    let currentDistance = 0;
-
-    const handleTouchStart = (e) => {
-      // Only start swipe detection if touch starts in bottom half of screen
-      const touchY = e.touches[0].clientY;
-      if (touchY > window.innerHeight / 2) {
-        startY = touchY;
-        currentDistance = 0;
-      }
-    };
-
-    const handleTouchMove = (e) => {
-      if (startY === 0) return;
-
-      const currentY = e.touches[0].clientY;
-      const deltaY = startY - currentY; // Positive means swiping up
-
-      if (deltaY > 0) {
-        // Swiping up
-        currentDistance = deltaY;
-      }
-    };
-
-    const handleTouchEnd = () => {
-      if (currentDistance > 80) {
-        // Swiped up enough, open bottom sheet
-        setShowBottomSheet(true);
-      }
-      startY = 0;
-      currentDistance = 0;
-    };
-
-    document.addEventListener("touchstart", handleTouchStart, {
-      passive: true,
-    });
-    document.addEventListener("touchmove", handleTouchMove, { passive: true });
-    document.addEventListener("touchend", handleTouchEnd, { passive: true });
-
-    return () => {
-      document.removeEventListener("touchstart", handleTouchStart);
-      document.removeEventListener("touchmove", handleTouchMove);
-      document.removeEventListener("touchend", handleTouchEnd);
-    };
-  }, [capturedImage, showBottomSheet]);
 
   return (
     <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen">
@@ -759,8 +735,8 @@ function Capture() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`
-                  px-[14vw] py-[4vw] md:px-20 md:py-5 
-                  text-[5vw] md:text-[3vw] lg:text-2xl font-semibold 
+                  px-[14vw] py-[4vw] md:px-16 md:py-5 
+                  text-[5vw] md:text-[3vw] lg:text-4xl font-semibold 
                   text-white bg-[#e91e63] hover:bg-[#c2185b] 
                   transition-all duration-300 shadow-lg hover:shadow-xl 
                   rounded-tl-2xl rounded-br-2xl 
@@ -778,7 +754,7 @@ function Capture() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
-              className="flex gap-4 mt-4 md:gap-6 md:mt-6"
+              className="flex gap-4 justify-center items-center px-4 mt-6 w-full md:gap-6 md:mt-8"
             >
               <motion.button
                 onClick={async () => {
@@ -794,6 +770,7 @@ function Capture() {
                     setSelectedFrame(null);
                     setShowBottomSheet(false);
                     setNextPropId(1);
+                    setPropsButtonClicked(false);
 
                     // Stop and clear the current video stream completely
                     await stopVideoAndClear();
@@ -810,72 +787,189 @@ function Capture() {
                   }
                 }}
                 disabled={isRestarting}
-                whileHover={!isRestarting ? { scale: 1.05 } : {}}
-                whileTap={!isRestarting ? { scale: 0.95 } : {}}
+                whileHover={
+                  !isRestarting
+                    ? {
+                        scale: 1.05,
+                        y: -2,
+                        boxShadow: "0 10px 25px rgba(93, 64, 55, 0.3)",
+                      }
+                    : {}
+                }
+                whileTap={
+                  !isRestarting
+                    ? {
+                        scale: 0.92,
+                        y: 2,
+                        boxShadow: "0 2px 8px rgba(93, 64, 55, 0.2)",
+                      }
+                    : {}
+                }
                 className={`
-                  px-[12vw] py-[4vw] md:px-16 md:py-5 
-                  text-[4vw] md:text-[2.5vw] lg:text-xl font-semibold 
-                  text-white transition-all duration-300 
-                  shadow-lg hover:shadow-xl 
-                  rounded-tl-2xl rounded-br-2xl font-krylon tracking-wider
-                  ${
-                    isRestarting
-                      ? "bg-gray-500 opacity-75 cursor-not-allowed"
-                      : "bg-gray-600 hover:bg-gray-700"
-                  }
+                  w-20 h-20 md:w-24 md:h-24
+                  border-2 border-[#5d4037] text-[#5d4037] 
+                  rounded-2xl 
+                  hover:bg-[#5d4037] hover:text-white 
+                  transition-all duration-200 cursor-pointer
+                  flex items-center justify-center
+                  bg-white/80 backdrop-blur-sm
+                  relative
+                  ${isRestarting ? "opacity-75 cursor-not-allowed" : ""}
                 `}
+                style={{
+                  boxShadow:
+                    "0 8px 16px rgba(93, 64, 55, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
+                }}
               >
-                {isRestarting ? "Starting..." : "Retake"}
+                {isRestarting ? (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                  >
+                    <IoRefresh className="text-4xl md:text-5xl" />
+                  </motion.div>
+                ) : (
+                  <IoRefresh className="text-4xl md:text-5xl" />
+                )}
               </motion.button>
+
+              <div className="relative w-20 h-20 md:w-24 md:h-24">
+                {!propsButtonClicked && (
+                  <>
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl border-2 border-[#ffd700]"
+                      animate={{
+                        opacity: [0, 0.8, 0],
+                        scale: [1, 1.15, 1],
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      style={{
+                        boxShadow: "0 0 20px rgba(255, 215, 0, 0.6)",
+                      }}
+                    />
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl border-2 border-[#ffd700]"
+                      animate={{
+                        opacity: [0, 0.6, 0],
+                        scale: [1, 1.25, 1],
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 0.3,
+                      }}
+                      style={{
+                        boxShadow: "0 0 30px rgba(255, 215, 0, 0.4)",
+                      }}
+                    />
+                  </>
+                )}
+                <motion.button
+                  onClick={() => {
+                    setShowBottomSheet(true);
+                    setPropsButtonClicked(true);
+                  }}
+                  whileHover={{
+                    scale: 1.05,
+                    y: -2,
+                    boxShadow: !propsButtonClicked
+                      ? "0 10px 25px rgba(93, 64, 55, 0.3), 0 0 20px rgba(255, 215, 0, 0.6)"
+                      : "0 10px 25px rgba(93, 64, 55, 0.3)",
+                  }}
+                  whileTap={{
+                    scale: 0.92,
+                    y: 2,
+                    boxShadow: "0 2px 8px rgba(93, 64, 55, 0.2)",
+                  }}
+                  animate={
+                    !propsButtonClicked
+                      ? {
+                          scale: [1, 1.05, 1],
+                        }
+                      : {}
+                  }
+                  transition={
+                    !propsButtonClicked
+                      ? {
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }
+                      : {}
+                  }
+                  className="
+                    w-full h-full border-2 border-[#5d4037] text-[#5d4037] 
+                    rounded-2xl 
+                    hover:bg-[#5d4037] hover:text-white 
+                    transition-all duration-200 cursor-pointer
+                    flex items-center justify-center
+                    relative overflow-hidden
+                    bg-white/80 backdrop-blur-sm
+                  "
+                  style={{
+                    boxShadow: !propsButtonClicked
+                      ? "0 8px 16px rgba(93, 64, 55, 0.25), 0 0 15px rgba(255, 215, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.5)"
+                      : "0 8px 16px rgba(93, 64, 55, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
+                  }}
+                >
+                  <IoImages className="relative z-10 text-4xl md:text-5xl" />
+                  {!propsButtonClicked && (
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ffd700]/20 to-transparent rounded-2xl"
+                      animate={{
+                        x: ["-100%", "100%"],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                    />
+                  )}
+                </motion.button>
+              </div>
 
               <motion.button
                 onClick={submitImage}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{
+                  scale: 1.05,
+                  y: -2,
+                  boxShadow: "0 10px 25px rgba(93, 64, 55, 0.3)",
+                }}
+                whileTap={{
+                  scale: 0.92,
+                  y: 2,
+                  boxShadow: "0 2px 8px rgba(93, 64, 55, 0.2)",
+                }}
                 className="
-                  px-[12vw] py-[4vw] md:px-16 md:py-5 
-                  text-[4vw] md:text-[2.5vw] lg:text-xl font-semibold 
-                  text-white bg-[#e91e63] hover:bg-[#c2185b] 
-                  transition-all duration-300 shadow-lg hover:shadow-xl 
-                  rounded-tl-2xl rounded-br-2xl 
-                  font-krylon tracking-wider
+                  w-20 h-20 md:w-24 md:h-24
+                  border-2 border-[#5d4037] text-[#5d4037] 
+                  rounded-2xl 
+                  hover:bg-[#5d4037] hover:text-white 
+                  transition-all duration-200 cursor-pointer
+                  flex items-center justify-center
+                  bg-white/80 backdrop-blur-sm
+                  relative
                 "
+                style={{
+                  boxShadow:
+                    "0 8px 16px rgba(93, 64, 55, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
+                }}
               >
-                Submit
+                <IoCheckmarkCircle className="text-4xl md:text-5xl" />
               </motion.button>
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Swipe Up Area and Indicator */}
-        {capturedImage && !showBottomSheet && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col gap-2 items-center pb-4 mt-20 cursor-pointer"
-            onClick={() => setShowBottomSheet(true)}
-          >
-            <motion.div
-              animate={{ y: [0, -5, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5, delay: 0.1 }}
-              className="text-[#e91e63] text-2xl"
-            >
-              <IoChevronUp className="text-2xl" />
-            </motion.div>
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              className="text-[#e91e63] text-5xl font-bold font-krylon"
-              style={{
-                textShadow:
-                  "4px 4px 8px rgba(0, 0, 0, 0.6), 2px 2px 4px rgba(0, 0, 0, 0.4)",
-              }}
-            >
-              Swipe Up to Add Props & Frames
-            </motion.div>
-          </motion.div>
-        )}
       </div>
 
       {/* Bottom Sheet for Props and Frames */}
@@ -886,100 +980,160 @@ function Capture() {
         onTabChange={setActiveTab}
       >
         {/* Tabs */}
-        <div className="flex border-b-2 border-[#e91e63]">
+        <div className="flex gap-2 p-1 mb-4 bg-gray-100 rounded-2xl">
           <motion.button
             onClick={() => setActiveTab("props")}
-            whileTap={{ scale: 0.95 }}
-            className={`flex-1 py-4 text-center font-krylon text-lg md:text-xl transition-colors ${
+            // whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={`flex-1 py-3 px-4 text-center font-krylon text-base md:text-lg rounded-xl transition-all duration-300 ${
               activeTab === "props"
-                ? "bg-[#e91e63] text-white"
-                : "text-gray-600 hover:bg-gray-100"
+                ? "bg-gradient-to-r from-[#e91e63] to-[#f06292] text-white shadow-lg"
+                : "bg-gray-200 text-gray-600 hover:bg-gray-300"
             }`}
+            style={
+              activeTab === "props"
+                ? {
+                    boxShadow: "0 4px 15px rgba(233, 30, 99, 0.3)",
+                  }
+                : {}
+            }
           >
             Props
           </motion.button>
           <motion.button
             onClick={() => setActiveTab("frames")}
-            whileTap={{ scale: 0.95 }}
-            className={`flex-1 py-4 text-center font-krylon text-lg md:text-xl transition-colors ${
+            // whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={`flex-1 py-3 px-4 text-center font-krylon text-base md:text-lg rounded-xl transition-all duration-300 ${
               activeTab === "frames"
-                ? "bg-[#e91e63] text-white"
-                : "text-gray-600 hover:bg-gray-100"
+                ? "bg-gradient-to-r from-[#e91e63] to-[#f06292] text-white shadow-lg"
+                : "bg-gray-200 text-gray-600 hover:bg-gray-300"
             }`}
+            style={
+              activeTab === "frames"
+                ? {
+                    boxShadow: "0 4px 15px rgba(233, 30, 99, 0.3)",
+                  }
+                : {}
+            }
           >
             Frames
           </motion.button>
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto flex-1 p-4">
+        <div className="overflow-y-auto flex-1 px-4 -mx-4">
           {activeTab === "props" ? (
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-3 p-4">
               {availableProps &&
-                availableProps.map((prop, index) => (
-                  <motion.button
-                    key={prop.id}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => addProp(prop)}
-                    className="flex flex-col items-center p-2 rounded-lg transition-colors hover:bg-gray-100"
-                  >
-                    <img
-                      src={prop.url}
-                      alt={prop.name}
-                      className="object-contain mb-2 w-full h-24"
-                    />
-                    <span className="text-xs text-center text-gray-700 font-krylon">
-                      {prop.name}
-                    </span>
-                  </motion.button>
-                ))}
+                availableProps.map((prop, index) => {
+                  const isSelected = isPropSelected(prop);
+                  return (
+                    <motion.button
+                      key={prop.id}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.03 }}
+                      // whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => toggleProp(prop)}
+                      className={`relative flex flex-col items-center p-3 rounded-xl transition-all duration-200 ${
+                        isSelected
+                          ? "bg-gradient-to-br from-[#e91e63]/10 to-[#f06292]/10 border-2 border-[#e91e63] shadow-md"
+                          : "bg-white border-2 border-gray-200 hover:border-[#e91e63]/50 hover:shadow-md"
+                      }`}
+                      style={
+                        isSelected
+                          ? {
+                              boxShadow: "0 4px 12px rgba(233, 30, 99, 0.2)",
+                            }
+                          : {}
+                      }
+                    >
+                      {/* Checkmark Badge */}
+                      {isSelected && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-[#e91e63] to-[#f06292] rounded-full flex items-center justify-center shadow-lg z-10"
+                        >
+                          <IoCheckmarkCircle className="text-sm text-white" />
+                        </motion.div>
+                      )}
+                      <img
+                        src={prop.url}
+                        alt={prop.name}
+                        className="object-contain mb-2 w-full h-20 md:h-24"
+                      />
+                      <span
+                        className={`text-xs text-center font-krylon ${
+                          isSelected
+                            ? "text-[#e91e63] font-semibold"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        {prop.name}
+                      </span>
+                    </motion.button>
+                  );
+                })}
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4">
-              {selectedFrame && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={removeFrame}
-                  className="flex flex-col items-center p-4 rounded-lg border-2 border-red-500 transition-colors hover:bg-red-50"
-                >
-                  <span className="text-sm text-red-600 font-krylon">
-                    Remove Frame
-                  </span>
-                </motion.button>
-              )}
+            <div className="grid grid-cols-3 gap-3 p-4">
               {frames &&
-                frames.map((frame, index) => (
-                  <motion.button
-                    key={frame.id}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => applyFrame(frame)}
-                    className={`flex flex-col items-center p-2 rounded-lg border-2 transition-colors ${
-                      selectedFrame?.id === frame.id
-                        ? "border-[#e91e63] bg-pink-50"
-                        : "border-gray-300 hover:bg-gray-100"
-                    }`}
-                  >
-                    <img
-                      src={frame.url}
-                      alt={frame.name}
-                      className="object-contain mb-2 w-full h-32"
-                    />
-                    <span className="text-xs text-center text-gray-700 font-krylon">
-                      {frame.name}
-                    </span>
-                  </motion.button>
-                ))}
+                frames.map((frame, index) => {
+                  const isSelected = selectedFrame?.id === frame.id;
+                  return (
+                    <motion.button
+                      key={frame.id}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      // whileHover={{ scale: 1.03, y: -2 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() =>
+                        isSelected ? removeFrame() : applyFrame(frame)
+                      }
+                      className={`relative flex flex-col items-center p-2 rounded-xl transition-all  duration-200 ${
+                        isSelected 
+                          ? "bg-gradient-to-br from-[#e91e63]/10 to-[#f06292]/10 border-2 border-[#e91e63] shadow-lg"
+                          : "bg-white border-2 border-gray-200 hover:border-[#e91e63]/50 hover:shadow-md"
+                      }`}
+                      style={
+                        isSelected
+                          ? {
+                              boxShadow: "0 6px 20px rgba(233, 30, 99, 0.3)",
+                            }
+                          : {}
+                      }
+                    >
+                      {/* Checkmark Badge */}
+                      {isSelected && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute -top-2 -right-2 w-6 h-6 md:w-7 md:h-7 bg-gradient-to-br from-[#e91e63] to-[#f06292] rounded-full flex items-center justify-center shadow-lg z-10"
+                        >
+                          <IoCheckmarkCircle className="text-xs text-white md:text-base" />
+                        </motion.div>
+                      )}
+                      <img
+                        src={frame.url}
+                        alt={frame.name}
+                        className="object-contain mb-2 w-full h-24 rounded-lg md:h-32"
+                      />
+                      <span
+                        className={`text-xs md:text-sm text-center font-krylon ${
+                          isSelected
+                            ? "text-[#e91e63] font-semibold"
+                            : "text-gray-700"
+                        }`}
+                      >
+                        {frame.name}
+                      </span>
+                    </motion.button>
+                  );
+                })}
             </div>
           )}
         </div>
