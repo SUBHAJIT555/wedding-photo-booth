@@ -7,6 +7,8 @@ import Preview from "../pages/Preview";
 import ErrorPage from "../pages/ErrorPage";
 import ImageViewer from "../pages/ImageViewer";
 import AnimatedOutlet from "../component/AnimatedOutlet";
+import ProtectedRoute from "../component/ProtectedRoute";
+import Login from "../pages/Login";
 // import CaptureTest from "../pages/CaptureTest";
 
 export const router = createBrowserRouter([
@@ -15,19 +17,35 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: (
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/instruction",
-        element: <Instruction />,
+        element: (
+          <ProtectedRoute>
+            <Instruction />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/capture",
-        element: <Capture />,
+        element: (
+          <ProtectedRoute>
+            <Capture />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/avatar",
-        element: <Avatar />,
+        element: (
+          <ProtectedRoute>
+            <Avatar />
+          </ProtectedRoute>
+        ),
       },
       // {
       //   path: "/submitorretake",
@@ -35,11 +53,19 @@ export const router = createBrowserRouter([
       // },
       {
         path: "/preview",
-        element: <Preview />,
+        element: (
+          <ProtectedRoute>
+            <Preview />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/i/:id",
-        element: <ImageViewer />,
+        element: <ImageViewer />, // Public route - no auth needed for viewing shared images
+      },
+      {
+        path: "/login",
+        element: <Login />,
       },
       {
         path: "*",

@@ -9,15 +9,19 @@ export default defineConfig({
       // Proxy PHP requests to your PHP server during development
       // Make sure you have a PHP server running (e.g., php -S localhost:8000)
       "/upload-image.php": {
-        target: process.env.VITE_PHP_SERVER || "http://localhost:8000",
+        target: "http://localhost/photo-booth/",
+        changeOrigin: true,
+      },
+      "/auth.php": {
+        target: "http://localhost/photo-booth/",
         changeOrigin: true,
       },
       "/i.php": {
-        target: process.env.VITE_PHP_SERVER || "http://localhost:8000",
+        target: "http://localhost/photo-booth/",
         changeOrigin: true,
       },
       "/uploads": {
-        target: process.env.VITE_PHP_SERVER || "http://localhost:8000",
+        target: "http://localhost/photo-booth/",
         changeOrigin: true,
       },
     },

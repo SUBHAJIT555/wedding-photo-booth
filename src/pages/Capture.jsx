@@ -187,25 +187,29 @@ function Capture() {
       console.log("Image uploaded:", uploadResult);
 
       stopVideo();
-      
+
       // Save both the base64 (for local storage/backward compatibility) and the URL
       saveData("capturedImage", imageToSave);
       saveData("capturedImageUrl", uploadResult.url);
       saveData("capturedImageShortUrl", uploadResult.shortUrl);
 
       // Navigate with the URL (short URL for QR code)
-      navigate("/preview", { 
-        state: { 
+      navigate("/preview", {
+        state: {
           resultUrl: uploadResult.url,
           shortUrl: uploadResult.shortUrl,
           // Keep base64 for backward compatibility
           base64Image: imageToSave,
-        } 
+        },
       });
     } catch (error) {
       console.error("Error submitting image:", error);
       setLoading(false);
-      alert(`Failed to upload image: ${error.message || "Unknown error"}. Please try again.`);
+      alert(
+        `Failed to upload image: ${
+          error.message || "Unknown error"
+        }. Please try again.`
+      );
     }
   };
 
@@ -286,34 +290,6 @@ function Capture() {
     setSelectedProps([...selectedProps, newProp]);
     setNextPropId(nextPropId + 1);
   };
-
-  // const addProp = (prop) => {
-  //   console.log("in add Prop function", prop);
-  //   const container = imageContainerRef.current;
-  //   if (!container) return;
-
-  //   const rect = container.getBoundingClientRect();
-  //   const newProp = {
-  //     ...prop,
-  //     id: `prop-${nextPropId}`,
-  //     position: {
-  //       x: rect.width / 2 - 50,
-  //       y: rect.height / 2 - 50,
-  //     },
-
-  //     // position: {
-  //     //   x: (rect.width / 2 - 50) * (imageRef.current.naturalWidth / rect.width),
-  //     //   y:
-  //     //     (rect.height / 2 - 50) *
-  //     //     (imageRef.current.naturalHeight / rect.height),
-  //     // },
-  //     // position: { x: rect.width / 2 - 50, y: rect.height / 2 - 50 },
-  //     size: { width: 100, height: 100 },
-  //     rotation: 0,
-  //   };
-  //   setSelectedProps([...selectedProps, newProp]);
-  //   setNextPropId(nextPropId + 1);
-  // };
 
   const updateProp = (updatedProp) => {
     setSelectedProps(
