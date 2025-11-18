@@ -42,26 +42,54 @@ function PropItem({
     isRotating,
   ]);
 
-  const previewScaleX = imageDimensions.width / 2000;
-  const previewScaleY = imageDimensions.height / 3000;
+  // const previewScaleX = imageDimensions.width / 2000;
+  // const previewScaleY = imageDimensions.height / 3000;
 
+  // In PropItem component, update the initial position calculation:
   const handleImageLoad = (e) => {
     if (size) return;
     const img = e.target;
     const naturalWidth = img.naturalWidth;
     const naturalHeight = img.naturalHeight;
 
-    const maxWidth = containerWidth * 0.4;
-    const maxHeight = containerHeight * 0.4;
+    const maxWidth = containerWidth * 0.3; // Reduced from 0.4 for better fit
+    const maxHeight = containerHeight * 0.3;
     let width = naturalWidth;
     let height = naturalHeight;
     const scale = Math.min(maxWidth / width, maxHeight / height, 1);
     width *= scale;
     height *= scale;
 
+    // Calculate initial position considering image offset
+    const initialX = (containerWidth - width) / 2;
+    const initialY = (containerHeight - height) / 2;
+
     setSize({ width, height });
-    onUpdate({ ...prop, size: { width, height }, position, rotation });
+    setPosition({ x: initialX, y: initialY });
+    onUpdate({
+      ...prop,
+      size: { width, height },
+      position: { x: initialX, y: initialY },
+      rotation,
+    });
   };
+  // const handleImageLoad = (e) => {
+  //   if (size) return;
+  //   const img = e.target;
+  //   const naturalWidth = img.naturalWidth;
+  //   const naturalHeight = img.naturalHeight;
+
+  //   const maxWidth = containerWidth * 0.4;
+  //   const maxHeight = containerHeight * 0.4;
+  //   let width = naturalWidth;
+  //   let height = naturalHeight;
+  //   const scale = Math.min(maxWidth / width, maxHeight / height, 1);
+  //   width *= scale;
+  //   height *= scale;
+
+  //   setSize({ width, height });
+  //   onUpdate({ ...prop, size: { width, height }, position, rotation });
+  // };
 
   const handleMouseDown = (e, type) => {
     e.stopPropagation();

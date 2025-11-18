@@ -461,6 +461,7 @@ function Capture() {
   // ]);
   const composeFinalImage = useCallback(() => {
     return new Promise((resolve) => {
+      console.log("🚀 Starting composeFinalImage");
       if (!capturedImage || !compositeCanvasRef.current) {
         resolve();
         return;
@@ -568,23 +569,30 @@ function Capture() {
     const FRAME_H = 3544;
     const { x: INNER_X, y: INNER_Y, w: INNER_W, h: INNER_H } = INNER_HOLE;
 
-    // PREVIEW camera resolution (your fixed design space)
-    const PREVIEW_W = imageDimensions.width;
-    const PREVIEW_H = imageDimensions.height;
+    // Get the actual displayed image dimensions from the DOM
+    const displayW = imageDimensions.width;
+    const displayH = imageDimensions.height;
+    const displayOffsetX = imageDimensions.offsetX || 0;
+    const displayOffsetY = imageDimensions.offsetY || 0;
 
-    // BASE camera resolution (your drawing baseline)
-    const BASE_W = 2000;
-    const BASE_H = 3000;
+    console.log("🔄 Drawing props with dimensions:", {
+      displayW,
+      displayH,
+      displayOffsetX,
+      displayOffsetY,
+      props: selectedProps.map((p) => ({
+        name: p.name,
+        domX: p.position.x,
+        domY: p.position.y,
+        size: p.size,
+      })),
+    });
 
-    // PREVIEW → BASE scale
-    const previewScaleX = PREVIEW_W / BASE_W;
-    const previewScaleY = PREVIEW_H / BASE_H;
+    // Calculate scale factors
+    const scaleX = selectedFrame ? INNER_W / displayW : FRAME_W / displayW;
+    const scaleY = selectedFrame ? INNER_H / displayH : FRAME_H / displayH;
 
-    // BASE → FINAL CANVAS scale
-    const finalScaleX = selectedFrame ? INNER_W / BASE_W : FRAME_W / BASE_W;
-    const finalScaleY = selectedFrame ? INNER_H / BASE_H : FRAME_H / BASE_H;
-
-    // LOAD PROP IMAGES
+    // Load all prop images
     const loadedProps = await Promise.all(
       selectedProps.map((prop) => {
         return new Promise((resolve) => {
@@ -597,42 +605,63 @@ function Capture() {
       })
     );
 
+    // Draw all loaded props
     loadedProps.forEach((item) => {
       if (!item) return;
 
       const { prop, img } = item;
 
-      // ---------------------------------------
-      // 1️⃣ CONVERT PREVIEW SIZE → FINAL SIZE
-      // ---------------------------------------
-      const finalW = (prop.size.width / previewScaleX) * finalScaleX;
-      const finalH = (prop.size.height / previewScaleY) * finalScaleY;
+      // Get prop dimensions
+      const propWidth = prop.size?.width || 100;
+      const propHeight = prop.size?.height || 100;
 
-      // ---------------------------------------
-      // 2️⃣ CONVERT PREVIEW POSITION → FINAL POS
-      // ---------------------------------------
-      const baseX = (prop.position.x - imageDimensions.offsetX) / previewScaleX;
-      const baseY = (prop.position.y - imageDimensions.offsetY) / previewScaleY;
+      // Calculate final dimensions on canvas
+      const finalWidth = propWidth * scaleX;
+      const finalHeight = propHeight * scaleY;
 
-      const canvasX = baseX * finalScaleX + (selectedFrame ? INNER_X : 0);
-      const canvasY = baseY * finalScaleY + (selectedFrame ? INNER_Y : 0);
+      // Convert DOM coordinates to canvas coordinates
+      // Remove the container offset to get position relative to the actual image
+      const relativeX = prop.position.x - displayOffsetX;
+      const relativeY = prop.position.y - displayOffsetY;
 
-      // ---------------------------------------
-      // 3️⃣ DRAW PROP
-      // ---------------------------------------
+      // Scale to final canvas coordinates
+      const canvasX = relativeX * scaleX + (selectedFrame ? INNER_X : 0);
+      const canvasY = relativeY * scaleY + (selectedFrame ? INNER_Y : 0);
+
+      console.log(`📍 Prop "${prop.name}" positioning:`, {
+        domX: prop.position.x,
+        domY: prop.position.y,
+        relativeX,
+        relativeY,
+        canvasX: Math.round(canvasX),
+        canvasY: Math.round(canvasY),
+        finalWidth: Math.round(finalWidth),
+        finalHeight: Math.round(finalHeight),
+      });
+
+      // Draw the prop with rotation
       ctx.save();
-      ctx.translate(canvasX, canvasY);
+      ctx.translate(canvasX + finalWidth / 2, canvasY + finalHeight / 2);
       ctx.rotate(((prop.rotation || 0) * Math.PI) / 180);
-      ctx.drawImage(img, -finalW / 2, -finalH / 2, finalW, finalH);
+      ctx.drawImage(
+        img,
+        -finalWidth / 2,
+        -finalHeight / 2,
+        finalWidth,
+        finalHeight
+      );
       ctx.restore();
 
-      // ---------------------------------------
-      // 4️⃣ DEBUG LABEL
-      // ---------------------------------------
-      const debug = `x:${prop.position.x} y:${prop.position.y} w:${prop.size.width} h:${prop.size.height}`;
-      ctx.font = "40px Arial";
-      ctx.fillStyle = "rgba(0,0,0,0.7)";
-      ctx.fillText(debug, canvasX - finalW / 2, canvasY - finalH / 2 - 20);
+      // Debug visualization (optional)
+      if (import.meta.env.VITE_APP_ENV === "dev") {
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(canvasX, canvasY, finalWidth, finalHeight);
+
+        ctx.fillStyle = "red";
+        ctx.font = "20px Arial";
+        ctx.fillText(prop.name, canvasX, canvasY - 5);
+      }
     });
   };
 
@@ -1120,6 +1149,21 @@ function Capture() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Add this useEffect to debug prop positioning
+  useEffect(() => {
+    if (selectedProps.length > 0) {
+      console.log(
+        "🎯 Current Props State:",
+        selectedProps.map((p) => ({
+          name: p.name,
+          position: p.position,
+          size: p.size,
+          rotation: p.rotation,
+        }))
+      );
+    }
+  }, [selectedProps]);
+
   // Restart camera when captured image is cleared (retake scenario)
   useEffect(() => {
     if (!capturedImage && !videoStream && !isRestarting) {
@@ -1297,6 +1341,17 @@ function Capture() {
                         height: renderH,
                         offsetX,
                         offsetY,
+                        containerWidth: containerW,
+                        containerHeight: containerH,
+                      });
+
+                      console.log("🖼️ Image dimensions updated:", {
+                        renderW: Math.round(renderW),
+                        renderH: Math.round(renderH),
+                        offsetX: Math.round(offsetX),
+                        offsetY: Math.round(offsetY),
+                        containerW: Math.round(containerW),
+                        containerH: Math.round(containerH),
                       });
                     }
                     // if (imageRef.current) {
