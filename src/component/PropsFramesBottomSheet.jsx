@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import BottomSheet from "./BottomSheet";
 import { props as availableProps, frames } from "../constant/propsAndFrames";
 import { IoCheckmarkCircle } from "react-icons/io5";
+import PropTypes from "prop-types";
 
 const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
   isOpen,
@@ -184,4 +185,16 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
   );
 });
 
+PropsFramesBottomSheet.propTypes = {
+  isOpen: PropTypes.bool,
+  capturedImage: PropTypes.string,
+  activeTab: PropTypes.string,
+  selectedFrame: PropTypes.object,
+  onClose: PropTypes.func,
+  onTabChange: PropTypes.func,
+  onToggleProp: PropTypes.func,
+  onApplyFrame: PropTypes.func,
+  onRemoveFrame: PropTypes.func,
+  isPropSelected: PropTypes.func,
+};
 export default PropsFramesBottomSheet;
