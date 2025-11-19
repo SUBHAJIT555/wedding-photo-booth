@@ -342,13 +342,13 @@ function Capture() {
     w: 1750,
     h: 2350,
   };
-  function drawDebugLabel(ctx, text, x, y) {
-    ctx.font = "32px Arial";
-    ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(x, y - 36, ctx.measureText(text).width + 20, 40);
-    ctx.fillStyle = "white";
-    ctx.fillText(text, x + 10, y - 10);
-  }
+  // function drawDebugLabel(ctx, text, x, y) {
+  //   ctx.font = "32px Arial";
+  //   ctx.fillStyle = "rgba(0,0,0,0.6)";
+  //   ctx.fillRect(x, y - 36, ctx.measureText(text).width + 20, 40);
+  //   ctx.fillStyle = "white";
+  //   ctx.fillText(text, x + 10, y - 10);
+  // }
 
   // const composeFinalImage = useCallback(() => {
   //   if (!capturedImage || !compositeCanvasRef.current) return;
@@ -459,6 +459,109 @@ function Capture() {
   //   imageDimensions,
   //   updateFinalImage,
   // ]);
+  // const composeFinalImage = useCallback(() => {
+  //   return new Promise((resolve) => {
+  //     console.log("🚀 Starting composeFinalImage");
+  //     if (!capturedImage || !compositeCanvasRef.current) {
+  //       resolve();
+  //       return;
+  //     }
+
+  //     const FRAME_W = 2363;
+  //     const FRAME_H = 3544;
+
+  //     const { x: INNER_X, y: INNER_Y, w: INNER_W, h: INNER_H } = INNER_HOLE;
+
+  //     const canvas = compositeCanvasRef.current;
+  //     const ctx = canvas.getContext("2d");
+
+  //     canvas.width = FRAME_W;
+  //     canvas.height = FRAME_H;
+
+  //     // white background for final print
+  //     ctx.fillStyle = "white";
+  //     ctx.fillRect(0, 0, FRAME_W, FRAME_H);
+
+  //     const img = new Image();
+
+  //     img.onload = async () => {
+  //       const srcW = img.width;
+  //       const srcH = img.height;
+  //       const imgRatio = srcW / srcH;
+
+  //       let drawX, drawY, drawW, drawH;
+
+  //       // ================================
+  //       // CASE 1 — NO FRAME SELECTED
+  //       // ================================
+  //       if (!selectedFrame) {
+  //         const canvasRatio = FRAME_W / FRAME_H;
+
+  //         if (imgRatio > canvasRatio) {
+  //           drawH = FRAME_H;
+  //           drawW = drawH * imgRatio;
+  //           drawX = (FRAME_W - drawW) / 2;
+  //           drawY = 0;
+  //         } else {
+  //           drawW = FRAME_W;
+  //           drawH = drawW / imgRatio;
+  //           drawX = 0;
+  //           drawY = (FRAME_H - drawH) / 2;
+  //         }
+
+  //         ctx.drawImage(img, drawX, drawY, drawW, drawH);
+
+  //         // Draw props normally
+  //         await drawPropsAsync(ctx);
+
+  //         updateFinalImage();
+  //         resolve();
+  //         return;
+  //       }
+
+  //       // ================================
+  //       // CASE 2 — FRAME SELECTED
+  //       // ================================
+  //       const holeRatio = INNER_W / INNER_H;
+
+  //       // Fit inside hole
+  //       if (imgRatio > holeRatio) {
+  //         drawW = INNER_W;
+  //         drawH = drawW / imgRatio;
+  //         drawX = INNER_X;
+  //         drawY = INNER_Y + (INNER_H - drawH) / 2;
+  //       } else {
+  //         drawH = INNER_H;
+  //         drawW = drawH * imgRatio;
+  //         drawX = INNER_X + (INNER_W - drawW) / 2;
+  //         drawY = INNER_Y;
+  //       }
+
+  //       ctx.drawImage(img, drawX, drawY, drawW, drawH);
+
+  //       // Draw props BEHIND frame
+  //       await drawPropsAsync(ctx);
+
+  //       // Load frame
+  //       const frameImg = new Image();
+  //       frameImg.crossOrigin = "anonymous";
+  //       frameImg.onload = async () => {
+  //         ctx.drawImage(frameImg, 0, 0, FRAME_W, FRAME_H);
+
+  //         // Draw props ON TOP of frame
+  //         await drawPropsAsync(ctx);
+
+  //         updateFinalImage();
+  //         resolve(); // 🎯 FINALLY resolve here
+  //       };
+
+  //       frameImg.src = selectedFrame.url;
+  //     };
+
+  //     img.src = capturedImage;
+  //   });
+  // }, [capturedImage, selectedFrame, selectedProps, INNER_HOLE]);
+
   const composeFinalImage = useCallback(() => {
     return new Promise((resolve) => {
       console.log("🚀 Starting composeFinalImage");
@@ -469,7 +572,6 @@ function Capture() {
 
       const FRAME_W = 2363;
       const FRAME_H = 3544;
-
       const { x: INNER_X, y: INNER_Y, w: INNER_W, h: INNER_H } = INNER_HOLE;
 
       const canvas = compositeCanvasRef.current;
@@ -485,9 +587,15 @@ function Capture() {
       const img = new Image();
 
       img.onload = async () => {
-        const srcW = img.width;
-        const srcH = img.height;
+        const srcW = img.naturalWidth; // Use naturalWidth instead of width
+        const srcH = img.naturalHeight; // Use naturalHeight instead of height
         const imgRatio = srcW / srcH;
+
+        console.log("📐 Captured image dimensions:", {
+          width: srcW,
+          height: srcH,
+          ratio: imgRatio.toFixed(4),
+        });
 
         let drawX, drawY, drawW, drawH;
 
@@ -518,7 +626,7 @@ function Capture() {
           resolve();
           return;
         }
-
+        console.log("🟠 CASE 2 — FRAME SELECTED");
         // ================================
         // CASE 2 — FRAME SELECTED
         // ================================
@@ -537,22 +645,28 @@ function Capture() {
           drawY = INNER_Y;
         }
 
+        console.log("🖼️ Image in frame hole:", {
+          drawX: Math.round(drawX),
+          drawY: Math.round(drawY),
+          drawW: Math.round(drawW),
+          drawH: Math.round(drawH),
+          holeRatio: holeRatio.toFixed(4),
+        });
+
         ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
-        // Draw props BEHIND frame
+        // Draw props ON TOP of the camera image but UNDER the frame
         await drawPropsAsync(ctx);
 
         // Load frame
         const frameImg = new Image();
         frameImg.crossOrigin = "anonymous";
         frameImg.onload = async () => {
+          // Draw frame overlay (covers everything)
           ctx.drawImage(frameImg, 0, 0, FRAME_W, FRAME_H);
 
-          // Draw props ON TOP of frame
-          await drawPropsAsync(ctx);
-
           updateFinalImage();
-          resolve(); // 🎯 FINALLY resolve here
+          resolve();
         };
 
         frameImg.src = selectedFrame.url;
@@ -580,6 +694,7 @@ function Capture() {
       displayH,
       displayOffsetX,
       displayOffsetY,
+      selectedFrame: selectedFrame?.name || "none",
       props: selectedProps.map((p) => ({
         name: p.name,
         domX: p.position.x,
@@ -587,10 +702,6 @@ function Capture() {
         size: p.size,
       })),
     });
-
-    // Calculate scale factors
-    const scaleX = selectedFrame ? INNER_W / displayW : FRAME_W / displayW;
-    const scaleY = selectedFrame ? INNER_H / displayH : FRAME_H / displayH;
 
     // Load all prop images
     const loadedProps = await Promise.all(
@@ -615,55 +726,528 @@ function Capture() {
       const propWidth = prop.size?.width || 100;
       const propHeight = prop.size?.height || 100;
 
-      // Calculate final dimensions on canvas
-      const finalWidth = propWidth * scaleX;
-      const finalHeight = propHeight * scaleY;
+      if (selectedFrame) {
+        // ============================================
+        // 🟠 CASE: WITH FRAME SELECTED
+        // ============================================
 
-      // Convert DOM coordinates to canvas coordinates
-      // Remove the container offset to get position relative to the actual image
-      const relativeX = prop.position.x - displayOffsetX;
-      const relativeY = prop.position.y - displayOffsetY;
+        // When frame is selected, we need to calculate how the displayed preview
+        // maps to the actual camera image area within the frame hole
 
-      // Scale to final canvas coordinates
-      const canvasX = relativeX * scaleX + (selectedFrame ? INNER_X : 0);
-      const canvasY = relativeY * scaleY + (selectedFrame ? INNER_Y : 0);
+        // First, let's calculate how the camera image fits in the frame hole
+        const capturedImg = new Image();
+        capturedImg.src = capturedImage;
 
-      console.log(`📍 Prop "${prop.name}" positioning:`, {
-        domX: prop.position.x,
-        domY: prop.position.y,
-        relativeX,
-        relativeY,
-        canvasX: Math.round(canvasX),
-        canvasY: Math.round(canvasY),
-        finalWidth: Math.round(finalWidth),
-        finalHeight: Math.round(finalHeight),
-      });
+        // Use the actual captured image dimensions instead of hardcoded 2000x3000
+        const capturedW = capturedImg.naturalWidth || 2000;
+        const capturedH = capturedImg.naturalHeight || 3000;
+        const capturedRatio = capturedW / capturedH;
 
-      // Draw the prop with rotation
-      ctx.save();
-      ctx.translate(canvasX + finalWidth / 2, canvasY + finalHeight / 2);
-      ctx.rotate(((prop.rotation || 0) * Math.PI) / 180);
-      ctx.drawImage(
-        img,
-        -finalWidth / 2,
-        -finalHeight / 2,
-        finalWidth,
-        finalHeight
-      );
-      ctx.restore();
+        // Calculate how the captured image fits in the frame hole
+        const holeRatio = INNER_W / INNER_H;
 
-      // Debug visualization (optional)
-      if (import.meta.env.VITE_APP_ENV === "dev") {
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(canvasX, canvasY, finalWidth, finalHeight);
+        let imageInHoleX, imageInHoleY, imageInHoleW, imageInHoleH;
 
-        ctx.fillStyle = "red";
-        ctx.font = "20px Arial";
-        ctx.fillText(prop.name, canvasX, canvasY - 5);
+        if (capturedRatio > holeRatio) {
+          // Image is wider than hole - fit to height
+          imageInHoleH = INNER_H;
+          imageInHoleW = imageInHoleH * capturedRatio;
+          imageInHoleX = INNER_X + (INNER_W - imageInHoleW) / 2;
+          imageInHoleY = INNER_Y;
+        } else {
+          // Image is taller than hole - fit to width
+          imageInHoleW = INNER_W;
+          imageInHoleH = imageInHoleW / capturedRatio;
+          imageInHoleX = INNER_X;
+          imageInHoleY = INNER_Y + (INNER_H - imageInHoleH) / 2;
+        }
+
+        // The key fix: We need to map from the displayed preview coordinates
+        // to the actual image area within the frame hole
+
+        // Calculate the scale from displayed preview to the actual image in frame hole
+        const scaleX = imageInHoleW / displayW;
+        const scaleY = imageInHoleH / displayH;
+
+        // Convert DOM coordinates to frame hole coordinates
+        // Remove container offset to get position relative to the actual displayed image
+        const relativeX = prop.position.x - displayOffsetX;
+        const relativeY = prop.position.y - displayOffsetY;
+
+        // Scale to final canvas coordinates within the frame hole
+        const canvasX = relativeX * scaleX + imageInHoleX;
+        const canvasY = relativeY * scaleY + imageInHoleY;
+
+        // Calculate final dimensions
+        const finalWidth = propWidth * scaleX;
+        const finalHeight = propHeight * scaleY;
+
+        console.log(`📍 WITH FRAME - Prop "${prop.name}":`, {
+          domX: prop.position.x,
+          domY: prop.position.y,
+          displayOffsetX,
+          displayOffsetY,
+          relativeX,
+          relativeY,
+          imageInHoleX: Math.round(imageInHoleX),
+          imageInHoleY: Math.round(imageInHoleY),
+          imageInHoleW: Math.round(imageInHoleW),
+          imageInHoleH: Math.round(imageInHoleH),
+          scaleX: scaleX.toFixed(4),
+          scaleY: scaleY.toFixed(4),
+          canvasX: Math.round(canvasX),
+          canvasY: Math.round(canvasY),
+          finalWidth: Math.round(finalWidth),
+          finalHeight: Math.round(finalHeight),
+        });
+
+        // Draw the prop with rotation
+        ctx.save();
+        ctx.translate(canvasX + finalWidth / 2, canvasY + finalHeight / 2);
+        ctx.rotate(((prop.rotation || 0) * Math.PI) / 180);
+        ctx.drawImage(
+          img,
+          -finalWidth / 2,
+          -finalHeight / 2,
+          finalWidth,
+          finalHeight
+        );
+        ctx.restore();
+      } else {
+        // ============================================
+        // 🔵 CASE: NO FRAME SELECTED
+        // ============================================
+
+        // Calculate scale factors for full canvas
+        const scaleX = FRAME_W / displayW;
+        const scaleY = FRAME_H / displayH;
+
+        // Convert DOM coordinates to canvas coordinates
+        const relativeX = prop.position.x - displayOffsetX;
+        const relativeY = prop.position.y - displayOffsetY;
+
+        // Scale to final canvas coordinates
+        const canvasX = relativeX * scaleX;
+        const canvasY = relativeY * scaleY;
+
+        // Calculate final dimensions on canvas
+        const finalWidth = propWidth * scaleX;
+        const finalHeight = propHeight * scaleY;
+
+        console.log(`📍 NO FRAME - Prop "${prop.name}":`, {
+          domX: prop.position.x,
+          domY: prop.position.y,
+          relativeX,
+          relativeY,
+          canvasX: Math.round(canvasX),
+          canvasY: Math.round(canvasY),
+          finalWidth: Math.round(finalWidth),
+          finalHeight: Math.round(finalHeight),
+        });
+
+        // Draw the prop with rotation
+        ctx.save();
+        ctx.translate(canvasX + finalWidth / 2, canvasY + finalHeight / 2);
+        ctx.rotate(((prop.rotation || 0) * Math.PI) / 180);
+        ctx.drawImage(
+          img,
+          -finalWidth / 2,
+          -finalHeight / 2,
+          finalWidth,
+          finalHeight
+        );
+        ctx.restore();
       }
     });
   };
+
+  // const composeFinalImage = useCallback(() => {
+  //   return new Promise((resolve) => {
+  //     console.log("🚀 Starting composeFinalImage");
+  //     if (!capturedImage || !compositeCanvasRef.current) {
+  //       resolve();
+  //       return;
+  //     }
+
+  //     const FRAME_W = 2363;
+  //     const FRAME_H = 3544;
+  //     const { x: INNER_X, y: INNER_Y, w: INNER_W, h: INNER_H } = INNER_HOLE;
+
+  //     const canvas = compositeCanvasRef.current;
+  //     const ctx = canvas.getContext("2d");
+
+  //     canvas.width = FRAME_W;
+  //     canvas.height = FRAME_H;
+
+  //     // white background for final print
+  //     ctx.fillStyle = "white";
+  //     ctx.fillRect(0, 0, FRAME_W, FRAME_H);
+
+  //     const img = new Image();
+
+  //     img.onload = async () => {
+  //       const srcW = img.width;
+  //       const srcH = img.height;
+  //       const imgRatio = srcW / srcH;
+
+  //       let drawX, drawY, drawW, drawH;
+
+  //       // ================================
+  //       // CASE 1 — NO FRAME SELECTED
+  //       // ================================
+  //       if (!selectedFrame) {
+  //         const canvasRatio = FRAME_W / FRAME_H;
+
+  //         if (imgRatio > canvasRatio) {
+  //           drawH = FRAME_H;
+  //           drawW = drawH * imgRatio;
+  //           drawX = (FRAME_W - drawW) / 2;
+  //           drawY = 0;
+  //         } else {
+  //           drawW = FRAME_W;
+  //           drawH = drawW / imgRatio;
+  //           drawX = 0;
+  //           drawY = (FRAME_H - drawH) / 2;
+  //         }
+
+  //         ctx.drawImage(img, drawX, drawY, drawW, drawH);
+
+  //         // Draw props normally
+  //         await drawPropsAsync(ctx);
+
+  //         updateFinalImage();
+  //         resolve();
+  //         return;
+  //       }
+
+  //       // ================================
+  //       // CASE 2 — FRAME SELECTED
+  //       // ================================
+  //       const holeRatio = INNER_W / INNER_H;
+
+  //       // Fit inside hole
+  //       if (imgRatio > holeRatio) {
+  //         drawW = INNER_W;
+  //         drawH = drawW / imgRatio;
+  //         drawX = INNER_X;
+  //         drawY = INNER_Y + (INNER_H - drawH) / 2;
+  //       } else {
+  //         drawH = INNER_H;
+  //         drawW = drawH * imgRatio;
+  //         drawX = INNER_X + (INNER_W - drawW) / 2;
+  //         drawY = INNER_Y;
+  //       }
+
+  //       ctx.drawImage(img, drawX, drawY, drawW, drawH);
+
+  //       // Draw props ON TOP of the camera image but UNDER the frame
+  //       await drawPropsAsync(ctx);
+
+  //       // Load frame
+  //       const frameImg = new Image();
+  //       frameImg.crossOrigin = "anonymous";
+  //       frameImg.onload = async () => {
+  //         // Draw frame overlay (covers everything)
+  //         ctx.drawImage(frameImg, 0, 0, FRAME_W, FRAME_H);
+
+  //         updateFinalImage();
+  //         resolve();
+  //       };
+
+  //       frameImg.src = selectedFrame.url;
+  //     };
+
+  //     img.src = capturedImage;
+  //   });
+  // }, [capturedImage, selectedFrame, selectedProps, INNER_HOLE]);
+
+  // const drawPropsAsync = async (ctx) => {
+  //   if (!imageDimensions.width || !selectedProps.length) return;
+
+  //   const FRAME_W = 2363;
+  //   const FRAME_H = 3544;
+  //   const { x: INNER_X, y: INNER_Y, w: INNER_W, h: INNER_H } = INNER_HOLE;
+
+  //   // Get the actual displayed image dimensions from the DOM
+  //   const displayW = imageDimensions.width;
+  //   const displayH = imageDimensions.height;
+  //   const displayOffsetX = imageDimensions.offsetX || 0;
+  //   const displayOffsetY = imageDimensions.offsetY || 0;
+
+  //   console.log("🔄 Drawing props with dimensions:", {
+  //     displayW,
+  //     displayH,
+  //     displayOffsetX,
+  //     displayOffsetY,
+  //     selectedFrame: selectedFrame?.name || "none",
+  //     props: selectedProps.map((p) => ({
+  //       name: p.name,
+  //       domX: p.position.x,
+  //       domY: p.position.y,
+  //       size: p.size,
+  //     })),
+  //   });
+
+  //   // Load all prop images
+  //   const loadedProps = await Promise.all(
+  //     selectedProps.map((prop) => {
+  //       return new Promise((resolve) => {
+  //         const img = new Image();
+  //         img.crossOrigin = "anonymous";
+  //         img.onload = () => resolve({ prop, img });
+  //         img.onerror = () => resolve(null);
+  //         img.src = prop.url;
+  //       });
+  //     })
+  //   );
+
+  //   // Draw all loaded props
+  //   loadedProps.forEach((item) => {
+  //     if (!item) return;
+
+  //     const { prop, img } = item;
+
+  //     // Get prop dimensions
+  //     const propWidth = prop.size?.width || 100;
+  //     const propHeight = prop.size?.height || 100;
+
+  //     if (selectedFrame) {
+  //       // ============================================
+  //       // 🟠 CASE: WITH FRAME SELECTED
+  //       // ============================================
+
+  //       // When frame is selected, the camera image is scaled to fit inside the frame hole
+  //       // We need to calculate how the displayed image maps to the frame hole
+
+  //       // Get the captured image dimensions (2000x3000 from your capture)
+  //       const capturedImg = new Image();
+  //       capturedImg.src = capturedImage;
+  //       const capturedW = 2000; // From your capture code
+  //       const capturedH = 3000; // From your capture code
+  //       const capturedRatio = capturedW / capturedH;
+
+  //       // Calculate how the captured image fits in the frame hole
+  //       const holeRatio = INNER_W / INNER_H;
+
+  //       let imageInHoleX, imageInHoleY, imageInHoleW, imageInHoleH;
+
+  //       if (capturedRatio > holeRatio) {
+  //         // Image is wider than hole - fit to height
+  //         imageInHoleH = INNER_H;
+  //         imageInHoleW = imageInHoleH * capturedRatio;
+  //         imageInHoleX = INNER_X + (INNER_W - imageInHoleW) / 2;
+  //         imageInHoleY = INNER_Y;
+  //       } else {
+  //         // Image is taller than hole - fit to width
+  //         imageInHoleW = INNER_W;
+  //         imageInHoleH = imageInHoleW / capturedRatio;
+  //         imageInHoleX = INNER_X;
+  //         imageInHoleY = INNER_Y + (INNER_H - imageInHoleH) / 2;
+  //       }
+
+  //       // Calculate scale from displayed image to frame hole image
+  //       const scaleX = imageInHoleW / displayW;
+  //       const scaleY = imageInHoleH / displayH;
+
+  //       // Convert DOM coordinates to frame hole coordinates
+  //       const relativeX = prop.position.x - displayOffsetX;
+  //       const relativeY = prop.position.y - displayOffsetY;
+
+  //       const canvasX = relativeX * scaleX + imageInHoleX;
+  //       const canvasY = relativeY * scaleY + imageInHoleY;
+
+  //       // Calculate final dimensions
+  //       const finalWidth = propWidth * scaleX;
+  //       const finalHeight = propHeight * scaleY;
+
+  //       console.log(`📍 WITH FRAME - Prop "${prop.name}":`, {
+  //         domX: prop.position.x,
+  //         domY: prop.position.y,
+  //         relativeX,
+  //         relativeY,
+  //         imageInHoleX: Math.round(imageInHoleX),
+  //         imageInHoleY: Math.round(imageInHoleY),
+  //         imageInHoleW: Math.round(imageInHoleW),
+  //         imageInHoleH: Math.round(imageInHoleH),
+  //         canvasX: Math.round(canvasX),
+  //         canvasY: Math.round(canvasY),
+  //         finalWidth: Math.round(finalWidth),
+  //         finalHeight: Math.round(finalHeight),
+  //       });
+
+  //       // Draw the prop with rotation
+  //       ctx.save();
+  //       ctx.translate(canvasX + finalWidth / 2, canvasY + finalHeight / 2);
+  //       ctx.rotate(((prop.rotation || 0) * Math.PI) / 180);
+  //       ctx.drawImage(
+  //         img,
+  //         -finalWidth / 2,
+  //         -finalHeight / 2,
+  //         finalWidth,
+  //         finalHeight
+  //       );
+  //       ctx.restore();
+  //     } else {
+  //       // ============================================
+  //       // 🔵 CASE: NO FRAME SELECTED
+  //       // ============================================
+
+  //       // Calculate scale factors for full canvas
+  //       const scaleX = FRAME_W / displayW;
+  //       const scaleY = FRAME_H / displayH;
+
+  //       // Convert DOM coordinates to canvas coordinates
+  //       const relativeX = prop.position.x - displayOffsetX;
+  //       const relativeY = prop.position.y - displayOffsetY;
+
+  //       // Scale to final canvas coordinates
+  //       const canvasX = relativeX * scaleX;
+  //       const canvasY = relativeY * scaleY;
+
+  //       // Calculate final dimensions on canvas
+  //       const finalWidth = propWidth * scaleX;
+  //       const finalHeight = propHeight * scaleY;
+
+  //       console.log(`📍 NO FRAME - Prop "${prop.name}":`, {
+  //         domX: prop.position.x,
+  //         domY: prop.position.y,
+  //         relativeX,
+  //         relativeY,
+  //         canvasX: Math.round(canvasX),
+  //         canvasY: Math.round(canvasY),
+  //         finalWidth: Math.round(finalWidth),
+  //         finalHeight: Math.round(finalHeight),
+  //       });
+
+  //       // Draw the prop with rotation
+  //       ctx.save();
+  //       ctx.translate(canvasX + finalWidth / 2, canvasY + finalHeight / 2);
+  //       ctx.rotate(((prop.rotation || 0) * Math.PI) / 180);
+  //       ctx.drawImage(
+  //         img,
+  //         -finalWidth / 2,
+  //         -finalHeight / 2,
+  //         finalWidth,
+  //         finalHeight
+  //       );
+  //       ctx.restore();
+  //     }
+
+  //     // Debug visualization (optional)
+  //     // if (import.meta.env.VITE_APP_ENV === "dev") {
+  //     //   ctx.strokeStyle = "red";
+  //     //   ctx.lineWidth = 2;
+  //     //   ctx.strokeRect(canvasX, canvasY, finalWidth, finalHeight);
+
+  //     //   ctx.fillStyle = "red";
+  //     //   ctx.font = "20px Arial";
+  //     //   ctx.fillText(prop.name, canvasX, canvasY - 5);
+  //     // }
+  //   });
+  // };
+
+  // const drawPropsAsync = async (ctx) => {
+  //   if (!imageDimensions.width || !selectedProps.length) return;
+
+  //   const FRAME_W = 2363;
+  //   const FRAME_H = 3544;
+  //   const { x: INNER_X, y: INNER_Y, w: INNER_W, h: INNER_H } = INNER_HOLE;
+
+  //   // Get the actual displayed image dimensions from the DOM
+  //   const displayW = imageDimensions.width;
+  //   const displayH = imageDimensions.height;
+  //   const displayOffsetX = imageDimensions.offsetX || 0;
+  //   const displayOffsetY = imageDimensions.offsetY || 0;
+
+  //   console.log("🔄 Drawing props with dimensions:", {
+  //     displayW,
+  //     displayH,
+  //     displayOffsetX,
+  //     displayOffsetY,
+  //     props: selectedProps.map((p) => ({
+  //       name: p.name,
+  //       domX: p.position.x,
+  //       domY: p.position.y,
+  //       size: p.size,
+  //     })),
+  //   });
+
+  //   // Calculate scale factors
+  //   const scaleX = selectedFrame ? INNER_W / displayW : FRAME_W / displayW;
+  //   const scaleY = selectedFrame ? INNER_H / displayH : FRAME_H / displayH;
+
+  //   // Load all prop images
+  //   const loadedProps = await Promise.all(
+  //     selectedProps.map((prop) => {
+  //       return new Promise((resolve) => {
+  //         const img = new Image();
+  //         img.crossOrigin = "anonymous";
+  //         img.onload = () => resolve({ prop, img });
+  //         img.onerror = () => resolve(null);
+  //         img.src = prop.url;
+  //       });
+  //     })
+  //   );
+
+  //   // Draw all loaded props
+  //   loadedProps.forEach((item) => {
+  //     if (!item) return;
+
+  //     const { prop, img } = item;
+
+  //     // Get prop dimensions
+  //     const propWidth = prop.size?.width || 100;
+  //     const propHeight = prop.size?.height || 100;
+
+  //     // Calculate final dimensions on canvas
+  //     const finalWidth = propWidth * scaleX;
+  //     const finalHeight = propHeight * scaleY;
+
+  //     // Convert DOM coordinates to canvas coordinates
+  //     // Remove the container offset to get position relative to the actual image
+  //     const relativeX = prop.position.x - displayOffsetX;
+  //     const relativeY = prop.position.y - displayOffsetY;
+
+  //     // Scale to final canvas coordinates
+  //     const canvasX = relativeX * scaleX + (selectedFrame ? INNER_X : 0);
+  //     const canvasY = relativeY * scaleY + (selectedFrame ? INNER_Y : 0);
+
+  //     console.log(`📍 Prop "${prop.name}" positioning:`, {
+  //       domX: prop.position.x,
+  //       domY: prop.position.y,
+  //       relativeX,
+  //       relativeY,
+  //       canvasX: Math.round(canvasX),
+  //       canvasY: Math.round(canvasY),
+  //       finalWidth: Math.round(finalWidth),
+  //       finalHeight: Math.round(finalHeight),
+  //     });
+
+  //     // Draw the prop with rotation
+  //     ctx.save();
+  //     ctx.translate(canvasX + finalWidth / 2, canvasY + finalHeight / 2);
+  //     ctx.rotate(((prop.rotation || 0) * Math.PI) / 180);
+  //     ctx.drawImage(
+  //       img,
+  //       -finalWidth / 2,
+  //       -finalHeight / 2,
+  //       finalWidth,
+  //       finalHeight
+  //     );
+  //     ctx.restore();
+
+  //     // Debug visualization (optional)
+  //     if (import.meta.env.VITE_APP_ENV === "dev") {
+  //       ctx.strokeStyle = "red";
+  //       ctx.lineWidth = 2;
+  //       ctx.strokeRect(canvasX, canvasY, finalWidth, finalHeight);
+
+  //       ctx.fillStyle = "red";
+  //       ctx.font = "20px Arial";
+  //       ctx.fillText(prop.name, canvasX, canvasY - 5);
+  //     }
+  //   });
+  // };
 
   // const drawPropsAsync = async (ctx) => {
   //   if (!imageDimensions.width || !selectedProps.length) {
