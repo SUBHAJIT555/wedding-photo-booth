@@ -2,6 +2,7 @@ import { memo, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PropItem from "./PropItem";
 import CountdownOverlay from "./CountdownOverlay";
+import PropTypes from "prop-types";
 
 const VideoImageContainer = memo(function VideoImageContainer({
   capturedImage,
@@ -120,5 +121,20 @@ const VideoImageContainer = memo(function VideoImageContainer({
     </div>
   );
 });
+
+VideoImageContainer.propTypes = {
+  capturedImage: PropTypes.string,
+  finalImage: PropTypes.string,
+  videoRef: PropTypes.object,
+  imageRef: PropTypes.object,
+  imageContainerRef: PropTypes.object,
+  isRestarting: PropTypes.bool,
+  imageDimensions: PropTypes.object,
+  selectedProps: PropTypes.array,
+  countdown: PropTypes.number,
+  onUpdateProp: PropTypes.func,
+  onDeleteProp: PropTypes.func,
+  onImageLoad: PropTypes.func,
+};
 
 export default VideoImageContainer;

@@ -8,7 +8,6 @@ const PropItem = memo(function PropItem({
   onDelete,
   containerWidth,
   containerHeight,
-  imageDimensions,
 }) {
   const [position, setPosition] = useState(prop.position || { x: 100, y: 100 });
   const [size, setSize] = useState(prop.size || null);

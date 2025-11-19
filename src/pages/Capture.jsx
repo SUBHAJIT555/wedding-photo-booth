@@ -183,7 +183,7 @@ function Capture() {
           ctx.drawImage(
             img,
             -finalWidth / 2 - 80,
-            -finalHeight / 2 + 5,
+            -finalHeight / 2 - 1,
             finalWidth,
             finalHeight
           );
@@ -660,7 +660,7 @@ function Capture() {
   useEffect(() => {
     if (!capturedImage) return;
     composeFinalImage();
-  }, [capturedImage, selectedFrame, imageDimensions]);
+  }, [capturedImage, selectedFrame, imageDimensions, selectedProps]);
 
   useEffect(() => {
     if (countdown === null) return;
