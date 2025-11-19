@@ -471,64 +471,65 @@ function Capture() {
         // 🟠 CASE: WITH FRAME SELECTED
         // ============================================
 
-        // When frame is selected, we need to calculate how the displayed preview
-        // maps to the actual camera image area within the frame hole
-
-        // First, let's calculate how the camera image fits in the frame hole
+        // 1) How captured image fits in the frame hole (canvas space)
         const capturedImg = new Image();
         capturedImg.src = capturedImage;
 
-        // Use the actual captured image dimensions instead of hardcoded 2000x3000
         const capturedW = capturedImg.naturalWidth || 2000;
         const capturedH = capturedImg.naturalHeight || 3000;
         const capturedRatio = capturedW / capturedH;
 
-        // Calculate how the captured image fits in the frame hole
         const holeRatio = INNER_W / INNER_H;
 
         let imageInHoleX, imageInHoleY, imageInHoleW, imageInHoleH;
 
         if (capturedRatio > holeRatio) {
-          // Image is wider than hole - fit to height
           imageInHoleH = INNER_H;
           imageInHoleW = imageInHoleH * capturedRatio;
           imageInHoleX = INNER_X + (INNER_W - imageInHoleW) / 2;
           imageInHoleY = INNER_Y;
         } else {
-          // Image is taller than hole - fit to width
           imageInHoleW = INNER_W;
           imageInHoleH = imageInHoleW / capturedRatio;
           imageInHoleX = INNER_X;
           imageInHoleY = INNER_Y + (INNER_H - imageInHoleH) / 2;
         }
 
-        // The key fix: We need to map from the displayed preview coordinates
-        // to the actual image area within the frame hole
+        // 2) Compute the HOLE rectangle in DOM space
+        // displayW/displayH = frame size in DOM
+        const frameDomX = displayOffsetX;
+        const frameDomY = displayOffsetY;
+        const frameDomW = displayW;
+        const frameDomH = displayH;
 
-        // Calculate the scale from displayed preview to the actual image in frame hole
-        const scaleX = imageInHoleW / displayW;
-        const scaleY = imageInHoleH / displayH;
+        // map INNER_HOLE (frame coords) -> DOM coords
+        const holeDomX = frameDomX + (INNER_X / FRAME_W) * frameDomW;
+        const holeDomY = frameDomY + (INNER_Y / FRAME_H) * frameDomH;
+        const holeDomW = (INNER_W / FRAME_W) * frameDomW;
+        const holeDomH = (INNER_H / FRAME_H) * frameDomH;
 
-        // Convert DOM coordinates to frame hole coordinates
-        // Remove container offset to get position relative to the actual displayed image
-        const relativeX = prop.position.x - displayOffsetX;
-        const relativeY = prop.position.y - displayOffsetY;
+        // 3) Scale from DOM hole -> canvas hole
+        const scaleX = imageInHoleW / holeDomW;
+        const scaleY = imageInHoleH / holeDomH;
 
-        // Scale to final canvas coordinates within the frame hole
-        const canvasX = relativeX * scaleX + imageInHoleX;
-        const canvasY = relativeY * scaleY + imageInHoleY;
+        // position relative to hole in DOM
+        const relativeX = prop.position.x - holeDomX;
+        const relativeY = prop.position.y - holeDomY;
 
-        // Calculate final dimensions
+        // 4) Final canvas position
+        const canvasX = imageInHoleX + relativeX * scaleX;
+        const canvasY = imageInHoleY + relativeY * scaleY;
+
         const finalWidth = propWidth * scaleX;
         const finalHeight = propHeight * scaleY;
 
         console.log(`📍 WITH FRAME - Prop "${prop.name}":`, {
           domX: prop.position.x,
           domY: prop.position.y,
-          displayOffsetX,
-          displayOffsetY,
-          relativeX,
-          relativeY,
+          holeDomX: Math.round(holeDomX),
+          holeDomY: Math.round(holeDomY),
+          holeDomW: Math.round(holeDomW),
+          holeDomH: Math.round(holeDomH),
           imageInHoleX: Math.round(imageInHoleX),
           imageInHoleY: Math.round(imageInHoleY),
           imageInHoleW: Math.round(imageInHoleW),
@@ -541,7 +542,6 @@ function Capture() {
           finalHeight: Math.round(finalHeight),
         });
 
-        // Draw the prop with rotation
         ctx.save();
         ctx.translate(canvasX + finalWidth / 2, canvasY + finalHeight / 2);
         ctx.rotate(((prop.rotation || 0) * Math.PI) / 180);
