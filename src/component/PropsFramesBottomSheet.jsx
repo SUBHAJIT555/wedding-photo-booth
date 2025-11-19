@@ -1,10 +1,10 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import BottomSheet from "./BottomSheet";
 import { props as availableProps, frames } from "../constant/propsAndFrames";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import PropTypes from "prop-types";
 
-function PropsFramesBottomSheet({
+const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
   isOpen,
   capturedImage,
   activeTab,
@@ -182,20 +182,6 @@ function PropsFramesBottomSheet({
       </div>
     </BottomSheet>
   );
-}
-
-PropsFramesBottomSheet.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  capturedImage: PropTypes.string, // Can be null initially
-  activeTab: PropTypes.string.isRequired,
-  selectedFrame: PropTypes.object, // Can be null when no frame is selected
-  //   selectedProps: PropTypes.array.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onTabChange: PropTypes.func.isRequired,
-  onToggleProp: PropTypes.func.isRequired,
-  onApplyFrame: PropTypes.func.isRequired,
-  onRemoveFrame: PropTypes.func.isRequired,
-  isPropSelected: PropTypes.func.isRequired,
-};
+});
 
 export default PropsFramesBottomSheet;

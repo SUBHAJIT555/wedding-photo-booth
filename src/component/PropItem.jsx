@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-import { useState, useRef, useEffect } from "react";
+import { memo, useState, useRef, useEffect } from "react";
 import { FaTrashAlt, FaUndoAlt, FaExpandAlt } from "react-icons/fa";
 
-function PropItem({
+const PropItem = memo(function PropItem({
   prop,
   onUpdate,
   onDelete,
@@ -16,10 +16,6 @@ function PropItem({
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
-
-  console.log("prop", prop);
-
-  console.log("position", position);
 
   const dragStart = useRef({ x: 0, y: 0 });
   const resizeStart = useRef({ x: 0, y: 0, width: 0, height: 0 });
@@ -224,23 +220,6 @@ function PropItem({
       }}
       onMouseDown={(e) => handleMouseDown(e, "move")}
     >
-      {/* DEBUG overlay */}
-      <div
-        style={{
-          position: "absolute",
-          top: -40,
-          left: 0,
-          background: "rgba(0,0,0,0.7)",
-          color: "white",
-          fontSize: 10,
-          padding: "2px 4px",
-        }}
-      >
-        posX:{Math.round(position.x)} posY:{Math.round(position.y)}
-        offX:{Math.round(imageDimensions.offsetX)}
-        offY:{Math.round(imageDimensions.offsetY)}
-      </div>
-
       {/* Inner wrapper (rotatable) */}
       <div
         className="relative"
@@ -295,6 +274,6 @@ function PropItem({
       </div>
     </div>
   );
-}
+});
 
 export default PropItem;

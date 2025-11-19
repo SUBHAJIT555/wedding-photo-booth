@@ -1,8 +1,9 @@
+import { memo, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PropItem from "./PropItem";
 import CountdownOverlay from "./CountdownOverlay";
 
-function VideoImageContainer({
+const VideoImageContainer = memo(function VideoImageContainer({
   capturedImage,
   finalImage,
   videoRef,
@@ -16,6 +17,23 @@ function VideoImageContainer({
   onDeleteProp,
   onImageLoad,
 }) {
+  // Memoize props list to prevent unnecessary re-renders
+  const propsList = useMemo(
+    () =>
+      selectedProps.map((prop) => (
+        <div key={prop.id} style={{ pointerEvents: "auto" }}>
+          <PropItem
+            prop={prop}
+            imageDimensions={imageDimensions}
+            onUpdate={onUpdateProp}
+            onDelete={onDeleteProp}
+            containerWidth={imageDimensions.width}
+            containerHeight={imageDimensions.height}
+          />
+        </div>
+      )),
+    [selectedProps, imageDimensions, onUpdateProp, onDeleteProp]
+  );
   return (
     <div
       ref={imageContainerRef}
@@ -87,23 +105,12 @@ function VideoImageContainer({
               onLoad={onImageLoad}
             />
             {/* Props overlay - positioned absolutely over the image */}
-            {imageDimensions.width > 0 && (
+            {imageDimensions.width > 0 && selectedProps.length > 0 && (
               <div
                 className="absolute inset-0"
                 style={{ borderRadius: "1rem", pointerEvents: "none" }}
               >
-                {selectedProps.map((prop) => (
-                  <div key={prop.id} style={{ pointerEvents: "auto" }}>
-                    <PropItem
-                      prop={prop}
-                      imageDimensions={imageDimensions}
-                      onUpdate={onUpdateProp}
-                      onDelete={onDeleteProp}
-                      containerWidth={imageDimensions.width}
-                      containerHeight={imageDimensions.height}
-                    />
-                  </div>
-                ))}
+                {propsList}
               </div>
             )}
           </motion.div>
@@ -112,7 +119,6 @@ function VideoImageContainer({
       <CountdownOverlay countdown={countdown} />
     </div>
   );
-}
+});
 
 export default VideoImageContainer;
-

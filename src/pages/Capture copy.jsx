@@ -166,17 +166,9 @@ function Capture() {
   };
 
   const submitImage = async () => {
-    console.log("Submitting image...");
     setLoading(true);
 
     try {
-      // ✅ Compose final image with frame + props
-      // await new Promise((resolve) => {
-      //   composeFinalImage();
-      //   // Wait for image composition to complete
-      //   setTimeout(resolve, 500);
-      // });
-
       await composeFinalImage();
 
       const imageToSave = compositeCanvasRef.current.toDataURL(
@@ -191,15 +183,15 @@ function Capture() {
       }
 
       // Upload image to server
-      console.log("Uploading image to server...");
+      // console.log("Uploading image to server...");
       const uploadResult = await uploadImage(imageToSave);
-      console.log("Image uploaded:", uploadResult);
+      // console.log("Image uploaded:", uploadResult);
 
       stopVideo();
 
       // Transform localhost URLs to include /photo-booth/ path
       const transformedResult = transformUploadResult(uploadResult);
-      console.log("Transformed URLs:", transformedResult);
+      // console.log("Transformed URLs:", transformedResult);
 
       // Save transformed URLs to localStorage
       saveData("capturedImageUrl", transformedResult.url);
@@ -225,11 +217,11 @@ function Capture() {
   };
 
   const updateFinalImage = useCallback(() => {
-    console.log(
-      "in update Final Image function in update Final Image function"
-    );
+    // console.log(
+    //   "in update Final Image function in update Final Image function"
+    // );
     if (!compositeCanvasRef.current) return;
-    console.log("in update Final Image function");
+    // console.log("in update Final Image function");
     const image = compositeCanvasRef.current.toDataURL("image/png");
     setFinalImage(image);
   }, []);
@@ -304,7 +296,7 @@ function Capture() {
 
   const composeFinalImage = useCallback(() => {
     return new Promise((resolve) => {
-      console.log("🚀 Starting composeFinalImage");
+      // console.log("🚀 Starting composeFinalImage");
       if (!capturedImage || !compositeCanvasRef.current) {
         resolve();
         return;
@@ -331,11 +323,11 @@ function Capture() {
         const srcH = img.naturalHeight; // Use naturalHeight instead of height
         const imgRatio = srcW / srcH;
 
-        console.log("📐 Captured image dimensions:", {
-          width: srcW,
-          height: srcH,
-          ratio: imgRatio.toFixed(4),
-        });
+        // console.log("📐 Captured image dimensions:", {
+        // width: srcW,
+        // height: srcH,
+        // ratio: imgRatio.toFixed(4),
+        // });
 
         let drawX, drawY, drawW, drawH;
 
@@ -366,7 +358,7 @@ function Capture() {
           resolve();
           return;
         }
-        console.log("🟠 CASE 2 — FRAME SELECTED");
+        // console.log("🟠 CASE 2 — FRAME SELECTED");
         // ================================
         // CASE 2 — FRAME SELECTED
         // ================================
@@ -385,13 +377,13 @@ function Capture() {
           drawY = INNER_Y;
         }
 
-        console.log("🖼️ Image in frame hole:", {
-          drawX: Math.round(drawX),
-          drawY: Math.round(drawY),
-          drawW: Math.round(drawW),
-          drawH: Math.round(drawH),
-          holeRatio: holeRatio.toFixed(4),
-        });
+        // console.log("🖼️ Image in frame hole:", {
+        //   drawX: Math.round(drawX),
+        //   drawY: Math.round(drawY),
+        //   drawW: Math.round(drawW),
+        //   drawH: Math.round(drawH),
+        //   holeRatio: holeRatio.toFixed(4),
+        // });
 
         ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
@@ -429,19 +421,19 @@ function Capture() {
     const displayOffsetX = imageDimensions.offsetX || 0;
     const displayOffsetY = imageDimensions.offsetY || 0;
 
-    console.log("🔄 Drawing props with dimensions:", {
-      displayW,
-      displayH,
-      displayOffsetX,
-      displayOffsetY,
-      selectedFrame: selectedFrame?.name || "none",
-      props: selectedProps.map((p) => ({
-        name: p.name,
-        domX: p.position.x,
-        domY: p.position.y,
-        size: p.size,
-      })),
-    });
+    // console.log("🔄 Drawing props with dimensions:", {
+    //   displayW,
+    //   displayH,
+    //   displayOffsetX,
+    //   displayOffsetY,
+    //   selectedFrame: selectedFrame?.name || "none",
+    //   props: selectedProps.map((p) => ({
+    //     name: p.name,
+    //     domX: p.position.x,
+    //     domY: p.position.y,
+    //     size: p.size,
+    //   })),
+    // });
 
     // Load all prop images
     const loadedProps = await Promise.all(
@@ -523,24 +515,24 @@ function Capture() {
         const finalWidth = propWidth * scaleX;
         const finalHeight = propHeight * scaleY;
 
-        console.log(`📍 WITH FRAME - Prop "${prop.name}":`, {
-          domX: prop.position.x,
-          domY: prop.position.y,
-          holeDomX: Math.round(holeDomX),
-          holeDomY: Math.round(holeDomY),
-          holeDomW: Math.round(holeDomW),
-          holeDomH: Math.round(holeDomH),
-          imageInHoleX: Math.round(imageInHoleX),
-          imageInHoleY: Math.round(imageInHoleY),
-          imageInHoleW: Math.round(imageInHoleW),
-          imageInHoleH: Math.round(imageInHoleH),
-          scaleX: scaleX.toFixed(4),
-          scaleY: scaleY.toFixed(4),
-          canvasX: Math.round(canvasX),
-          canvasY: Math.round(canvasY),
-          finalWidth: Math.round(finalWidth),
-          finalHeight: Math.round(finalHeight),
-        });
+        // console.log(`📍 WITH FRAME - Prop "${prop.name}":`, {
+        //   domX: prop.position.x,
+        //   domY: prop.position.y,
+        //   holeDomX: Math.round(holeDomX),
+        //   holeDomY: Math.round(holeDomY),
+        //   holeDomW: Math.round(holeDomW),
+        //   holeDomH: Math.round(holeDomH),
+        //   imageInHoleX: Math.round(imageInHoleX),
+        //   imageInHoleY: Math.round(imageInHoleY),
+        //   imageInHoleW: Math.round(imageInHoleW),
+        //   imageInHoleH: Math.round(imageInHoleH),
+        //   scaleX: scaleX.toFixed(4),
+        //   scaleY: scaleY.toFixed(4),
+        //   canvasX: Math.round(canvasX),
+        //   canvasY: Math.round(canvasY),
+        //   finalWidth: Math.round(finalWidth),
+        //   finalHeight: Math.round(finalHeight),
+        // });
 
         ctx.save();
         ctx.translate(canvasX + finalWidth / 2, canvasY + finalHeight / 2);
@@ -574,16 +566,16 @@ function Capture() {
         const finalWidth = propWidth * scaleX;
         const finalHeight = propHeight * scaleY;
 
-        console.log(`📍 NO FRAME - Prop "${prop.name}":`, {
-          domX: prop.position.x,
-          domY: prop.position.y,
-          relativeX,
-          relativeY,
-          canvasX: Math.round(canvasX),
-          canvasY: Math.round(canvasY),
-          finalWidth: Math.round(finalWidth),
-          finalHeight: Math.round(finalHeight),
-        });
+        // console.log(`📍 NO FRAME - Prop "${prop.name}":`, {
+        //   domX: prop.position.x,
+        //   domY: prop.position.y,
+        //   relativeX,
+        //   relativeY,
+        //   canvasX: Math.round(canvasX),
+        //   canvasY: Math.round(canvasY),
+        //   finalWidth: Math.round(finalWidth),
+        //   finalHeight: Math.round(finalHeight),
+        // });
 
         // Draw the prop with rotation
         ctx.save();
@@ -703,15 +695,15 @@ function Capture() {
   // Add this useEffect to debug prop positioning
   useEffect(() => {
     if (selectedProps.length > 0) {
-      console.log(
-        "🎯 Current Props State:",
-        selectedProps.map((p) => ({
-          name: p.name,
-          position: p.position,
-          size: p.size,
-          rotation: p.rotation,
-        }))
-      );
+      // console.log(
+      // "🎯 Current Props State:",
+      // selectedProps.map((p) => ({
+      //   name: p.name,
+      //   position: p.position,
+      //   size: p.size,
+      //   rotation: p.rotation,
+      // }))
+      // );
     }
   }, [selectedProps]);
 
@@ -761,14 +753,14 @@ function Capture() {
         containerHeight: containerH,
       });
 
-      console.log("🖼️ Image dimensions updated:", {
-        renderW: Math.round(renderW),
-        renderH: Math.round(renderH),
-        offsetX: Math.round(offsetX),
-        offsetY: Math.round(offsetY),
-        containerW: Math.round(containerW),
-        containerH: Math.round(containerH),
-      });
+      // console.log("🖼️ Image dimensions updated:", {
+      // renderW: Math.round(renderW),
+      // renderH: Math.round(renderH),
+      // offsetX: Math.round(offsetX),
+      // offsetY: Math.round(offsetY),
+      // containerW: Math.round(containerW),
+      // containerH: Math.round(containerH),
+      // });
     }
   };
 

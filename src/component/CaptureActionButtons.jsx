@@ -1,7 +1,8 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { IoRefresh, IoImages, IoCheckmarkCircle } from "react-icons/io5";
 
-function CaptureActionButtons({
+const CaptureActionButtons = memo(function CaptureActionButtons({
   capturedImage,
   loading,
   isRestarting,
@@ -233,7 +234,7 @@ function CaptureActionButtons({
       </motion.button>
     </motion.div>
   );
-}
+});
 
 export default CaptureActionButtons;
 

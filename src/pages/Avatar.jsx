@@ -102,15 +102,15 @@ function Avatar() {
           avatar_id: selectedAvatarId,
         };
         // Start timer
-        const start = performance.now();
+        // const start = performance.now();
         const response = await publicAxios.post("swap.php", formData);
         // End timer
-        const end = performance.now();
-        const elapsed = ((end - start) / 1000).toFixed(2); // seconds
-        console.log(`Swap API took ${elapsed} seconds`);
+        // const end = performance.now();
+        // const elapsed = ((end - start) / 1000).toFixed(2); // seconds
+        // console.log(`Swap API took ${elapsed} seconds`);
 
         const data = response.data;
-        console.log(data);
+        // console.log(data);
 
         if (data?.data?.result_url) {
           navigate(`/preview?resultUrl=${data.data.result_url}`, {

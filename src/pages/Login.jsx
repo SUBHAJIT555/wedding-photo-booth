@@ -29,7 +29,7 @@ function Login() {
         const baseUrl = apiUrl.replace(/\/+$/, "");
         authUrl = `${baseUrl}/auth.php`;
       } else {
-        console.log("No API URL found, using relative path");
+        // console.log("No API URL found, using relative path");
         authUrl = "/auth.php";
       }
 
