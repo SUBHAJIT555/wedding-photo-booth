@@ -140,40 +140,105 @@ function Preview() {
   const printImageAsPDF = async () => {
     try {
       setLoading(true);
-      // Fetch the image as a Blob
-      const response = await fetch(finalUrl);
-      const imageBlob = await response.blob();
-      const imageArrayBuffer = await imageBlob.arrayBuffer();
 
-      // Create a new PDF document
+      let imageArrayBuffer;
+      let isPng = false;
+
+      // Handle base64 data URLs
+      if (finalUrl.startsWith("data:image")) {
+        // Extract base64 data from data URL
+        const base64Data = finalUrl.split(",")[1];
+        const binaryString = atob(base64Data);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        imageArrayBuffer = bytes.buffer;
+
+        // Detect PNG from data URL
+        isPng = finalUrl.startsWith("data:image/png");
+      } else {
+        // Fetch image from URL
+        const res = await fetch(finalUrl, {
+          mode: "cors",
+          credentials: "omit",
+        });
+
+        if (!res.ok) {
+          throw new Error(
+            `Failed to fetch image: ${res.status} ${res.statusText}`
+          );
+        }
+
+        const contentType = res.headers.get("content-type") ?? "";
+        imageArrayBuffer = await res.arrayBuffer();
+
+        // Detect PNG from content type or URL
+        isPng =
+          contentType.includes("png") ||
+          finalUrl.toLowerCase().endsWith(".png") ||
+          finalUrl.toLowerCase().includes(".png");
+      }
+
+      // Check PNG signature (first 8 bytes: 89 50 4E 47 0D 0A 1A 0A)
+      if (!isPng && imageArrayBuffer.byteLength >= 8) {
+        const signature = new Uint8Array(imageArrayBuffer, 0, 8);
+        const pngSignature = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+        isPng = signature.every((byte, index) => byte === pngSignature[index]);
+      }
+
+      const imageBytes = new Uint8Array(imageArrayBuffer);
+
+      // Create PDF document
       const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([288, 432]); // 4x6 inches in points (1 inch = 72 points)
+      const page = pdfDoc.addPage([288, 432]); // 4x6 inches in points
 
-      // Embed the image into the PDF
-      const image = await pdfDoc.embedJpg(imageArrayBuffer);
-      const { width, height } = image.scale(0.25);
+      // Embed image based on type
+      let embeddedImage;
+      if (isPng) {
+        embeddedImage = await pdfDoc.embedPng(imageBytes);
+      } else {
+        // Assume JPEG/JPG
+        embeddedImage = await pdfDoc.embedJpg(imageBytes);
+      }
 
-      // Calculate position to center the image
-      const x = (page.getWidth() - width) / 2;
-      const y = (page.getHeight() - height) / 2;
+      // Get image dimensions
+      const { width: imgW, height: imgH } = embeddedImage.size();
+
+      // Calculate scaling to fit page
+      const pageWidth = page.getWidth();
+      const pageHeight = page.getHeight();
+      const scale = Math.min(pageWidth / imgW, pageHeight / imgH);
+
+      const scaledW = imgW * scale;
+      const scaledH = imgH * scale;
+
+      // Center image on page
+      const x = (pageWidth - scaledW) / 2;
+      const y = (pageHeight - scaledH) / 2;
 
       // Draw image on PDF
-      page.drawImage(image, { x, y, width, height });
+      page.drawImage(embeddedImage, {
+        x,
+        y,
+        width: scaledW,
+        height: scaledH,
+      });
 
-      // Convert PDF to Uint8Array
+      // Convert PDF to base64
       const pdfBytes = await pdfDoc.save();
-      const pdfBase64 = uint8ArrayToBase64(new Uint8Array(pdfBytes)); // Proper encoding
+      const pdfBase64 = uint8ArrayToBase64(pdfBytes);
 
-      // console.log(pdfBase64);
+      // Send to PrintNode
+      const apiKey = import.meta.env.VITE_PRINTNODE_API_KEY;
+      const printerId = import.meta.env.VITE_PRINTNODE_PRINTER_ID;
 
-      //  download(pdfBytes, generateUniqueFilename("pdf"));
-
-      // Send the PDF to PrintNode
-      const apiKey = import.meta.env.VITE_PRINTNODE_API_KEY; // Replace with actual API key
-      const printerId = import.meta.env.VITE_PRINTNODE_PRINTER_ID; // Replace with actual printer ID
+      if (!apiKey || !printerId) {
+        throw new Error("PrintNode API key or printer ID not configured");
+      }
 
       const printJob = {
-        printerId: printerId,
+        printerId,
         title: "PDF Print Job",
         contentType: "pdf_base64",
         content: pdfBase64,
@@ -192,15 +257,24 @@ function Preview() {
         body: JSON.stringify(printJob),
       });
 
-      if (responsePrint.ok) {
-        console.log("Print job sent successfully!");
+      if (!responsePrint.ok) {
+        const errorData = await responsePrint.json();
+        console.error("Print failed:", errorData);
+        throw new Error(
+          `Print failed: ${errorData.message || "Unknown error"}`
+        );
       } else {
-        console.error("Print failed:", await responsePrint.json());
+        console.log("Print job sent successfully!");
       }
     } catch (error) {
       console.error("Error processing print job:", error);
+      alert(
+        `Failed to print: ${
+          error.message || "Unknown error"
+        }. Please try again.`
+      );
     } finally {
-      // This for loading 40sec
+      // Loading timeout
       setTimeout(() => {
         setLoading(false);
       }, 35000);
