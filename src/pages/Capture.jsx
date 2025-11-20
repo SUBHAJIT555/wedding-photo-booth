@@ -182,7 +182,7 @@ function Capture() {
           ctx.rotate(((prop.rotation || 0) * Math.PI) / 180);
           ctx.drawImage(
             img,
-            -finalWidth / 2 - 80,
+            -finalWidth / 2,
             -finalHeight / 2 - 1,
             finalWidth,
             finalHeight
