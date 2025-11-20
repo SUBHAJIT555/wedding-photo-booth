@@ -47,7 +47,7 @@ const PropItem = memo(function PropItem({
         src={prop.thumbnail}
         alt={prop.name}
         loading="eager"
-        className="object-contain mb-2 w-full h-20 md:h-24"
+        className="object-contain mb-2 w-full h-20 md:h-24 bg-white"
         decoding="async"
       />
       <span
