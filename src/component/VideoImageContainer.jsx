@@ -3,6 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import PropItem from "./PropItem";
 import CountdownOverlay from "./CountdownOverlay";
 import PropTypes from "prop-types";
+import { INNER_HOLE } from "../pages/Capture";
+
+const FRAME_W = 2363;
+const FRAME_H = 3544;
 
 const VideoImageContainer = memo(function VideoImageContainer({
   capturedImage,
@@ -13,12 +17,12 @@ const VideoImageContainer = memo(function VideoImageContainer({
   isRestarting,
   imageDimensions,
   selectedProps,
+  selectedFrame,
   countdown,
   onUpdateProp,
   onDeleteProp,
   onImageLoad,
 }) {
-  // Memoize props list to prevent unnecessary re-renders
   const propsList = useMemo(
     () =>
       selectedProps.map((prop) => (
@@ -35,10 +39,11 @@ const VideoImageContainer = memo(function VideoImageContainer({
       )),
     [selectedProps, imageDimensions, onUpdateProp, onDeleteProp]
   );
+
   return (
     <div
       ref={imageContainerRef}
-      className="flex relative justify-center items-center w-full"
+      className="flex relative justify-center items-center w-full rounded-2xl bg-white"
       style={{
         maxWidth: "70vw",
         aspectRatio: "2/3",
@@ -55,26 +60,17 @@ const VideoImageContainer = memo(function VideoImageContainer({
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
             className="w-full h-full"
-            style={{
-              aspectRatio: "2/3",
-              maxHeight: "85vh",
-              minHeight: "60vh",
-            }}
+            style={{ aspectRatio: "2/3" }}
           >
             <video
               ref={videoRef}
-              className="object-cover w-full h-full bg-black rounded-2xl shadow-2xl"
               autoPlay
               muted
               playsInline
+              className="object-cover w-full h-full bg-black rounded-2xl shadow-2xl"
               style={{
                 opacity: isRestarting ? 0.5 : 1,
                 transition: "opacity 0.3s ease",
-                display: "block",
-                aspectRatio: "2/3",
-                objectFit: "cover",
-                maxHeight: "85vh",
-                minHeight: "60vh",
               }}
             />
           </motion.div>
@@ -85,30 +81,80 @@ const VideoImageContainer = memo(function VideoImageContainer({
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
             className="relative w-full h-full"
-            style={{
-              aspectRatio: "2/3",
-              maxHeight: "85vh",
-              minHeight: "60vh",
-            }}
+            style={{ aspectRatio: "2/3" }}
           >
+            {/* FIXED STYLE — NO FUNCTION */}
             <img
               ref={imageRef}
               src={finalImage || capturedImage}
               alt="Captured"
-              className="object-contain w-full h-full rounded-2xl border-4 border-white shadow-2xl pointer-events-none"
-              style={{
-                display: "block",
-                aspectRatio: "2/3",
-                objectFit: "contain",
-                maxHeight: "85vh",
-                minHeight: "60vh",
-              }}
               onLoad={onImageLoad}
+              draggable={false}
+              className="absolute top-0 left-0 pointer-events-none rounded-2xl"
+              style={
+                !selectedFrame || !imageDimensions.width
+                  ? {
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }
+                  : (() => {
+                      const { x: HX, y: HY, w: HW, h: HH } = INNER_HOLE;
+
+                      const camRatio = 2000 / 3000;
+                      const holeRatio = HW / HH;
+
+                      let previewW, previewH;
+
+                      if (camRatio > holeRatio) {
+                        previewW = (HW / FRAME_W) * imageDimensions.width;
+                        previewH = previewW / camRatio;
+                      } else {
+                        previewH = (HH / FRAME_H) * imageDimensions.height;
+                        previewW = previewH * camRatio;
+                      }
+
+                      const holeDomX =
+                        imageDimensions.offsetX +
+                        (HX / FRAME_W) * imageDimensions.width;
+
+                      const holeDomY =
+                        imageDimensions.offsetY +
+                        (HY / FRAME_H) * imageDimensions.height;
+
+                      return {
+                        position: "absolute",
+                        width: `${previewW}px`,
+                        height: `${previewH}px`,
+                        left: `${
+                          holeDomX +
+                          ((HW / FRAME_W) * imageDimensions.width - previewW) /
+                            2
+                        }px`,
+                        top: `${
+                          holeDomY +
+                          ((HH / FRAME_H) * imageDimensions.height - previewH) /
+                            2
+                        }px`,
+                        objectFit: "cover",
+                        borderRadius: "12px",
+                      };
+                    })()
+              }
             />
-            {/* Props overlay - positioned absolutely over the image */}
+
+            {selectedFrame && (
+              <img
+                src={selectedFrame.urlMedium}
+                className="absolute inset-0 w-full h-full object-contain pointer-events-none z-30"
+                style={{ borderRadius: "1rem" }}
+                draggable={false}
+              />
+            )}
+
             {imageDimensions.width > 0 && selectedProps.length > 0 && (
               <div
-                className="absolute inset-0"
+                className="absolute inset-0 z-40"
                 style={{ borderRadius: "1rem", pointerEvents: "none" }}
               >
                 {propsList}
@@ -117,6 +163,7 @@ const VideoImageContainer = memo(function VideoImageContainer({
           </motion.div>
         )}
       </AnimatePresence>
+
       <CountdownOverlay countdown={countdown} />
     </div>
   );
@@ -131,6 +178,7 @@ VideoImageContainer.propTypes = {
   isRestarting: PropTypes.bool,
   imageDimensions: PropTypes.object,
   selectedProps: PropTypes.array,
+  selectedFrame: PropTypes.object,
   countdown: PropTypes.number,
   onUpdateProp: PropTypes.func,
   onDeleteProp: PropTypes.func,

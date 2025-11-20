@@ -44,7 +44,7 @@ const PropItem = memo(function PropItem({
         </motion.div>
       )}
       <img
-        src={prop.thumbnail}
+        src={prop.urlSmall}
         alt={prop.name}
         loading="eager"
         className="object-contain mb-2 w-full h-20 md:h-24 bg-white"
@@ -108,7 +108,7 @@ const FrameItem = memo(function FrameItem({
         </motion.div>
       )}
       <img
-        src={frame.thumbnail}
+        src={frame.urlSmall}
         alt={frame.name}
         loading="eager"
         className="object-contain mb-2 w-full h-24 rounded-lg md:h-32"
@@ -167,9 +167,9 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
   useEffect(() => {
     if (isOpen && capturedImage && !imagesPreloaded) {
       // Preload all prop thumbnails
-      const propThumbnails = availableProps.map((prop) => prop.thumbnail);
+      const propThumbnails = availableProps.map((prop) => prop.urlSmall);
       // Preload all frame thumbnails
-      const frameThumbnails = frames.map((frame) => frame.thumbnail);
+      const frameThumbnails = frames.map((frame) => frame.urlSmall);
 
       // Preload images in batches to avoid blocking
       const allThumbnails = [...propThumbnails, ...frameThumbnails];
@@ -244,24 +244,6 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
       {/* Tabs */}
       <div className="flex gap-2 p-1 mb-4 bg-gray-100 rounded-2xl">
         <motion.button
-          onClick={() => onTabChange("props")}
-          whileTap={{ scale: 0.98 }}
-          className={`flex-1 py-3 px-4 text-center font-krylon text-base md:text-lg rounded-xl transition-all duration-300 ${
-            activeTab === "props"
-              ? "bg-gradient-to-r from-[#e91e63] to-[#f06292] text-white shadow-lg"
-              : "bg-gray-200 text-gray-600 hover:bg-gray-300"
-          }`}
-          style={
-            activeTab === "props"
-              ? {
-                  boxShadow: "0 4px 15px rgba(233, 30, 99, 0.3)",
-                }
-              : {}
-          }
-        >
-          Props
-        </motion.button>
-        <motion.button
           onClick={() => onTabChange("frames")}
           whileTap={{ scale: 0.98 }}
           className={`flex-1 py-3 px-4 text-center font-krylon text-base md:text-lg rounded-xl transition-all duration-300 ${
@@ -279,19 +261,28 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
         >
           Frames
         </motion.button>
+        <motion.button
+          onClick={() => onTabChange("props")}
+          whileTap={{ scale: 0.98 }}
+          className={`flex-1 py-3 px-4 text-center font-krylon text-base md:text-lg rounded-xl transition-all duration-300 ${
+            activeTab === "props"
+              ? "bg-gradient-to-r from-[#e91e63] to-[#f06292] text-white shadow-lg"
+              : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+          }`}
+          style={
+            activeTab === "props"
+              ? {
+                  boxShadow: "0 4px 15px rgba(233, 30, 99, 0.3)",
+                }
+              : {}
+          }
+        >
+          Props
+        </motion.button>
       </div>
 
       {/* Content - Keep both tabs mounted but hidden for instant switching */}
       <div className="overflow-y-auto flex-1 px-4 -mx-4">
-        {/* Props Tab */}
-        <div
-          className={`overflow-y-auto flex-1 px-4 -mx-4 h-[350px] ${
-            activeTab === "props" ? "block" : "hidden"
-          }`}
-        >
-          <div className="grid grid-cols-3 gap-5 p-4">{propsList}</div>
-        </div>
-
         {/* Frames Tab */}
         <div
           className={`grid grid-cols-3 gap-5 p-4 ${
@@ -299,6 +290,14 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
           }`}
         >
           {framesList}
+        </div>
+        {/* Props Tab */}
+        <div
+          className={`overflow-y-auto flex-1 px-4 -mx-4 h-[350px] ${
+            activeTab === "props" ? "block" : "hidden"
+          }`}
+        >
+          <div className="grid grid-cols-3 gap-5 p-4">{propsList}</div>
         </div>
       </div>
     </BottomSheet>

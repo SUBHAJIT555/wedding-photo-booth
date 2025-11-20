@@ -230,7 +230,7 @@ const PropItem = memo(function PropItem({
         }}
       >
         <img
-          src={prop.url}
+          src={prop.urlMedium}
           alt={prop.name}
           onLoad={handleImageLoad}
           style={{

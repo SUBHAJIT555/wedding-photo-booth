@@ -1,377 +1,455 @@
 // Props and frames data
 // import images
-import Prop01 from "../assets/images/Props/Props-1.png";
-import Prop01Thumb from "../assets/images/Props-thumb/Props-1.webp";
+import Prop01 from "../assets/images/Props/Large_3468X/Props-1.png";
+import Prop01Medium from "../assets/images/Props/Medium_300X/Props-1.webp";
+import Prop01Small from "../assets/images/Props/Small_100X/Props-1.webp";
 
-import Prop02 from "../assets/images/Props/Props-2.png";
-import Prop02Thumb from "../assets/images/Props-thumb/Props-2.webp";
+import Prop02 from "../assets/images/Props/Large_3468X/Props-2.png";
+import Prop02Medium from "../assets/images/Props/Medium_300X/Props-2.webp";
+import Prop02Small from "../assets/images/Props/Small_100X/Props-2.webp";
 
-import Prop03 from "../assets/images/Props/Props-3.png";
-import Prop03Thumb from "../assets/images/Props-thumb/Props-3.webp";
+import Prop03 from "../assets/images/Props/Large_3468X/Props-3.png";
+import Prop03Medium from "../assets/images/Props/Medium_300X/Props-3.webp";
+import Prop03Small from "../assets/images/Props/Small_100X/Props-3.webp";
 
-import Prop04 from "../assets/images/Props/Props-4.png";
-import Prop04Thumb from "../assets/images/Props-thumb/Props-4.webp";
+import Prop04 from "../assets/images/Props/Large_3468X/Props-4.png";
+import Prop04Medium from "../assets/images/Props/Medium_300X/Props-4.webp";
+import Prop04Small from "../assets/images/Props/Small_100X/Props-4.webp";
 
-import Prop05 from "../assets/images/Props/Props-5.png";
-import Prop05Thumb from "../assets/images/Props-thumb/Props-5.webp";
+import Prop05 from "../assets/images/Props/Large_3468X/Props-5.png";
+import Prop05Medium from "../assets/images/Props/Medium_300X/Props-5.webp";
+import Prop05Small from "../assets/images/Props/Small_100X/Props-5.webp";
 
-import Prop06 from "../assets/images/Props/Props-6.png";
-import Prop06Thumb from "../assets/images/Props-thumb/Props-6.webp";
+import Prop06 from "../assets/images/Props/Large_3468X/Props-6.png";
+import Prop06Medium from "../assets/images/Props/Medium_300X/Props-6.webp";
+import Prop06Small from "../assets/images/Props/Small_100X/Props-6.webp";
 
-import Prop07 from "../assets/images/Props/Props-7.png";
-import Prop07Thumb from "../assets/images/Props-thumb/Props-7.webp";
+import Prop07 from "../assets/images/Props/Large_3468X/Props-7.png";
+import Prop07Medium from "../assets/images/Props/Medium_300X/Props-7.webp";
+import Prop07Small from "../assets/images/Props/Small_100X/Props-7.webp";
 
-import Prop08 from "../assets/images/Props/Props-8.png";
-import Prop08Thumb from "../assets/images/Props-thumb/Props-8.webp";
+import Prop08 from "../assets/images/Props/Large_3468X/Props-8.png";
+import Prop08Medium from "../assets/images/Props/Medium_300X/Props-8.webp";
+import Prop08Small from "../assets/images/Props/Small_100X/Props-8.webp";
 
-import Prop09 from "../assets/images/Props/Props-9.png";
-import Prop09Thumb from "../assets/images/Props-thumb/Props-9.webp";
+import Prop09 from "../assets/images/Props/Large_3468X/Props-9.png";
+import Prop09Medium from "../assets/images/Props/Medium_300X/Props-9.webp";
+import Prop09Small from "../assets/images/Props/Small_100X/Props-9.webp";
 
-import Prop10 from "../assets/images/Props/Props-10.png";
-import Prop10Thumb from "../assets/images/Props-thumb/Props-10.webp";
+import Prop10 from "../assets/images/Props/Large_3468X/Props-10.png";
+import Prop10Medium from "../assets/images/Props/Medium_300X/Props-10.webp";
+import Prop10Small from "../assets/images/Props/Small_100X/Props-10.webp";
 
-import Prop11 from "../assets/images/Props/Props-11.png";
-import Prop11Thumb from "../assets/images/Props-thumb/Props-11.webp";
+import Prop11 from "../assets/images/Props/Large_3468X/Props-11.png";
+import Prop11Medium from "../assets/images/Props/Medium_300X/Props-11.webp";
+import Prop11Small from "../assets/images/Props/Small_100X/Props-11.webp";
 
-import Prop12 from "../assets/images/Props/Props-12.png";
-import Prop12Thumb from "../assets/images/Props-thumb/Props-12.webp";
+import Prop12 from "../assets/images/Props/Large_3468X/Props-12.png";
+import Prop12Medium from "../assets/images/Props/Medium_300X/Props-12.webp";
+import Prop12Small from "../assets/images/Props/Small_100X/Props-12.webp";
 
-import Prop13 from "../assets/images/Props/Props-13.png";
-import Prop13Thumb from "../assets/images/Props-thumb/Props-13.webp";
+import Prop13 from "../assets/images/Props/Large_3468X/Props-13.png";
+import Prop13Medium from "../assets/images/Props/Medium_300X/Props-13.webp";
+import Prop13Small from "../assets/images/Props/Small_100X/Props-13.webp";
 
-import Prop14 from "../assets/images/Props/Props-14.png";
-import Prop14Thumb from "../assets/images/Props-thumb/Props-14.webp";
+import Prop14 from "../assets/images/Props/Large_3468X/Props-14.png";
+import Prop14Medium from "../assets/images/Props/Medium_300X/Props-14.webp";
+import Prop14Small from "../assets/images/Props/Small_100X/Props-14.webp";
 
-import Prop15 from "../assets/images/Props/Props-15.png";
-import Prop15Thumb from "../assets/images/Props-thumb/Props-15.webp";
+import Prop15 from "../assets/images/Props/Large_3468X/Props-15.png";
+import Prop15Medium from "../assets/images/Props/Medium_300X/Props-15.webp";
+import Prop15Small from "../assets/images/Props/Small_100X/Props-15.webp";
 
-import Prop16 from "../assets/images/Props/Props-16.png";
-import Prop16Thumb from "../assets/images/Props-thumb/Props-16.webp";
+import Prop16 from "../assets/images/Props/Large_3468X/Props-16.png";
+import Prop16Medium from "../assets/images/Props/Medium_300X/Props-16.webp";
+import Prop16Small from "../assets/images/Props/Small_100X/Props-16.webp";
 
-import Prop17 from "../assets/images/Props/Props-17.png";
-import Prop17Thumb from "../assets/images/Props-thumb/Props-17.webp";
+import Prop17 from "../assets/images/Props/Large_3468X/Props-17.png";
+import Prop17Medium from "../assets/images/Props/Medium_300X/Props-17.webp";
+import Prop17Small from "../assets/images/Props/Small_100X/Props-17.webp";
 
-import Prop18 from "../assets/images/Props/Props-18.png";
-import Prop18Thumb from "../assets/images/Props-thumb/Props-18.webp";
+import Prop18 from "../assets/images/Props/Large_3468X/Props-18.png";
+import Prop18Medium from "../assets/images/Props/Medium_300X/Props-18.webp";
+import Prop18Small from "../assets/images/Props/Small_100X/Props-18.webp";
 
-import Prop19 from "../assets/images/Props/Props-19.png";
-import Prop19Thumb from "../assets/images/Props-thumb/Props-19.webp";
+import Prop19 from "../assets/images/Props/Large_3468X/Props-19.png";
+import Prop19Medium from "../assets/images/Props/Medium_300X/Props-19.webp";
+import Prop19Small from "../assets/images/Props/Small_100X/Props-19.webp";
 
-import Prop20 from "../assets/images/Props/Props-20.png";
-import Prop20Thumb from "../assets/images/Props-thumb/Props-20.webp";
+import Prop20 from "../assets/images/Props/Large_3468X/Props-20.png";
+import Prop20Medium from "../assets/images/Props/Medium_300X/Props-20.webp";
+import Prop20Small from "../assets/images/Props/Small_100X/Props-20.webp";
 
-import Prop21 from "../assets/images/Props/Props-21.png";
-import Prop21Thumb from "../assets/images/Props-thumb/Props-21.webp";
+import Prop21 from "../assets/images/Props/Large_3468X/Props-21.png";
+import Prop21Medium from "../assets/images/Props/Medium_300X/Props-21.webp";
+import Prop21Small from "../assets/images/Props/Small_100X/Props-21.webp";
 
-import Prop22 from "../assets/images/Props/Props-22.png";
-import Prop22Thumb from "../assets/images/Props-thumb/Props-22.webp";
+import Prop22 from "../assets/images/Props/Large_3468X/Props-22.png";
+import Prop22Medium from "../assets/images/Props/Medium_300X/Props-22.webp";
+import Prop22Small from "../assets/images/Props/Small_100X/Props-22.webp";
 
-import Prop23 from "../assets/images/Props/Props-23.png";
-import Prop23Thumb from "../assets/images/Props-thumb/Props-23.webp";
+import Prop23 from "../assets/images/Props/Large_3468X/Props-23.png";
+import Prop23Medium from "../assets/images/Props/Medium_300X/Props-23.webp";
+import Prop23Small from "../assets/images/Props/Small_100X/Props-23.webp";
 
-import Prop24 from "../assets/images/Props/Props-24.png";
-import Prop24Thumb from "../assets/images/Props-thumb/Props-24.webp";
+import Prop24 from "../assets/images/Props/Large_3468X/Props-24.png";
+import Prop24Medium from "../assets/images/Props/Medium_300X/Props-24.webp";
+import Prop24Small from "../assets/images/Props/Small_100X/Props-24.webp";
 
-import Prop25 from "../assets/images/Props/Props-25.png";
-import Prop25Thumb from "../assets/images/Props-thumb/Props-25.webp";
+import Prop25 from "../assets/images/Props/Large_3468X/Props-25.png";
+import Prop25Medium from "../assets/images/Props/Medium_300X/Props-25.webp";
+import Prop25Small from "../assets/images/Props/Small_100X/Props-25.webp";
 
-import Prop26 from "../assets/images/Props/Props-26.png";
-import Prop26Thumb from "../assets/images/Props-thumb/Props-26.webp";
+import Prop26 from "../assets/images/Props/Large_3468X/Props-26.png";
+import Prop26Medium from "../assets/images/Props/Medium_300X/Props-26.webp";
+import Prop26Small from "../assets/images/Props/Small_100X/Props-26.webp";
 
-import Prop27 from "../assets/images/Props/Props-27.png";
-import Prop27Thumb from "../assets/images/Props-thumb/Props-27.webp";
+import Prop27 from "../assets/images/Props/Large_3468X/Props-27.png";
+import Prop27Medium from "../assets/images/Props/Medium_300X/Props-27.webp";
+import Prop27Small from "../assets/images/Props/Small_100X/Props-27.webp";
 
-import Prop28 from "../assets/images/Props/Props-28.png";
-import Prop28Thumb from "../assets/images/Props-thumb/Props-28.webp";
+import Prop28 from "../assets/images/Props/Large_3468X/Props-28.png";
+import Prop28Medium from "../assets/images/Props/Medium_300X/Props-28.webp";
+import Prop28Small from "../assets/images/Props/Small_100X/Props-28.webp";
 
-import Prop29 from "../assets/images/Props/Props-29.png";
-import Prop29Thumb from "../assets/images/Props-thumb/Props-29.webp";
+import Prop29 from "../assets/images/Props/Large_3468X/Props-29.png";
+import Prop29Medium from "../assets/images/Props/Medium_300X/Props-29.webp";
+import Prop29Small from "../assets/images/Props/Small_100X/Props-29.webp";
 
-import Prop30 from "../assets/images/Props/Props-30.png";
-import Prop30Thumb from "../assets/images/Props-thumb/Props-30.webp";
+import Prop30 from "../assets/images/Props/Large_3468X/Props-30.png";
+import Prop30Medium from "../assets/images/Props/Medium_300X/Props-30.webp";
+import Prop30Small from "../assets/images/Props/Small_100X/Props-30.webp";
 
-import Prop31 from "../assets/images/Props/Props-31.png";
-import Prop31Thumb from "../assets/images/Props-thumb/Props-31.webp";
+import Prop31 from "../assets/images/Props/Large_3468X/Props-31.png";
+import Prop31Medium from "../assets/images/Props/Medium_300X/Props-31.webp";
+import Prop31Small from "../assets/images/Props/Small_100X/Props-31.webp";
 
-import Prop32 from "../assets/images/Props/Props-32.png";
-import Prop32Thumb from "../assets/images/Props-thumb/Props-32.webp";
+import Prop32 from "../assets/images/Props/Large_3468X/Props-32.png";
+import Prop32Medium from "../assets/images/Props/Medium_300X/Props-32.webp";
+import Prop32Small from "../assets/images/Props/Small_100X/Props-32.webp";
 
-import Prop33 from "../assets/images/Props/Props-33.png";
-import Prop33Thumb from "../assets/images/Props-thumb/Props-33.webp";
+import Prop33 from "../assets/images/Props/Large_3468X/Props-33.png";
+import Prop33Medium from "../assets/images/Props/Medium_300X/Props-33.webp";
+import Prop33Small from "../assets/images/Props/Small_100X/Props-33.webp";
 
-import Prop34 from "../assets/images/Props/Props-34.png";
-import Prop34Thumb from "../assets/images/Props-thumb/Props-34.webp";
+import Prop34 from "../assets/images/Props/Large_3468X/Props-34.png";
+import Prop34Medium from "../assets/images/Props/Medium_300X/Props-34.webp";
+import Prop34Small from "../assets/images/Props/Small_100X/Props-34.webp";
 
-import Prop35 from "../assets/images/Props/Props-35.png";
-import Prop35Thumb from "../assets/images/Props-thumb/Props-35.webp";
+import Prop35 from "../assets/images/Props/Large_3468X/Props-35.png";
+import Prop35Medium from "../assets/images/Props/Medium_300X/Props-35.webp";
+import Prop35Small from "../assets/images/Props/Small_100X/Props-35.webp";
 
-import Prop36 from "../assets/images/Props/Props-36.png";
-import Prop36Thumb from "../assets/images/Props-thumb/Props-36.webp";
+import Prop36 from "../assets/images/Props/Large_3468X/Props-36.png";
+import Prop36Medium from "../assets/images/Props/Medium_300X/Props-36.webp";
+import Prop36Small from "../assets/images/Props/Small_100X/Props-36.webp";
 
-import Frame01 from "../assets/images/Frames/Frame-01.png";
-import Frame02 from "../assets/images/Frames/Frame-02.png";
-import Frame03 from "../assets/images/Frames/Frame-03.png";
-import Frame04 from "../assets/images/Frames/Frame-04.png";
-import Frame05 from "../assets/images/Frames/Frame-05.png";
-import Frame06 from "../assets/images/Frames/Frame-06.png";
-import Frame01Thumb from "../assets/images/Frames-thumb/Frame-01.webp";
-import Frame02Thumb from "../assets/images/Frames-thumb/Frame-02.webp";
-import Frame03Thumb from "../assets/images/Frames-thumb/Frame-03.webp";
-import Frame04Thumb from "../assets/images/Frames-thumb/Frame-04.webp";
-import Frame05Thumb from "../assets/images/Frames-thumb/Frame-05.webp";
-import Frame06Thumb from "../assets/images/Frames-thumb/Frame-06.webp";
+import Frame01 from "../assets/images/Frames/Large_9846X/Frame-01.png";
+import Frame02 from "../assets/images/Frames/Large_9846X/Frame-02.png";
+import Frame03 from "../assets/images/Frames/Large_9846X/Frame-03.png";
+import Frame04 from "../assets/images/Frames/Large_9846X/Frame-04.png";
+import Frame05 from "../assets/images/Frames/Large_9846X/Frame-05.png";
+import Frame06 from "../assets/images/Frames/Large_9846X/Frame-06.png";
+import Frame01Medium from "../assets/images/Frames/Medium_1000X/Frame-01.webp";
+import Frame02Medium from "../assets/images/Frames/Medium_1000X/Frame-02.webp";
+import Frame03Medium from "../assets/images/Frames/Medium_1000X/Frame-03.webp";
+import Frame04Medium from "../assets/images/Frames/Medium_1000X/Frame-04.webp";
+import Frame05Medium from "../assets/images/Frames/Medium_1000X/Frame-05.webp";
+import Frame06Medium from "../assets/images/Frames/Medium_1000X/Frame-06.webp";
+import Frame01Small from "../assets/images/Frames/Small_100X/Frame-01.webp";
+import Frame02Small from "../assets/images/Frames/Small_100X/Frame-02.webp";
+import Frame03Small from "../assets/images/Frames/Small_100X/Frame-03.webp";
+import Frame04Small from "../assets/images/Frames/Small_100X/Frame-04.webp";
+import Frame05Small from "../assets/images/Frames/Small_100X/Frame-05.webp";
+import Frame06Small from "../assets/images/Frames/Small_100X/Frame-06.webp";
 
 export const props = [
   {
     id: "prop-1",
     name: "Jugaadu Bhaiya",
     url: Prop01,
-    thumbnail: Prop01Thumb,
+    urlSmall: Prop01Small,
+    urlMedium: Prop01Medium,
     category: "signs",
   },
   {
     id: "prop-2",
     name: "Pyari Nani",
     url: Prop02,
-    thumbnail: Prop02Thumb,
+    urlSmall: Prop02Small,
+    urlMedium: Prop02Medium,
     category: "signs",
   },
   {
     id: "prop-3",
     name: "Fabulous Bua",
     url: Prop03,
-    thumbnail: Prop03Thumb,
+    urlSmall: Prop03Small,
+    urlMedium: Prop03Medium,
     category: "signs",
   },
   {
     id: "prop-4",
     name: "Super Mom",
     url: Prop04,
-    thumbnail: Prop04Thumb,
+    urlSmall: Prop04Small,
+    urlMedium: Prop04Medium,
     category: "signs",
   },
   {
     id: "prop-5",
     name: "Pyare Nana",
     url: Prop05,
-    thumbnail: Prop05Thumb,
+    urlSmall: Prop05Small,
+    urlMedium: Prop05Medium,
     category: "signs",
   },
   {
     id: "prop-6",
     name: "Handsome Me",
     url: Prop06,
-    thumbnail: Prop06Thumb,
+    urlSmall: Prop06Small,
+    urlMedium: Prop06Medium,
     category: "signs",
   },
   {
     id: "prop-7",
     name: "Lovely Mami",
     url: Prop07,
-    thumbnail: Prop07Thumb,
+    urlSmall: Prop07Small,
+    urlMedium: Prop07Medium,
     category: "signs",
   },
   {
     id: "prop-8",
     name: "Sanskari Bhabi",
     url: Prop08,
-    thumbnail: Prop08Thumb,
+    urlSmall: Prop08Small,
+    urlMedium: Prop08Medium,
     category: "signs",
   },
   {
     id: "prop-9",
     name: "Caring Masi",
     url: Prop09,
-    thumbnail: Prop09Thumb,
+    urlSmall: Prop09Small,
+    urlMedium: Prop09Medium,
     category: "signs",
   },
   {
     id: "prop-10",
     name: "Nautanki Chachi",
     url: Prop10,
-    thumbnail: Prop10Thumb,
+    urlSmall: Prop10Small,
+    urlMedium: Prop10Medium,
     category: "signs",
   },
   {
     id: "prop-11",
     name: "Super Dad",
     url: Prop11,
-    thumbnail: Prop11Thumb,
+    urlSmall: Prop11Small,
+    urlMedium: Prop11Medium,
     category: "signs",
   },
   {
     id: "prop-12",
     name: "Supercool Mami",
     url: Prop12,
-    thumbnail: Prop12Thumb,
+    urlSmall: Prop12Small,
+    urlMedium: Prop12Medium,
     category: "signs",
   },
   {
     id: "prop-13",
     name: "Pyare Dadi",
     url: Prop13,
-    thumbnail: Prop13Thumb,
+    urlSmall: Prop13Small,
+    urlMedium: Prop13Medium,
     category: "signs",
   },
   {
     id: "prop-14",
     name: "Pyare Dada",
     url: Prop14,
-    thumbnail: Prop14Thumb,
+    urlSmall: Prop14Small,
+    urlMedium: Prop14Medium,
     category: "signs",
   },
   {
     id: "prop-15",
     name: "Awesome Me",
     url: Prop15,
-    thumbnail: Prop15Thumb,
+    urlSmall: Prop15Small,
+    urlMedium: Prop15Medium,
     category: "signs",
   },
   {
     id: "prop-16",
     name: "Dholak",
     url: Prop16,
-    thumbnail: Prop16Thumb,
+    urlSmall: Prop16Small,
+    urlMedium: Prop16Medium,
     category: "instruments",
   },
   {
     id: "prop-17",
     name: "Kalash",
     url: Prop17,
-    thumbnail: Prop17Thumb,
+    urlSmall: Prop17Small,
+    urlMedium: Prop17Medium,
     category: "accessories",
   },
   {
     id: "prop-18",
     name: "Bow Tie",
     url: Prop18,
-    thumbnail: Prop18Thumb,
+    urlSmall: Prop18Small,
+    urlMedium: Prop18Medium,
     category: "accessories",
   },
   {
     id: "prop-19",
     name: "Team Bride",
     url: Prop19,
-    thumbnail: Prop19Thumb,
+    urlSmall: Prop19Small,
+    urlMedium: Prop19Medium,
     category: "arrows",
   },
   {
     id: "prop-20",
     name: "Gur Naal Ishq Mitha",
     url: Prop20,
-    thumbnail: Prop20Thumb,
+    urlSmall: Prop20Small,
+    urlMedium: Prop20Medium,
     category: "signs",
   },
   {
     id: "prop-21",
     name: "Moustache",
     url: Prop21,
-    thumbnail: Prop21Thumb,
+    urlSmall: Prop21Small,
+    urlMedium: Prop21Medium,
     category: "accessories",
   },
   {
     id: "prop-22",
     name: "Inn Bhi Kya Jaldi Thi?",
     url: Prop22,
-    thumbnail: Prop22Thumb,
+    urlSmall: Prop22Small,
+    urlMedium: Prop22Medium,
     category: "signs",
   },
   {
     id: "prop-23",
     name: "Team Groom",
     url: Prop23,
-    thumbnail: Prop23Thumb,
+    urlSmall: Prop23Small,
+    urlMedium: Prop23Medium,
     category: "arrows",
   },
   {
     id: "prop-24",
     name: "I Am Next",
     url: Prop24,
-    thumbnail: Prop24Thumb,
+    urlSmall: Prop24Small,
+    urlMedium: Prop24Medium,
     category: "arrows",
   },
   {
     id: "prop-25",
     name: "Haldi Hai",
     url: Prop25,
-    thumbnail: Prop25Thumb,
+    urlSmall: Prop25Small,
+    urlMedium: Prop25Medium,
     category: "accessories",
   },
   {
     id: "prop-26",
     name: "Aaj Mere Yaar Ki Haldi Hai",
     url: Prop26,
-    thumbnail: Prop26Thumb,
+    urlSmall: Prop26Small,
+    urlMedium: Prop26Medium,
     category: "signs",
   },
   {
     id: "prop-27",
     name: "Lips",
     url: Prop27,
-    thumbnail: Prop27Thumb,
+    urlSmall: Prop27Small,
+    urlMedium: Prop27Medium,
     category: "accessories",
   },
   {
     id: "prop-28",
     name: "Single",
     url: Prop28,
-    thumbnail: Prop28Thumb,
+    urlSmall: Prop28Small,
+    urlMedium: Prop28Medium,
     category: "arrows",
   },
   {
     id: "prop-29",
     name: "Hat",
     url: Prop29,
-    thumbnail: Prop29Thumb,
+    urlSmall: Prop29Small,
+    urlMedium: Prop29Medium,
     category: "accessories",
   },
   {
     id: "prop-30",
     name: "Pink Glasses",
     url: Prop30,
-    thumbnail: Prop30Thumb,
+    urlSmall: Prop30Small,
+    urlMedium: Prop30Medium,
     category: "accessories",
   },
   {
     id: "prop-31",
     name: "About To Be Taken",
     url: Prop31,
-    thumbnail: Prop31Thumb,
+    urlSmall: Prop31Small,
+    urlMedium: Prop31Medium,
     category: "signs",
   },
   {
     id: "prop-32",
     name: "I Am Next",
     url: Prop32,
-    thumbnail: Prop32Thumb,
+    urlSmall: Prop32Small,
+    urlMedium: Prop32Medium,
     category: "signs",
   },
   {
     id: "prop-33",
     name: "First Step",
     url: Prop33,
-    thumbnail: Prop33Thumb,
+    urlSmall: Prop33Small,
+    urlMedium: Prop33Medium,
     category: "signs",
   },
   {
     id: "prop-34",
     name: "Badhaiyan",
     url: Prop34,
-    thumbnail: Prop34Thumb,
+    urlSmall: Prop34Small,
+    urlMedium: Prop34Medium,
     category: "signs",
   },
   {
     id: "prop-35",
     name: "Dulhan Ki Hot Saheli",
     url: Prop35,
-    thumbnail: Prop35Thumb,
+    urlSmall: Prop35Small,
+    urlMedium: Prop35Medium,
     category: "signs",
   },
   {
     id: "prop-36",
     name: "Abhi Bhi Time Hai Bhag Jaa",
     url: Prop36,
-    thumbnail: Prop36Thumb,
+    urlSmall: Prop36Small,
+    urlMedium: Prop36Medium,
     category: "signs",
   },
 ];
@@ -381,42 +459,53 @@ export const frames = [
     id: "frame-1",
     name: "Frame 1",
     url: Frame01,
-    thumbnail: Frame01Thumb,
+    urlMedium: Frame01Medium,
+    urlSmall: Frame01Small,
     type: "border",
   },
   {
     id: "frame-2",
     name: "Frame 2",
     url: Frame02,
-    thumbnail: Frame02Thumb,
+
+    urlMedium: Frame02Medium,
+    urlSmall: Frame02Small,
     type: "border",
   },
   {
     id: "frame-3",
     name: "Frame 3",
     url: Frame03,
-    thumbnail: Frame03Thumb,
+
+    urlMedium: Frame03Medium,
+    urlSmall: Frame03Small,
     type: "border",
   },
   {
     id: "frame-4",
     name: "Frame 4",
     url: Frame04,
-    thumbnail: Frame04Thumb,
+
+    urlMedium: Frame04Medium,
+    urlSmall: Frame04Small,
     type: "border",
   },
   {
     id: "frame-5",
     name: "Frame 5",
     url: Frame05,
-    thumbnail: Frame05Thumb,
+
+    urlMedium: Frame05Medium,
+    urlSmall: Frame05Small,
     type: "border",
   },
   {
     id: "frame-6",
     name: "Frame 6",
     url: Frame06,
-    thumbnail: Frame06Thumb,
+
+    urlMedium: Frame06Medium,
+    urlSmall: Frame06Small,
     type: "border",
   },
 ];

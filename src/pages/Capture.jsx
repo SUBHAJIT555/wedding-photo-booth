@@ -10,7 +10,7 @@ import PropsFramesBottomSheet from "../component/PropsFramesBottomSheet";
 import { uploadImage } from "../utils/uploadImage";
 import { transformUploadResult } from "../utils/urlTransform";
 
-const INNER_HOLE = {
+export const INNER_HOLE = {
   x: 310,
   y: 330,
   w: 1750,
@@ -309,15 +309,18 @@ function Capture() {
     setLoading(true);
 
     try {
-      await composeFinalImage();
+      // await composeFinalImage();
 
-      // Use requestAnimationFrame to ensure canvas is ready
-      await new Promise((resolve) => requestAnimationFrame(resolve));
+      // // Use requestAnimationFrame to ensure canvas is ready
+      // await new Promise((resolve) => requestAnimationFrame(resolve));
 
-      const imageToSave = compositeCanvasRef.current.toDataURL(
-        "image/png",
-        1.0
-      );
+      // const imageToSave = compositeCanvasRef.current.toDataURL(
+      //   "image/png",
+      //   1.0
+      // );
+      console.log("capturedImage exists?", !!capturedImage);
+
+      const imageToSave = await composeFinalImage();
 
       if (!imageToSave) {
         setLoading(false);
@@ -359,14 +362,14 @@ function Capture() {
     }
   };
 
-  const updateFinalImage = useCallback(() => {
-    if (!compositeCanvasRef.current) return;
-    // Use requestAnimationFrame for smoother updates
-    requestAnimationFrame(() => {
-      const image = compositeCanvasRef.current.toDataURL("image/png");
-      setFinalImage(image);
-    });
-  }, []);
+  // const updateFinalImage = useCallback(() => {
+  //   if (!compositeCanvasRef.current) return;
+  //   // Use requestAnimationFrame for smoother updates
+  //   requestAnimationFrame(() => {
+  //     const image = compositeCanvasRef.current.toDataURL("image/png");
+  //     setFinalImage(image);
+  //   });
+  // }, []);
 
   const toggleProp = (prop) => {
     // Check if this prop type is already selected
@@ -425,7 +428,7 @@ function Capture() {
 
   const applyFrame = (frame) => {
     // Remove all props immediately when a frame is applied
-    setSelectedProps([]);
+    // setSelectedProps([]);
     setNextPropId(1);
 
     // Apply the frame
@@ -438,9 +441,8 @@ function Capture() {
 
   const composeFinalImage = useCallback(() => {
     return new Promise((resolve) => {
-      // if (ENABLE_LOGS) console.log("🚀 Starting composeFinalImage");
       if (!capturedImage || !compositeCanvasRef.current) {
-        resolve();
+        resolve(null);
         return;
       }
 
@@ -454,30 +456,20 @@ function Capture() {
       canvas.width = FRAME_W;
       canvas.height = FRAME_H;
 
-      // white background for final print
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, FRAME_W, FRAME_H);
 
       const img = new Image();
+      img.crossOrigin = "anonymous";
 
       img.onload = async () => {
-        const srcW = img.naturalWidth; // Use naturalWidth instead of width
-        const srcH = img.naturalHeight; // Use naturalHeight instead of height
+        const srcW = img.naturalWidth;
+        const srcH = img.naturalHeight;
         const imgRatio = srcW / srcH;
-
-        if (ENABLE_LOGS) {
-          // console.log("📐 Captured image dimensions:", {
-          //   width: srcW,
-          //   height: srcH,
-          //   ratio: imgRatio.toFixed(4),
-          // });
-        }
 
         let drawX, drawY, drawW, drawH;
 
-        // ================================
-        // CASE 1 — NO FRAME SELECTED
-        // ================================
+        // ----- NO FRAME -----
         if (!selectedFrame) {
           const canvasRatio = FRAME_W / FRAME_H;
 
@@ -495,20 +487,16 @@ function Capture() {
 
           ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
-          // Draw props normally
           await drawPropsAsync(ctx);
 
-          updateFinalImage();
-          resolve();
+          const out = canvas.toDataURL("image/jpeg", 0.85);
+          resolve(out);
           return;
         }
-        // if (ENABLE_LOGS) console.log("🟠 CASE 2 — FRAME SELECTED");
-        // ================================
-        // CASE 2 — FRAME SELECTED
-        // ================================
+
+        // ----- FRAME SELECTED -----
         const holeRatio = INNER_W / INNER_H;
 
-        // Fit inside hole
         if (imgRatio > holeRatio) {
           drawW = INNER_W;
           drawH = drawW / imgRatio;
@@ -521,62 +509,29 @@ function Capture() {
           drawY = INNER_Y;
         }
 
-        if (ENABLE_LOGS) {
-          // console.log("🖼️ Image in frame hole:", {
-          //   drawX: Math.round(drawX),
-          //   drawY: Math.round(drawY),
-          //   drawW: Math.round(drawW),
-          //   drawH: Math.round(drawH),
-          //   holeRatio: holeRatio.toFixed(4),
-          // });
-        }
-
         ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
-        // Draw props ON TOP of the camera image but UNDER the frame
         await drawPropsAsync(ctx);
 
-        // Load frame with caching
-        let frameImg = imageCache.current.get(selectedFrame.url);
-        if (frameImg && frameImg.complete && frameImg.naturalWidth > 0) {
-          // Use cached frame
+        // draw frame overlay
+        const frameImg = new Image();
+        frameImg.crossOrigin = "anonymous";
+
+        frameImg.onload = async () => {
           ctx.drawImage(frameImg, 0, 0, FRAME_W, FRAME_H);
-          // Then draw props ON TOP
-          await drawPropsAsync(ctx);
-          updateFinalImage();
-          resolve();
-        } else {
-          // Load new frame
-          frameImg = new Image();
-          frameImg.crossOrigin = "anonymous";
-          frameImg.onload = async () => {
-            // Cache the frame image
-            imageCache.current.set(selectedFrame.url, frameImg);
-            // Draw frame overlay (covers everything)
-            ctx.drawImage(frameImg, 0, 0, FRAME_W, FRAME_H);
-            // Then draw props ON TOP
-            await drawPropsAsync(ctx);
-            updateFinalImage();
-            resolve();
-          };
-          frameImg.onerror = () => {
-            console.error("Failed to load frame image");
-            resolve();
-          };
-          frameImg.src = selectedFrame.url;
-        }
+
+          const out = canvas.toDataURL("image/jpeg", 0.85);
+          resolve(out);
+        };
+
+        frameImg.onerror = () => resolve(null);
+        frameImg.src = selectedFrame.url;
       };
 
+      img.onerror = () => resolve(null);
       img.src = capturedImage;
     });
-  }, [
-    capturedImage,
-    selectedFrame,
-    selectedProps,
-    drawPropsAsync,
-    updateFinalImage,
-    ENABLE_LOGS,
-  ]);
+  }, [capturedImage, selectedFrame, selectedProps, drawPropsAsync]);
 
   // Image cache to avoid reloading the same images
   const imageCache = useRef(new Map());
@@ -584,7 +539,7 @@ function Capture() {
   useEffect(() => {
     if (!capturedImage) return;
     composeFinalImage();
-  }, [capturedImage, selectedFrame, imageDimensions]);
+  }, [capturedImage, selectedFrame, imageDimensions, selectedProps]);
 
   useEffect(() => {
     if (countdown === null) return;
@@ -634,7 +589,7 @@ function Capture() {
         // 🔥 THIS IS THE PREVIEW-PERFECT CAPTURE
         ctx.drawImage(video, drawX, drawY, drawW, drawH);
 
-        const image = canvas.toDataURL("image/png", 1.0);
+        const image = canvas.toDataURL("image/jpeg", 0.85);
 
         // SAVE OUTPUT
         setCapturedImage(image);
@@ -810,6 +765,7 @@ function Capture() {
           imageDimensions={imageDimensions}
           selectedProps={selectedProps}
           countdown={countdown}
+          selectedFrame={selectedFrame}
           onUpdateProp={updateProp}
           onDeleteProp={deleteProp}
           onImageLoad={handleImageLoad}
