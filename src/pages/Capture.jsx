@@ -32,7 +32,7 @@ function Capture() {
   const [loading, setLoading] = useState(false);
   const [isRestarting, setIsRestarting] = useState(false);
   const [showBottomSheet, setShowBottomSheet] = useState(false);
-  const [activeTab, setActiveTab] = useState("frames");
+  const [activeTab, setActiveTab] = useState("props");
   const [selectedProps, setSelectedProps] = useState([]);
   const [selectedFrame, setSelectedFrame] = useState(null);
   const [nextPropId, setNextPropId] = useState(1);

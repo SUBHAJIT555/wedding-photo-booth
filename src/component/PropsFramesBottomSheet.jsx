@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo, useRef } from "react";
-import BottomSheet from "./BottomSheet";
+import Sheet from "./Sheet";
 import { props as availableProps, frames } from "../constant/propsAndFrames";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import PropTypes from "prop-types";
@@ -34,12 +34,7 @@ function enableDragScroll(el) {
 }
 
 // ===== Memoized Prop Item =====
-const PropItem = memo(function PropItem({
-  prop,
-  index,
-  isSelected,
-  onToggleProp,
-}) {
+const PropItem = memo(function PropItem({ prop, isSelected, onToggleProp }) {
   return (
     <button
       key={prop.id}
@@ -74,7 +69,6 @@ const PropItem = memo(function PropItem({
 // ===== Memoized Frame Item =====
 const FrameItem = memo(function FrameItem({
   frame,
-  index,
   isSelected,
   onApplyFrame,
   onRemoveFrame,
@@ -109,6 +103,19 @@ const FrameItem = memo(function FrameItem({
     </button>
   );
 });
+
+PropItem.propTypes = {
+  prop: PropTypes.object,
+  isSelected: PropTypes.bool,
+  onToggleProp: PropTypes.func,
+};
+
+FrameItem.propTypes = {
+  frame: PropTypes.object,
+  isSelected: PropTypes.bool,
+  onApplyFrame: PropTypes.func,
+  onRemoveFrame: PropTypes.func,
+};
 
 // ===== Bottom Sheet Component =====
 const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
@@ -159,21 +166,14 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
   );
 
   return (
-    <BottomSheet
+    <Sheet
+      side="top"
       isOpen={isOpen && capturedImage}
       onClose={onClose}
       activeTab={activeTab}
       onTabChange={onTabChange}
     >
       <div className="flex gap-2 p-1 mb-4 bg-gray-100 rounded-2xl">
-        <button
-          onClick={() => onTabChange("frames")}
-          className={`flex-1 py-3 px-4 rounded-xl ${
-            activeTab === "frames" ? "bg-[#e91e63] text-white" : "bg-gray-200"
-          }`}
-        >
-          Frames
-        </button>
         <button
           onClick={() => onTabChange("props")}
           className={`flex-1 py-3 px-4 rounded-xl ${
@@ -182,24 +182,31 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
         >
           Props
         </button>
+        <button
+          onClick={() => onTabChange("frames")}
+          className={`flex-1 py-3 px-4 rounded-xl ${
+            activeTab === "frames" ? "bg-[#e91e63] text-white" : "bg-gray-200"
+          }`}
+        >
+          Frames
+        </button>
       </div>
 
       <div className="flex-1 px-2">
-        {activeTab === "frames" && (
-          <div className="grid grid-cols-3 gap-4 p-2">{framesList}</div>
-        )}
-
         {activeTab === "props" && (
           <div
             ref={scrollRef}
-            className="h-[350px] overflow-y-auto bg-white rounded-xl p-2 hide-scrollbar"
+            className="h-[720px] overflow-y-auto bg-white rounded-xl p-2 hide-scrollbar"
             style={{ cursor: "grab", WebkitOverflowScrolling: "touch" }}
           >
-            <div className="grid grid-cols-3 gap-4">{propsList}</div>
+            <div className="grid grid-cols-3 gap-10">{propsList}</div>
           </div>
         )}
+        {activeTab === "frames" && (
+          <div className="grid grid-cols-3 gap-4 p-2">{framesList}</div>
+        )}
       </div>
-    </BottomSheet>
+    </Sheet>
   );
 });
 
