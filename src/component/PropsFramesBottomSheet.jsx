@@ -3,6 +3,7 @@ import Sheet from "./Sheet";
 import { props as availableProps, frames } from "../constant/propsAndFrames";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import PropTypes from "prop-types";
+import BottomSheet from "./BottomSheet";
 
 // ===== Drag Scroll Helper (works on Raspberry Pi Chromium) =====
 function enableDragScroll(el) {
@@ -166,8 +167,8 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
   );
 
   return (
-    <Sheet
-      side="top"
+    <BottomSheet
+      // side="top"
       isOpen={isOpen && capturedImage}
       onClose={onClose}
       activeTab={activeTab}
@@ -206,7 +207,7 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
           <div className="grid grid-cols-3 gap-4 p-2">{framesList}</div>
         )}
       </div>
-    </Sheet>
+    </BottomSheet>
   );
 });
 
