@@ -1,23 +1,104 @@
-# Prevent PHP execution in uploads directory
+#############################################
+
+# SECURITY: Do NOT allow PHP execution here
+
+#############################################
 <FilesMatch "\.php$">
-    Order Allow,Deny
-    Deny from all
+Order Allow,Deny
+Deny from all
 </FilesMatch>
 
-# Allow only image files
+#############################################
+
+# ALLOW PUBLIC ACCESS TO IMAGES
+
+#############################################
 <FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
-    Order Allow,Deny
-    Allow from all
+Order Allow,Deny
+Allow from all
+
+    <IfModule mod_headers.c>
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, OPTIONS"
+        Header set Access-Control-Allow-Headers "Content-Type, Range"
+        Header set Access-Control-Expose-Headers "Content-Length, Content-Range"
+    </IfModule>
+
 </FilesMatch>
 
-# Set proper MIME types
+#############################################
+
+# MIME TYPES (Safe)
+
+#############################################
 AddType image/jpeg .jpg .jpeg
 AddType image/png .png
 AddType image/gif .gif
 AddType image/webp .webp
 
-# Cache control for images
-<IfModule mod_headers.c>
-    Header set Cache-Control "public, max-age=31536000, immutable"
+#############################################
+
+# DISABLE WEBP REPLACEMENT (Main FIX)
+
+# Stops Cloudflare / LiteSpeed / Pagespeed
+
+# from converting JPG → WebP silently
+
+#############################################
+
+# Disable mod_pagespeed WebP rewrite
+
+<IfModule pagespeed_module>
+    ModPagespeed off
 </IfModule>
 
+# Disable Cloudflare WebP override
+
+<IfModule mod_headers.c>
+    Header unset CF-Polish
+    Header always set Accept "image/jpeg"
+</IfModule>
+
+# Disable LiteSpeed WebP replacement
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP_USER_AGENT} ".*"  
+    RewriteRule .* - [E=cache-control:no-ls-img]
+</IfModule>
+
+# Prevent host-level WebP automatic conversion (common on shared hosting)
+
+<IfModule mod_mime.c>
+    RemoveType .webp
+</IfModule>
+
+#############################################
+
+# DISABLE GZIP FOR IMAGES (Important)
+
+# If images are gzipped → corrupted binary
+
+#############################################
+<IfModule mod_deflate.c>
+SetEnvIfNoCase Request_URI "\.(jpg|jpeg|png|gif|webp)$" no-gzip=1
+</IfModule>
+
+#############################################
+
+# CACHE CONTROL
+
+#############################################
+<IfModule mod_headers.c>
+Header set Cache-Control "public, max-age=31536000, immutable"
+</IfModule>
+
+#############################################
+
+# PREVENT BOM / WHITESPACE CORRUPTION
+
+#############################################
+
+# This folder should NEVER pass through PHP
+
+#############################################

@@ -101,3 +101,21 @@ body {
     left: 100%;
   }
 }
+
+/* Hide scrollbar on all Chromium versions including Raspberry Pi */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0 !important; /* Chrome / Chromium / Safari */
+  height: 0 !important;
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent !important;
+}
+
+.hide-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}

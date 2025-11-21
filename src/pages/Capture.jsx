@@ -32,7 +32,7 @@ function Capture() {
   const [loading, setLoading] = useState(false);
   const [isRestarting, setIsRestarting] = useState(false);
   const [showBottomSheet, setShowBottomSheet] = useState(false);
-  const [activeTab, setActiveTab] = useState("props");
+  const [activeTab, setActiveTab] = useState("frames");
   const [selectedProps, setSelectedProps] = useState([]);
   const [selectedFrame, setSelectedFrame] = useState(null);
   const [nextPropId, setNextPropId] = useState(1);
@@ -511,14 +511,14 @@ function Capture() {
 
         ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
-        await drawPropsAsync(ctx);
-
         // draw frame overlay
         const frameImg = new Image();
         frameImg.crossOrigin = "anonymous";
 
         frameImg.onload = async () => {
           ctx.drawImage(frameImg, 0, 0, FRAME_W, FRAME_H);
+
+          await drawPropsAsync(ctx);
 
           const out = canvas.toDataURL("image/jpeg", 0.85);
           resolve(out);
@@ -536,10 +536,10 @@ function Capture() {
   // Image cache to avoid reloading the same images
   const imageCache = useRef(new Map());
 
-  useEffect(() => {
-    if (!capturedImage) return;
-    composeFinalImage();
-  }, [capturedImage, selectedFrame, imageDimensions, selectedProps]);
+  // useEffect(() => {
+  //   if (!capturedImage) return;
+  //   composeFinalImage();
+  // }, [capturedImage, selectedFrame, imageDimensions, selectedProps]);
 
   useEffect(() => {
     if (countdown === null) return;

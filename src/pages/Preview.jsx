@@ -137,6 +137,8 @@ function Preview() {
   //     }, 35000);
   //   }
   // };
+
+  // Current
   const printImageAsPDF = async () => {
     try {
       setLoading(true);
@@ -248,6 +250,8 @@ function Preview() {
         },
       };
 
+      console.log("printJJob", printJob);
+
       const responsePrint = await fetch("https://api.printnode.com/printjobs", {
         method: "POST",
         headers: {
@@ -280,6 +284,127 @@ function Preview() {
       }, 35000);
     }
   };
+
+  // const printImageAsPDF = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     console.log("----- PRINT DEBUG START -----");
+  //     console.log("finalUrl:", finalUrl);
+
+  //     let imageArrayBuffer;
+
+  //     // Direct base64 case
+  //     if (finalUrl.startsWith("data:image")) {
+  //       console.log("Mode: base64 data URL");
+
+  //       const base64Data = finalUrl.split(",")[1];
+  //       const bin = atob(base64Data);
+  //       const bytes = new Uint8Array(bin.length);
+  //       for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+
+  //       imageArrayBuffer = bytes.buffer;
+  //     } else {
+  //       console.log("Mode: fetch URL");
+
+  //       const res = await fetch(finalUrl, {
+  //         mode: "cors",
+  //         credentials: "omit",
+  //       });
+
+  //       console.log("HTTP status:", res.status);
+  //       console.log("Headers content-type:", res.headers.get("content-type"));
+
+  //       if (!res.ok) {
+  //         throw new Error(`HTTP ${res.status} ${res.statusText}`);
+  //       }
+
+  //       imageArrayBuffer = await res.arrayBuffer();
+  //     }
+
+  //     // ======================================================================
+  //     // BYTE INSPECTION
+  //     // ======================================================================
+  //     const bytes = new Uint8Array(imageArrayBuffer);
+  //     console.log("Byte length:", bytes.length);
+  //     console.log("First 32 bytes:", Array.from(bytes.slice(0, 32)));
+
+  //     if (bytes.length < 10) {
+  //       throw new Error("Image too small / not an image");
+  //     }
+
+  //     // ======================================================================
+  //     // REAL FORMAT DETECTION
+  //     // ======================================================================
+  //     // JPEG: FF D8
+  //     const isJpeg = bytes[0] === 0xff && bytes[1] === 0xd8;
+
+  //     // PNG: 89 50 4E 47 0D 0A 1A 0A
+  //     const isPng =
+  //       bytes[0] === 0x89 &&
+  //       bytes[1] === 0x50 &&
+  //       bytes[2] === 0x4e &&
+  //       bytes[3] === 0x47 &&
+  //       bytes[4] === 0x0d &&
+  //       bytes[5] === 0x0a &&
+  //       bytes[6] === 0x1a &&
+  //       bytes[7] === 0x0a;
+
+  //     console.log("Detected PNG:", isPng);
+  //     console.log("Detected JPEG:", isJpeg);
+
+  //     if (!isPng && !isJpeg) {
+  //       console.error("NOT PNG OR JPEG. RAW DUMP BELOW:");
+  //       console.log(new TextDecoder().decode(bytes.slice(0, 200))); // may show HTML or JSON
+  //       throw new Error(
+  //         "Downloaded file is NOT PNG/JPEG. Probably HTML or an error page."
+  //       );
+  //     }
+
+  //     // ======================================================================
+  //     // PDF-LIB WORK
+  //     // ======================================================================
+  //     const pdfDoc = await PDFDocument.create();
+  //     const page = pdfDoc.addPage([288, 432]); // 4x6
+
+  //     let embeddedImage;
+
+  //     if (isPng) {
+  //       console.log("Embedding PNG...");
+  //       embeddedImage = await pdfDoc.embedPng(bytes);
+  //     } else {
+  //       console.log("Embedding JPEG...");
+  //       embeddedImage = await pdfDoc.embedJpg(bytes);
+  //     }
+
+  //     const { width: imgW, height: imgH } = embeddedImage.size();
+  //     console.log("Image size:", imgW, imgH);
+
+  //     const pageW = page.getWidth();
+  //     const pageH = page.getHeight();
+  //     const scale = Math.min(pageW / imgW, pageH / imgH);
+
+  //     page.drawImage(embeddedImage, {
+  //       x: (pageW - imgW * scale) / 2,
+  //       y: (pageH - imgH * scale) / 2,
+  //       width: imgW * scale,
+  //       height: imgH * scale,
+  //     });
+
+  //     const pdfBytes = await pdfDoc.save();
+  //     const pdfBase64 = uint8ArrayToBase64(pdfBytes);
+
+  //     console.log("PDF generated successfully. Size:", pdfBytes.length);
+  //     console.log("PDF Bse64. Size:", pdfBase64);
+
+  //     console.log("----- PRINT DEBUG END -----");
+  //   } catch (error) {
+  //     console.error("PRINT ERROR:", error);
+  //     alert(`Failed to print: ${error.message || "Unknown error"}`);
+  //   } finally {
+  //     setTimeout(() => setLoading(false), 35000);
+  //   }
+  // };
 
   return loading ? (
     <div className="w-full h-screen">

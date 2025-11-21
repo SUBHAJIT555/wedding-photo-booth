@@ -59,7 +59,7 @@ if (!file_exists($imagePath)) {
 // Determine MIME type
 $mimeType = mime_content_type($imagePath);
 if (!$mimeType) {
-    $mimeType = 'image/png'; // fallback
+    $mimeType = 'image/jpeg'; // fallback
 }
 
 // Set headers for caching and CORS
