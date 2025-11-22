@@ -67,7 +67,7 @@ function Login() {
   };
 
   return (
-    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen">
+    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen cursor-none">
       {/* Background with Floral Pattern */}
       <div
         className="absolute top-0 left-0 w-full h-full z-[1]"
@@ -104,7 +104,7 @@ function Login() {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-gray-700 mb-2 cursor-none"
               >
                 Username
               </label>
@@ -117,7 +117,7 @@ function Login() {
                   setError("");
                 }}
                 placeholder="Enter username"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e91e63] focus:outline-none text-lg"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e91e63] focus:outline-none text-lg cursor-none"
                 autoFocus
                 disabled={loading}
                 autoComplete="username"
@@ -127,7 +127,7 @@ function Login() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-semibold text-gray-700 mb-2"
+                className="block text-sm font-semibold text-gray-700 mb-2 cursor-none"
               >
                 Password
               </label>
@@ -140,7 +140,7 @@ function Login() {
                   setError("");
                 }}
                 placeholder="Enter password"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e91e63] focus:outline-none text-lg"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e91e63] focus:outline-none text-lg cursor-none"
                 disabled={loading}
                 autoComplete="current-password"
               />
@@ -155,7 +155,7 @@ function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#e91e63] text-white rounded-lg font-semibold hover:bg-[#c2185b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-[#e91e63] text-white rounded-lg font-semibold hover:bg-[#c2185b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-none"
             >
               {loading ? "Logging in..." : "Login"}
             </button>

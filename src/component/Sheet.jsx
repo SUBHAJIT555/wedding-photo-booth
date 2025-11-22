@@ -11,7 +11,7 @@ export default function Sheet({ isOpen, onClose, children, side = "bottom" }) {
   useEffect(() => {
     if (scrollRef.current) {
       enableDragScroll(scrollRef.current);
-      scrollRef.current.style.cursor = "grab";
+      scrollRef.current.style.cursor = "none";
     }
   }, [isOpen]);
 
@@ -29,7 +29,7 @@ export default function Sheet({ isOpen, onClose, children, side = "bottom" }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[40]"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[40] cursor-none"
             onClick={onClose}
           />
 
@@ -40,7 +40,7 @@ export default function Sheet({ isOpen, onClose, children, side = "bottom" }) {
             exit="exit"
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
             className={`
-              fixed 
+              fixed cursor-none
               ${isTop ? "top-0 rounded-b-3xl" : "bottom-0 rounded-t-3xl"} 
               left-0 right-0 bg-white mx-4 z-[50]
             `}
@@ -59,7 +59,7 @@ export default function Sheet({ isOpen, onClose, children, side = "bottom" }) {
             {/* REAL scrollable container */}
             <div
               ref={scrollRef}
-              className="overflow-y-auto px-4 pb-5 h-full select-none"
+              className="overflow-y-auto px-4 pb-5 h-full select-none "
               style={{
                 WebkitOverflowScrolling: "auto", // Chromium fallback
               }}

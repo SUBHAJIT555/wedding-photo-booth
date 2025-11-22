@@ -6,7 +6,7 @@ import { FaHeart } from "react-icons/fa";
 
 function Instruction() {
   return (
-    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen">
+    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen cursor-none">
       {/* Background with Floral Pattern - Same as Home page */}
       <div
         className="absolute top-0 left-0 w-full h-full z-[1]"
@@ -81,7 +81,9 @@ function Instruction() {
                 and families.
               </p>
               <p className="text-xl leading-relaxed md:text-7xl xl:text-7xl font-krylon text-primary">
-                &quot;<FaHeart className="inline-block text-5xl text-yellow-400 md:text-6xl" />&quot;
+                &quot;
+                <FaHeart className="inline-block text-5xl text-yellow-400 md:text-6xl" />
+                &quot;
               </p>
             </div>
           </div>
@@ -91,7 +93,7 @@ function Instruction() {
         <div className="flex justify-center items-center mt-4">
           <Link
             to="/capture"
-            className="inline-block px-[12vw] py-[3vw] md:px-16 md:py-4 text-[4vw] md:text-[2.5vw] font-semibold text-white bg-[#e91e63] hover:bg-[#c2185b] transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 rounded-tl-2xl rounded-br-2xl font-krylon tracking-wider"
+            className="inline-block px-[12vw] py-[3vw] md:px-16 md:py-4 text-[4vw] md:text-[2.5vw] font-semibold text-white bg-[#e91e63] hover:bg-[#c2185b] transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 rounded-tl-2xl rounded-br-2xl font-krylon tracking-wider cursor-none"
           >
             Take Photo
           </Link>

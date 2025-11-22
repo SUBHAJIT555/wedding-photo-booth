@@ -6,7 +6,7 @@ export function enableDragScroll(el) {
   const mouseDown = (e) => {
     isDragging = true;
     pos = { top: el.scrollTop, y: e.clientY };
-    el.style.cursor = "grabbing";
+    // el.style.cursor = "grabbing";
     document.addEventListener("mousemove", mouseMove);
     document.addEventListener("mouseup", mouseUp);
   };
@@ -19,7 +19,7 @@ export function enableDragScroll(el) {
 
   const mouseUp = () => {
     isDragging = false;
-    el.style.cursor = "grab";
+    // el.style.cursor = "grab";
     document.removeEventListener("mousemove", mouseMove);
     document.removeEventListener("mouseup", mouseUp);
   };

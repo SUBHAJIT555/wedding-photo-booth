@@ -32,7 +32,7 @@ function Capture() {
   const [loading, setLoading] = useState(false);
   const [isRestarting, setIsRestarting] = useState(false);
   const [showBottomSheet, setShowBottomSheet] = useState(false);
-  const [activeTab, setActiveTab] = useState("props");
+  const [activeTab, setActiveTab] = useState("frames");
   const [selectedProps, setSelectedProps] = useState([]);
   const [selectedFrame, setSelectedFrame] = useState(null);
   const [nextPropId, setNextPropId] = useState(1);
@@ -733,7 +733,7 @@ function Capture() {
   };
 
   return (
-    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen ">
+    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen cursor-none">
       <CaptureBackground />
 
       {/* Main Content Container */}

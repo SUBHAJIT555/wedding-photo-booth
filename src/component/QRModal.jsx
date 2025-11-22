@@ -87,7 +87,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
 
   return (
     <div
-      className="flex fixed inset-0 z-50 justify-center items-center p-4 bg-black bg-opacity-70"
+      className="flex fixed inset-0 z-50 justify-center items-center p-4 bg-black bg-opacity-70 cursor-none"
       onClick={onClose}
     >
       <div
@@ -138,7 +138,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
                   <div className="flex flex-col items-center space-y-2 mt-4">
                     <button
                       onClick={handleCopyUrl}
-                      className="px-4 py-2 bg-[#e91e63] text-white rounded-lg hover:bg-[#c2185b] transition-colors font-semibold text-sm"
+                      className="px-4 py-2 bg-[#e91e63] text-white rounded-lg hover:bg-[#c2185b] transition-colors font-semibold text-sm cursor-none"
                     >
                       {copied ? "Copied!" : "Copy URL"}
                     </button>

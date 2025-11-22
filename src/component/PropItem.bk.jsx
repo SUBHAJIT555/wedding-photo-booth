@@ -214,7 +214,7 @@ const PropItem = memo(function PropItem({
         // top: `${position.y * previewScaleY}px`,
         width: size ? `${size.width}px` : "auto",
         height: size ? `${size.height}px` : "auto",
-        cursor: isDragging ? "grabbing" : "move",
+        // cursor: isDragging ? "grabbing" : "move",
         zIndex: 20,
       }}
       onMouseDown={(e) => handleMouseDown(e, "move")}
@@ -254,7 +254,7 @@ const PropItem = memo(function PropItem({
 
         {/* Rotate Handle */}
         <div
-          className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-6 h-6 flex items-center justify-center bg-yellow-500 rounded-full cursor-grab"
+          className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-6 h-6 flex items-center justify-center bg-yellow-500 rounded-full cursor-none"
           onMouseDown={(e) => handleMouseDown(e, "rotate")}
         >
           <FaUndoAlt color="white" size={12} />

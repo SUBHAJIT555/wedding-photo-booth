@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { memo } from "react";
 import { motion } from "framer-motion";
 import { IoRefresh, IoImages, IoCheckmarkCircle } from "react-icons/io5";
@@ -33,8 +34,8 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
             text-white bg-[#e91e63] hover:bg-[#c2185b] 
             transition-all duration-300 shadow-lg hover:shadow-xl 
             rounded-tl-2xl rounded-br-2xl 
-            font-krylon tracking-wider
-            ${loading ? "opacity-50 cursor-not-allowed" : ""}
+            font-krylon tracking-wider cursor-none
+            ${loading ? "opacity-50 " : ""}
           `}
         >
           {loading ? "Capturing..." : "Capture"}
@@ -78,11 +79,11 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
           border-2 border-[#5d4037] text-[#5d4037] 
           rounded-2xl 
           hover:bg-[#5d4037] hover:text-white 
-          transition-all duration-200 cursor-pointer
+          transition-all duration-200 cursor-none
           flex items-center justify-center
           bg-white/80 backdrop-blur-sm
           relative
-          ${isRestarting ? "opacity-75 cursor-not-allowed" : ""}
+          ${isRestarting ? "opacity-75 " : ""}
         `}
         style={{
           boxShadow:
@@ -175,7 +176,7 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
             w-full h-full border-2 border-[#5d4037] text-[#5d4037] 
             rounded-2xl 
             hover:bg-[#5d4037] hover:text-white 
-            transition-all duration-200 cursor-pointer
+            transition-all duration-200 cursor-none
             flex items-center justify-center
             relative overflow-hidden
             bg-white/80 backdrop-blur-sm
@@ -220,7 +221,7 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
           border-2 border-[#5d4037] text-[#5d4037] 
           rounded-2xl 
           hover:bg-[#5d4037] hover:text-white 
-          transition-all duration-200 cursor-pointer
+          transition-all duration-200 cursor-none
           flex items-center justify-center
           bg-white/80 backdrop-blur-sm
           relative
@@ -237,4 +238,3 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
 });
 
 export default CaptureActionButtons;
-

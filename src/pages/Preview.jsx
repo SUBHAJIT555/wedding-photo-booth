@@ -411,7 +411,7 @@ function Preview() {
       <LoadingSwapping visibility={swaploader} src={printingVideo} />
     </div>
   ) : (
-    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen">
+    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen cursor-none">
       {/* Background with Floral Pattern - Same as other pages */}
       <div
         className="absolute top-0 left-0 w-full h-full z-[1]"
@@ -463,7 +463,7 @@ function Preview() {
               <img
                 src={finalUrl}
                 alt="Your creation"
-                className="object-cover w-full h-full rounded-2xl border-4 border-white shadow-2xl"
+                className="object-cover w-full h-full rounded-2xl border-4 border-white shadow-2xl cursor-none"
                 style={{
                   aspectRatio: "2/3",
                   objectFit: "cover",
@@ -476,23 +476,23 @@ function Preview() {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap gap-6 justify-center mt-4 md:gap-10 md:mt-6">
+        <div className="flex flex-wrap gap-6 justify-center mt-4 md:gap-10 md:mt-6 cursor-none">
           <button
             onClick={printImageAsPDF}
-            className="border-2 border-[#5d4037] text-[#5d4037] p-3 md:p-4 rounded-2xl hover:bg-[#5d4037] hover:text-white transition-all duration-300 cursor-pointer"
+            className="border-2 border-[#5d4037] text-[#5d4037] p-3 md:p-4 rounded-2xl hover:bg-[#5d4037] hover:text-white transition-all duration-300 cursor-none"
           >
             <ImPrinter className="text-3xl md:text-5xl" />
           </button>
 
           <button
             onClick={() => setIsQRModalOpen(true)}
-            className="border-2 border-[#5d4037] text-[#5d4037] p-3 md:p-4 rounded-2xl hover:bg-[#5d4037] hover:text-white transition-all duration-300 cursor-pointer"
+            className="border-2 border-[#5d4037] text-[#5d4037] p-3 md:p-4 rounded-2xl hover:bg-[#5d4037] hover:text-white transition-all duration-300 cursor-none"
           >
             <IoQrCode className="text-3xl md:text-5xl" />
           </button>
 
           <Link to="/">
-            <button className="border-2 border-[#5d4037] text-[#5d4037] p-3 md:p-4 rounded-2xl hover:bg-[#5d4037] hover:text-white transition-all duration-300 cursor-pointer">
+            <button className="border-2 border-[#5d4037] text-[#5d4037] p-3 md:p-4 rounded-2xl hover:bg-[#5d4037] hover:text-white transition-all duration-300 cursor-none">
               <IoHome className="text-3xl md:text-5xl" />
             </button>
           </Link>

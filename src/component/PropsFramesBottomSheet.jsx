@@ -1,9 +1,8 @@
 import { memo, useEffect, useMemo, useRef } from "react";
-import Sheet from "./Sheet";
 import { props as availableProps, frames } from "../constant/propsAndFrames";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import PropTypes from "prop-types";
-import BottomSheet from "./BottomSheet";
+import Sheet from "./Sheet";
 
 // ===== Drag Scroll Helper (works on Raspberry Pi Chromium) =====
 function enableDragScroll(el) {
@@ -13,7 +12,7 @@ function enableDragScroll(el) {
   const mouseDown = (e) => {
     isDragging = true;
     pos = { top: el.scrollTop, y: e.clientY };
-    el.style.cursor = "grabbing";
+    // el.style.cursor = "grabbing";
     document.addEventListener("mousemove", mouseMove);
     document.addEventListener("mouseup", mouseUp);
   };
@@ -26,7 +25,7 @@ function enableDragScroll(el) {
 
   const mouseUp = () => {
     isDragging = false;
-    el.style.cursor = "grab";
+    el.style.cursor = "none";
     document.removeEventListener("mousemove", mouseMove);
     document.removeEventListener("mouseup", mouseUp);
   };
@@ -40,7 +39,7 @@ const PropItem = memo(function PropItem({ prop, isSelected, onToggleProp }) {
     <button
       key={prop.id}
       onClick={() => onToggleProp(prop)}
-      className={`relative flex flex-col items-center p-3 rounded-xl ${
+      className={`relative flex flex-col items-center p-3 rounded-xl cursor-none ${
         isSelected
           ? "bg-gradient-to-br from-[#e91e63]/10 to-[#f06292]/10 border-2 border-[#e91e63] shadow-md"
           : "bg-white border-2 border-gray-200 hover:border-[#e91e63]/50 hover:shadow-md"
@@ -78,7 +77,7 @@ const FrameItem = memo(function FrameItem({
     <button
       key={frame.id}
       onClick={() => (isSelected ? onRemoveFrame() : onApplyFrame(frame))}
-      className={`relative flex flex-col items-center p-2 rounded-xl ${
+      className={`relative flex flex-col items-center p-2 rounded-xl cursor-none ${
         isSelected
           ? "bg-gradient-to-br from-[#e91e63]/10 to-[#f06292]/10 border-2 border-[#e91e63] shadow-lg"
           : "bg-white border-2 border-gray-200 hover:border-[#e91e63]/50 hover:shadow-md"
@@ -167,8 +166,8 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
   );
 
   return (
-    <BottomSheet
-      // side="top"
+    <Sheet
+      side="top"
       isOpen={isOpen && capturedImage}
       onClose={onClose}
       activeTab={activeTab}
@@ -176,38 +175,38 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
     >
       <div className="flex gap-2 p-1 mb-4 bg-gray-100 rounded-2xl">
         <button
-          onClick={() => onTabChange("props")}
-          className={`flex-1 py-3 px-4 rounded-xl ${
-            activeTab === "props" ? "bg-[#e91e63] text-white" : "bg-gray-200"
-          }`}
-        >
-          Props
-        </button>
-        <button
           onClick={() => onTabChange("frames")}
-          className={`flex-1 py-3 px-4 rounded-xl ${
+          className={`flex-1 py-3 px-4 rounded-xl cursor-none ${
             activeTab === "frames" ? "bg-[#e91e63] text-white" : "bg-gray-200"
           }`}
         >
           Frames
         </button>
+        <button
+          onClick={() => onTabChange("props")}
+          className={`flex-1 py-3 px-4 rounded-xl cursor-none ${
+            activeTab === "props" ? "bg-[#e91e63] text-white" : "bg-gray-200"
+          }`}
+        >
+          Props
+        </button>
       </div>
 
       <div className="flex-1 px-2">
+        {activeTab === "frames" && (
+          <div className="grid grid-cols-3 gap-4 p-2">{framesList}</div>
+        )}
         {activeTab === "props" && (
           <div
             ref={scrollRef}
             className="h-[720px] overflow-y-auto bg-white rounded-xl p-2 hide-scrollbar"
-            style={{ cursor: "grab", WebkitOverflowScrolling: "touch" }}
+            style={{ cursor: "none", WebkitOverflowScrolling: "touch" }}
           >
             <div className="grid grid-cols-3 gap-10">{propsList}</div>
           </div>
         )}
-        {activeTab === "frames" && (
-          <div className="grid grid-cols-3 gap-4 p-2">{framesList}</div>
-        )}
       </div>
-    </BottomSheet>
+    </Sheet>
   );
 });
 

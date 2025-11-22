@@ -6,7 +6,7 @@ import SHLogo from "../assets/images/home/SH-Logo.svg";
 
 function Home() {
   return (
-    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen">
+    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen cursor-none">
       {/* Background with Floral Pattern */}
       <div
         className="absolute top-0 left-0 w-full h-full z-[1]"
@@ -54,16 +54,11 @@ function Home() {
             <h1 className="text-4xl md:text-6xl text-center mb-3 md:mb-16 leading-relaxed text-[#e91e63] font-dm-serif">
               Let&apos;s Capture
               <br />
-              <span className="text-4xl md:text-6xl">
-                Some Haldi Magic!
-              </span>
+              <span className="text-4xl md:text-6xl">Some Haldi Magic!</span>
             </h1>
 
             {/* Sub-text */}
-            <p
-              className="mb-10 text-xl leading-relaxed text-center md:text-3xl md:mb-12 font-krylon" 
-              
-            >
+            <p className="mb-10 text-xl leading-relaxed text-center md:text-3xl md:mb-12 font-krylon">
               &quot;Because every smile deserves a little haldi.&quot;
             </p>
 
@@ -71,17 +66,14 @@ function Home() {
             <div className="mb-6 md:mb-8">
               <Link
                 to="/instruction"
-                className="inline-block px-8 py-3 md:px-12 md:py-4 text-[3.5vw] md:text-[2vw] font-semibold text-white bg-[#e91e63] hover:bg-[#c2185b] transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 rounded-tl-2xl rounded-br-2xl font-krylon tracking-wider"
+                className="inline-block px-8 py-3 md:px-12 md:py-4 text-[3.5vw] md:text-[2vw] font-semibold text-white bg-[#e91e63] hover:bg-[#c2185b] transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 rounded-tl-2xl rounded-br-2xl font-krylon tracking-wider cursor-none"
               >
                 Start the Fun
               </Link>
             </div>
 
             {/* Hashtag */}
-            <p
-              className="text-3xl italic md:text-5xl font-dynalight text-primary"
-             
-            >
+            <p className="text-3xl italic md:text-5xl font-dynalight text-primary">
               #SabiGautHim
             </p>
           </div>
