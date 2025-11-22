@@ -19,6 +19,20 @@ export const INNER_HOLE = {
 
 const ENABLE_LOGS = false;
 
+const CAMERA_CONSTRAINTS = {
+  video: {
+    width: { ideal: 1280 },
+    height: { ideal: 720 },
+    facingMode: "user",
+    advanced: [
+      { exposureMode: "continuous" },
+      { focusMode: "continuous" },
+      { torch: false },
+    ],
+  },
+  audio: false,
+};
+
 function Capture() {
   const videoRef = useRef(null);
   const navigate = useNavigate();
@@ -43,6 +57,38 @@ function Capture() {
   });
   const [propsButtonClicked, setPropsButtonClicked] = useState(false);
   // const [debugInfo, setDebugInfo] = useState({});
+
+  const waitForExposure = (video) =>
+    new Promise((resolve) => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = 64;
+      canvas.height = 64;
+
+      const check = () => {
+        if (!video.videoWidth) {
+          requestAnimationFrame(check);
+          return;
+        }
+
+        ctx.drawImage(video, 0, 0, 64, 64);
+        const data = ctx.getImageData(0, 0, 64, 64).data;
+
+        let total = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          total += data[i] + data[i + 1] + data[i + 2];
+        }
+
+        const avg = total / (64 * 64 * 3);
+
+        // exposure ready
+        if (avg > 35) return resolve();
+
+        requestAnimationFrame(check);
+      };
+
+      check();
+    });
 
   const drawPropsAsync = useCallback(
     async (ctx) => {
@@ -183,82 +229,110 @@ function Capture() {
 
   const startCamera = useCallback(async () => {
     try {
-      // Stop any existing stream first
-      if (videoRef.current && videoRef.current.srcObject) {
-        const existingStream = videoRef.current.srcObject;
-        if (existingStream && existingStream.getTracks) {
-          existingStream.getTracks().forEach((track) => track.stop());
-        }
+      if (videoRef.current?.srcObject) {
+        videoRef.current.srcObject.getTracks().forEach((t) => t.stop());
         videoRef.current.srcObject = null;
       }
 
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          facingMode: "user",
-        },
-        audio: false,
+      const stream = await navigator.mediaDevices.getUserMedia(
+        CAMERA_CONSTRAINTS
+      );
+
+      videoRef.current.srcObject = stream;
+      setVideoStream(stream);
+
+      // Wait for metadata
+      await new Promise((resolve) => {
+        videoRef.current.onloadedmetadata = resolve;
       });
 
-      if (videoRef.current) {
-        // Set the stream
-        videoRef.current.srcObject = stream;
-        setVideoStream(stream);
+      // 🔥 Wait for exposure
+      await waitForExposure(videoRef.current);
 
-        // Wait for video to be ready
-        return new Promise((resolve) => {
-          const handleCanPlay = () => {
-            if (videoRef.current) {
-              videoRef.current.removeEventListener("canplay", handleCanPlay);
-              videoRef.current.removeEventListener(
-                "loadedmetadata",
-                handleLoadedMetadata
-              );
-              resolve();
-            }
-          };
-
-          const handleLoadedMetadata = () => {
-            if (videoRef.current) {
-              videoRef.current.removeEventListener("canplay", handleCanPlay);
-              videoRef.current.removeEventListener(
-                "loadedmetadata",
-                handleLoadedMetadata
-              );
-              resolve();
-            }
-          };
-
-          videoRef.current.addEventListener("canplay", handleCanPlay);
-          videoRef.current.addEventListener(
-            "loadedmetadata",
-            handleLoadedMetadata
-          );
-
-          // Fallback timeout
-          setTimeout(() => {
-            if (videoRef.current) {
-              videoRef.current.removeEventListener("canplay", handleCanPlay);
-              videoRef.current.removeEventListener(
-                "loadedmetadata",
-                handleLoadedMetadata
-              );
-            }
-            resolve();
-          }, 2000);
-        });
-      }
-    } catch (error) {
-      console.error("Error accessing the camera:", error);
-      // Only show alert for permission denied or not found errors
-      if (error.name === "NotAllowedError" || error.name === "NotFoundError") {
-        alert(
-          "Unable to access camera. Please check permissions and try again."
-        );
-      }
+      console.log("Camera ready (exposure stabilized)");
+    } catch (err) {
+      console.error("Camera error", err);
     }
   }, []);
+
+  // const startCamera = useCallback(async () => {
+  //   try {
+  //     // Stop any existing stream first
+  //     if (videoRef.current && videoRef.current.srcObject) {
+  //       const existingStream = videoRef.current.srcObject;
+  //       if (existingStream && existingStream.getTracks) {
+  //         existingStream.getTracks().forEach((track) => track.stop());
+  //       }
+  //       videoRef.current.srcObject = null;
+  //     }
+
+  //     const stream = await navigator.mediaDevices.getUserMedia({
+  //       video: {
+  //         width: { ideal: 1280 },
+  //         height: { ideal: 720 },
+  //         facingMode: "user",
+  //       },
+  //       audio: false,
+  //     });
+
+  //     if (videoRef.current) {
+  //       // Set the stream
+  //       videoRef.current.srcObject = stream;
+  //       setVideoStream(stream);
+
+  //       // Wait for video to be ready
+  //       return new Promise((resolve) => {
+  //         const handleCanPlay = () => {
+  //           if (videoRef.current) {
+  //             videoRef.current.removeEventListener("canplay", handleCanPlay);
+  //             videoRef.current.removeEventListener(
+  //               "loadedmetadata",
+  //               handleLoadedMetadata
+  //             );
+  //             resolve();
+  //           }
+  //         };
+
+  //         const handleLoadedMetadata = () => {
+  //           if (videoRef.current) {
+  //             videoRef.current.removeEventListener("canplay", handleCanPlay);
+  //             videoRef.current.removeEventListener(
+  //               "loadedmetadata",
+  //               handleLoadedMetadata
+  //             );
+  //             resolve();
+  //           }
+  //         };
+
+  //         videoRef.current.addEventListener("canplay", handleCanPlay);
+  //         videoRef.current.addEventListener(
+  //           "loadedmetadata",
+  //           handleLoadedMetadata
+  //         );
+
+  //         // Fallback timeout
+  //         setTimeout(() => {
+  //           if (videoRef.current) {
+  //             videoRef.current.removeEventListener("canplay", handleCanPlay);
+  //             videoRef.current.removeEventListener(
+  //               "loadedmetadata",
+  //               handleLoadedMetadata
+  //             );
+  //           }
+  //           resolve();
+  //         }, 2000);
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error accessing the camera:", error);
+  //     // Only show alert for permission denied or not found errors
+  //     if (error.name === "NotAllowedError" || error.name === "NotFoundError") {
+  //       alert(
+  //         "Unable to access camera. Please check permissions and try again."
+  //       );
+  //     }
+  //   }
+  // }, []);
 
   const stopVideo = useCallback(() => {
     // Stop stream from video element if available
