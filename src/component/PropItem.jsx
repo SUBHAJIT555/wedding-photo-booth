@@ -254,7 +254,7 @@ const PropItem = memo(function PropItem({
 
         {/* Rotate Handle */}
         <div
-          className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-6 h-6 flex items-center justify-center bg-yellow-500 rounded-full cursor-none"
+          className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-6 h-6 flex items-center justify-center bg-yellow-500 rounded-full "
           onMouseDown={(e) => handleMouseDown(e, "rotate")}
         >
           <FaUndoAlt color="white" size={12} />

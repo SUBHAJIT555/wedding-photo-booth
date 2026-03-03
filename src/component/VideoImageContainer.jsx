@@ -43,7 +43,7 @@ const VideoImageContainer = memo(function VideoImageContainer({
   return (
     <div
       ref={imageContainerRef}
-      className="flex relative justify-center items-center w-full rounded-2xl bg-white cursor-none"
+      className="flex relative justify-center items-center w-full rounded-2xl bg-white "
       style={{
         maxWidth: "70vw",
         aspectRatio: "2/3",

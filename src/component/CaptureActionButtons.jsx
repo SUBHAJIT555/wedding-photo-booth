@@ -34,7 +34,7 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
             text-white bg-[#e91e63] hover:bg-[#c2185b] 
             transition-all duration-300 shadow-lg hover:shadow-xl 
             rounded-tl-2xl rounded-br-2xl 
-            font-krylon tracking-wider cursor-none
+            font-krylon tracking-wider 
             ${loading ? "opacity-50 " : ""}
           `}
         >
@@ -79,7 +79,7 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
           border-2 border-[#5d4037] text-[#5d4037] 
           rounded-2xl 
           hover:bg-[#5d4037] hover:text-white 
-          transition-all duration-200 cursor-none
+          transition-all duration-200 
           flex items-center justify-center
           bg-white/80 backdrop-blur-sm
           relative
@@ -176,7 +176,7 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
             w-full h-full border-2 border-[#5d4037] text-[#5d4037] 
             rounded-2xl 
             hover:bg-[#5d4037] hover:text-white 
-            transition-all duration-200 cursor-none
+            transition-all duration-200 
             flex items-center justify-center
             relative overflow-hidden
             bg-white/80 backdrop-blur-sm
@@ -221,7 +221,7 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
           border-2 border-[#5d4037] text-[#5d4037] 
           rounded-2xl 
           hover:bg-[#5d4037] hover:text-white 
-          transition-all duration-200 cursor-none
+          transition-all duration-200 
           flex items-center justify-center
           bg-white/80 backdrop-blur-sm
           relative

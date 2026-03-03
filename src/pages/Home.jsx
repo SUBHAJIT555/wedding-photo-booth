@@ -1,83 +1,81 @@
-import { Link } from "react-router-dom";
-import BgImage from "../assets/images/home/Bg.png";
-import FlowerBgImage from "../assets/images/home/Flower-Bg.png";
-import ShapeFrame from "../assets/images/home/Shape-01.png";
-import SHLogo from "../assets/images/home/SH-Logo.svg";
+import { useNavigate } from "react-router-dom";
+import Logo from "../component/Logo";
+import { ShinyButton } from "../component/shiny-button";
+import BackgroundImage from "../assets/logo/background.png";
 
 function Home() {
+  const navigate = useNavigate();
   return (
-    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen cursor-none">
-      {/* Background with Floral Pattern */}
+    <div className="flex overflow-hidden relative flex-col justify-evenly items-center w-full h-screen min-h-screen text-white">
+      {/* Dashed grid - behind image so it doesn't overlay the camera */}
       <div
-        className="absolute top-0 left-0 w-full h-full z-[1]"
+        className="absolute inset-0 z-[-1] pointer-events-none"
         style={{
-          backgroundImage: `url(${BgImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: `
+            linear-gradient(to right, #FF5900 1px, transparent 1px),
+            linear-gradient(to bottom, #FF5900 1px, transparent 1px)
+          `,
+          backgroundSize: "2px 2px",
+          backgroundPosition: "0 0, 0 0",
+          maskImage: `
+            repeating-linear-gradient(
+              to right,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            repeating-linear-gradient(
+              to bottom,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%)
+          `,
+          WebkitMaskImage: `
+            repeating-linear-gradient(
+              to right,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            repeating-linear-gradient(
+              to bottom,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%)
+          `,
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
         }}
-      >
-        {/* Floral overlay */}
-        <div
-          className="absolute top-0 left-0 w-full h-full opacity-90"
-          style={{
-            backgroundImage: `url(${FlowerBgImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
+      />
+
+      {/* Background image - on top of grid */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <img
+          src={BackgroundImage}
+          alt=""
+          className="w-full h-full min-h-full object-cover object-top translate-y-[8%]"
+          aria-hidden
         />
       </div>
 
-      {/* Central Ornate Frame Container */}
-      <div className="relative z-[2] flex flex-col items-center justify-center w-full max-w-[90vw] px-4">
-        {/* Ornate Frame Background */}
-        <div className="relative w-full max-w-[75vw] max-h-[75vh]">
-          <img
-            src={ShapeFrame}
-            alt="Ornate Frame"
-            className="object-contain w-full h-full max-h-[75vh]"
-          />
+      {/* Logo */}
+      <div className="z-[2] mb-[15vw] -mt-[10vw]">
+        <Logo />
+      </div>
 
-          {/* Content inside the frame */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-[10%] py-[8%]">
-            {/* Logo/Monogram */}
-            <div className="mb-4 md:mb-6">
-              <img
-                src={SHLogo}
-                alt="Sabi Gaut Him Logo"
-                className="w-[25vw] max-w-[200px] h-auto"
-              />
-            </div>
-
-            {/* Main Heading */}
-            <h1 className="text-4xl md:text-6xl text-center mb-3 md:mb-16 leading-relaxed text-[#e91e63] font-dm-serif">
-              Let&apos;s Capture
-              <br />
-              <span className="text-4xl md:text-6xl">Some Haldi Magic!</span>
-            </h1>
-
-            {/* Sub-text */}
-            <p className="mb-10 text-xl leading-relaxed text-center md:text-3xl md:mb-12 font-krylon">
-              &quot;Because every smile deserves a little haldi.&quot;
-            </p>
-
-            {/* Start Button */}
-            <div className="mb-6 md:mb-8">
-              <Link
-                to="/instruction"
-                className="inline-block px-8 py-3 md:px-12 md:py-4 text-[3.5vw] md:text-[2vw] font-semibold text-white bg-[#e91e63] hover:bg-[#c2185b] transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 rounded-tl-2xl rounded-br-2xl font-krylon tracking-wider cursor-none"
-              >
-                Start the Fun
-              </Link>
-            </div>
-
-            {/* Hashtag */}
-            <p className="text-3xl italic md:text-5xl font-dynalight text-primary">
-              #SabiGautHim
-            </p>
-          </div>
-        </div>
+      {/* Start Button */}
+      <div className="flex justify-center items-center z-[2] mt-[90vw]">
+        <ShinyButton onClick={() => navigate("/instruction")}>
+          <span className="tracking-widest uppercase font-extrabold">Start</span>
+        </ShinyButton>
       </div>
     </div>
   );

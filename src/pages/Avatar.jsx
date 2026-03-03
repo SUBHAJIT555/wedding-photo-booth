@@ -191,7 +191,7 @@ function Avatar() {
             <div
               key={index}
               className={cn(
-                "group relative w-full max-w-[400px] mx-auto rounded-2xl overflow-hidden cursor-none",
+                "group relative w-full max-w-[400px] mx-auto rounded-2xl overflow-hidden ",
                 avatar.id === selectedAvatarId ? "border-4 border-zinc-200" : ""
               )}
               onClick={() => handleAvatarSelect(avatar.id)}

@@ -39,7 +39,7 @@ const PropItem = memo(function PropItem({ prop, isSelected, onToggleProp }) {
     <button
       key={prop.id}
       onClick={() => onToggleProp(prop)}
-      className={`relative flex flex-col items-center p-3 rounded-xl cursor-none ${
+      className={`relative flex flex-col items-center p-3 rounded-xl  ${
         isSelected
           ? "bg-gradient-to-br from-[#e91e63]/10 to-[#f06292]/10 border-2 border-[#e91e63] shadow-md"
           : "bg-white border-2 border-gray-200 hover:border-[#e91e63]/50 hover:shadow-md"
@@ -77,7 +77,7 @@ const FrameItem = memo(function FrameItem({
     <button
       key={frame.id}
       onClick={() => (isSelected ? onRemoveFrame() : onApplyFrame(frame))}
-      className={`relative flex flex-col items-center p-2 rounded-xl cursor-none ${
+      className={`relative flex flex-col items-center p-2 rounded-xl  ${
         isSelected
           ? "bg-gradient-to-br from-[#e91e63]/10 to-[#f06292]/10 border-2 border-[#e91e63] shadow-lg"
           : "bg-white border-2 border-gray-200 hover:border-[#e91e63]/50 hover:shadow-md"
@@ -176,7 +176,7 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
       <div className="flex gap-2 p-1 mb-4 bg-gray-100 rounded-2xl">
         <button
           onClick={() => onTabChange("frames")}
-          className={`flex-1 py-3 px-4 rounded-xl cursor-none ${
+          className={`flex-1 py-3 px-4 rounded-xl  ${
             activeTab === "frames" ? "bg-[#e91e63] text-white" : "bg-gray-200"
           }`}
         >
@@ -184,7 +184,7 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
         </button>
         <button
           onClick={() => onTabChange("props")}
-          className={`flex-1 py-3 px-4 rounded-xl cursor-none ${
+          className={`flex-1 py-3 px-4 rounded-xl  ${
             activeTab === "props" ? "bg-[#e91e63] text-white" : "bg-gray-200"
           }`}
         >

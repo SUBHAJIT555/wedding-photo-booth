@@ -64,7 +64,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
     if (data && data.startsWith("data:image")) {
       const link = document.createElement("a");
       link.href = data;
-      link.download = `wedding-photo-${Date.now()}.png`;
+      link.download = `talabat-photobooth-${Date.now()}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -87,7 +87,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
 
   return (
     <div
-      className="flex fixed inset-0 z-50 justify-center items-center p-4 bg-black bg-opacity-70 cursor-none"
+      className="flex fixed inset-0 z-50 justify-center items-center p-4 bg-black bg-opacity-70 "
       onClick={onClose}
     >
       <div
@@ -96,7 +96,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-white rounded-full border-2 border-white bg-primary hover:text-primary hover:bg-white hover:border-primary"
+          className="absolute top-4 right-4 p-2 text-white rounded-lg border border-neutral-300 ring-1 ring-offset-2 ring-neutral-300 bg-[#FF5900] hover:text-primary hover:bg-white hover:border-primary"
         >
           <IoMdClose />
         </button>
@@ -105,13 +105,13 @@ const QRModal = ({ isOpen, onClose, data }) => {
           <div className="flex flex-col items-center space-y-4">
             {error ? (
               <div className="flex flex-col items-center space-y-4 p-6">
-                <div className="text-red-600 text-center text-lg font-semibold">
+                <div className="text-[#FF5900] text-center text-xl font-semibold">
                   {error}
                 </div>
                 {data && data.startsWith("data:image") && (
                   <button
                     onClick={handleDownload}
-                    className="px-6 py-3 bg-[#e91e63] text-white rounded-lg hover:bg-[#c2185b] transition-colors font-semibold"
+                    className="px-6 py-3 bg-[#FF5900] text-white rounded-xl ring-1 ring-offset-2 ring-neutral-300 hover:bg-[#FF8C4D] transition-colors font-semibold"
                   >
                     Download Image Instead
                   </button>
@@ -138,7 +138,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
                   <div className="flex flex-col items-center space-y-2 mt-4">
                     <button
                       onClick={handleCopyUrl}
-                      className="px-4 py-2 bg-[#e91e63] text-white rounded-lg hover:bg-[#c2185b] transition-colors font-semibold text-sm cursor-none"
+                      className="px-4 py-2 bg-[#e91e63] text-white rounded-lg hover:bg-[#c2185b] transition-colors font-semibold text-sm "
                     >
                       {copied ? "Copied!" : "Copy URL"}
                     </button>

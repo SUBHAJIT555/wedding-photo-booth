@@ -1,104 +1,111 @@
-import { Link } from "react-router-dom";
-import BgImage from "../assets/images/home/Bg.png";
-import FlowerBgImage from "../assets/images/home/Flower-Bg.png";
-import FlowerImg from "../assets/images/home/Flower-img.png";
-import { FaHeart } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Logo from "../component/Logo";
+import { ShinyButton } from "../component/shiny-button";
 
 function Instruction() {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen cursor-none">
-      {/* Background with Floral Pattern - Same as Home page */}
+    <div className="min-h-screen w-full bg-white relative flex flex-col justify-evenly items-center overflow-hidden">
+      {/* Dashed Bottom Fade Grid - on top of glow so it's visible */}
       <div
-        className="absolute top-0 left-0 w-full h-full z-[1]"
+        className="absolute inset-0 z-[1] pointer-events-none"
         style={{
-          backgroundImage: `url(${BgImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: `
+            linear-gradient(to right, #FF5900 1px, transparent 1px),
+            linear-gradient(to bottom, #FF5900 1px, transparent 1px)
+          `,
+          backgroundSize: "10px 10px",
+          backgroundPosition: "0 0, 0 0",
+          opacity: 0.3,
+          maskImage: `
+            repeating-linear-gradient(
+              to right,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            repeating-linear-gradient(
+              to bottom,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            radial-gradient(ellipse 100% 80% at 50% 100%, #000 50%, transparent 90%)
+          `,
+          WebkitMaskImage: `
+            repeating-linear-gradient(
+              to right,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            repeating-linear-gradient(
+              to bottom,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            radial-gradient(ellipse 100% 80% at 50% 100%, #000 50%, transparent 90%)
+          `,
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
         }}
-      >
-        {/* Floral overlay */}
-        <div
-          className="absolute top-0 left-0 w-full h-full opacity-90"
-          style={{
-            backgroundImage: `url(${FlowerBgImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
-      </div>
+      />
 
-      {/* Main Content Container */}
-      <div className="relative z-[2] flex flex-col items-center justify-center w-full px-4 gap-8">
-        {/* Central Thank You Box */}
-        <div className="relative w-full max-w-[70vw] max-h-[65vh] bg-[#faf9f6] border-4 border-[#e91e63] rounded-tl-3xl rounded-br-3xl shadow-2xl overflow-visible">
-          {/* Floral Decoration - Top Right */}
-          <div className="absolute -top-[12vw] -right-[10vw] z-10">
-            <img
-              src={FlowerImg}
-              alt="Floral decoration"
-              className="w-[25vw] max-w-[200px] h-auto opacity-100"
-            />
-          </div>
+      {/* Amber-style glow background - base #FF5900 */}
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #FF5900 100%)
+          `,
+          backgroundSize: "100% 100%",
+        }}
+      />
 
-          {/* Floral Decoration - Bottom Left */}
-          <div className="absolute -bottom-[7vw] -left-[10vw] z-10">
-            <img
-              src={FlowerImg}
-              alt="Floral decoration"
-              className="w-[28vw] max-w-[230px] h-auto opacity-100 rotate-180"
-            />
-          </div>
+      <div className="flex flex-col justify-evenly items-center w-full flex-1 relative z-[2] text-white px-4 py-8">
+        <Logo />
 
-          {/* Content */}
-          <div className="flex relative z-20 flex-col justify-center items-center px-8 py-6 text-center">
-            {/* Thank You Message */}
-            <div className="flex flex-col gap-4 items-center mb-8">
-              <p className="text-4xl leading-relaxed md:text-5xl xl:text-6xl font-krylon text-primary">
-                Thank you for being a part of our
-              </p>
-              <p className="text-5xl leading-relaxed md:text-6xl xl:text-7xl font-dm-serif text-primary">
-                Haldi ceremony.
-              </p>
-              <p className="text-4xl leading-relaxed md:text-5xl xl:text-6xl font-krylon text-primary">
-                Your presence adds love, laughter
-              </p>
-              <p className="text-4xl leading-relaxed md:text-5xl xl:text-6xl font-krylon text-primary">
-                & memories to our special day.
-              </p>
-            </div>
-
-            {/* Sign-off */}
-            <div className="flex flex-col gap-4 items-center">
-              <p className="text-4xl italic leading-relaxed md:text-5xl xl:text-6xl font-krylon text-primary">
-                With love,
-              </p>
-              <p className="text-4xl leading-relaxed md:text-5xl xl:text-6xl font-dynalight text-primary">
-                #SabiGautHim
-              </p>
-              <p className="text-4xl leading-relaxed md:text-5xl xl:text-6xl font-krylon text-primary">
-                and families.
-              </p>
-              <p className="text-xl leading-relaxed md:text-7xl xl:text-7xl font-krylon text-primary">
-                &quot;
-                <FaHeart className="inline-block text-5xl text-yellow-400 md:text-6xl" />
-                &quot;
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Take Photo Button */}
-        <div className="flex justify-center items-center mt-4">
-          <Link
-            to="/capture"
-            className="inline-block px-[12vw] py-[3vw] md:px-16 md:py-4 text-[4vw] md:text-[2.5vw] font-semibold text-white bg-[#e91e63] hover:bg-[#c2185b] transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 rounded-tl-2xl rounded-br-2xl font-krylon tracking-wider cursor-none"
+        <div className="flex flex-col items-center max-w-2xl px-10 py-12 rounded-2xl bg-[#F4EDE3] border border-neutral-200 ring-1 ring-offset-8 ring-neutral-300 text-center">
+          <h1
+            className="mb-4 text-[3.5rem] md:text-[5rem] font-bold bg-clip-text text-transparent leading-tight"
+            style={{
+              backgroundImage: "linear-gradient(90deg, #FF5900, #411517, #ff8c4d, #FF5900)",
+              backgroundSize: "200% 100%",
+              animation: "gradient-shift 2.5s linear infinite",
+            }}
           >
-            Take Photo
-          </Link>
+            Welcome!
+          </h1>
+          <p className="text-[#FF5900] text-2xl md:text-3xl font-semibold mb-2">
+            to the Talabat Photo Booth
+          </p>
+          <p className="text-[#411517] text-xl md:text-2xl mt-4 leading-relaxed">
+            Capture your moment and take home a memory!
+          </p>
+        </div>
+
+        <div className="flex justify-center items-center">
+          <ShinyButton
+            onClick={() => navigate("/capture")}
+            className="text-[4vw] uppercase font-extrabold"
+          >
+            Take a Photo
+          </ShinyButton>
         </div>
       </div>
+
+      <style>{`
+        @keyframes gradient-shift {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
+        }
+      `}</style>
     </div>
   );
 }

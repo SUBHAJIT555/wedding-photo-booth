@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BgImage from "../assets/images/home/Bg.png";
-import FlowerBgImage from "../assets/images/home/Flower-Bg.png";
-
+import Logo from "../component/Logo";
+import { ShinyButton } from "../component/shiny-button";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -20,83 +19,124 @@ function Login() {
       setLoading(false);
       return;
     }
-
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL || "";
-      let authUrl;
-
-      if (apiUrl) {
-        const baseUrl = apiUrl.replace(/\/+$/, "");
-        authUrl = `${baseUrl}/auth.php`;
-      } else {
-        // console.log("No API URL found, using relative path");
-        authUrl = "/auth.php";
-      }
-
-      const response = await fetch(authUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Important for session cookies
-        body: JSON.stringify({
-          username: username.trim(),
-          password: password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        setError(data.message || "Invalid username or password");
-        setLoading(false);
-        return;
-      }
-
-      // Store authentication status
-      sessionStorage.setItem("authenticated", "true");
+     sessionStorage.setItem("authenticated", "true");
       sessionStorage.setItem("username", data.data.username || username);
 
-      // Navigate to home
       navigate("/");
-    } catch (error) {
-      console.error("Login error:", error);
-      setError("Failed to connect to server. Please try again.");
-      setLoading(false);
-    }
+
+    // try {
+    //   const apiUrl = import.meta.env.VITE_API_URL || "";
+    //   let authUrl;
+
+    //   if (apiUrl) {
+    //     const baseUrl = apiUrl.replace(/\/+$/, "");
+    //     authUrl = `${baseUrl}/auth.php`;
+    //   } else {
+    //     authUrl = "/auth.php";
+    //   }
+
+    //   const response = await fetch(authUrl, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     credentials: "include",
+    //     body: JSON.stringify({
+    //       username: username.trim(),
+    //       password: password,
+    //     }),
+    //   });
+
+    //   const data = await response.json();
+
+    //   if (!response.ok || !data.success) {
+    //     setError(data.message || "Invalid username or password");
+    //     setLoading(false);
+    //     return;
+    //   }
+
+    //   sessionStorage.setItem("authenticated", "true");
+    //   sessionStorage.setItem("username", data.data.username || username);
+
+    //   navigate("/");
+    // } catch (error) {
+    //   console.error("Login error:", error);
+    //   setError("Failed to connect to server. Please try again.");
+    //   setLoading(false);
+    // }
   };
 
   return (
-    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen cursor-none">
-      {/* Background with Floral Pattern */}
+    <div className="flex overflow-hidden relative flex-col justify-center items-center w-full h-screen min-h-screen">
+      {/* Dashed Bottom Fade Grid */}
       <div
-        className="absolute top-0 left-0 w-full h-full z-[1]"
+        className="absolute inset-0 z-[1] pointer-events-none"
         style={{
-          backgroundImage: `url(${BgImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: `
+            linear-gradient(to right, #FF5900 1px, transparent 1px),
+            linear-gradient(to bottom, #FF5900 1px, transparent 1px)
+          `,
+          backgroundSize: "10px 10px",
+          backgroundPosition: "0 0, 0 0",
+          opacity: 0.3,
+          maskImage: `
+            repeating-linear-gradient(
+              to right,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            repeating-linear-gradient(
+              to bottom,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            radial-gradient(ellipse 100% 80% at 50% 100%, #000 50%, transparent 90%)
+          `,
+          WebkitMaskImage: `
+            repeating-linear-gradient(
+              to right,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            repeating-linear-gradient(
+              to bottom,
+              black 0px,
+              black 3px,
+              transparent 3px,
+              transparent 8px
+            ),
+            radial-gradient(ellipse 100% 80% at 50% 100%, #000 50%, transparent 90%)
+          `,
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in",
         }}
-      >
-        {/* Floral overlay */}
-        <div
-          className="absolute top-0 left-0 w-full h-full opacity-90"
-          style={{
-            backgroundImage: `url(${FlowerBgImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        />
-      </div>
+      />
+
+      {/* Amber-style glow background */}
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #FF5900 100%)
+          `,
+          backgroundSize: "100% 100%",
+        }}
+      />
 
       {/* Main Content Container */}
       <div className="relative z-[2] flex flex-col items-center justify-center w-full px-4">
-        <div className="w-full max-w-md p-8 bg-white bg-opacity-95 rounded-2xl shadow-2xl">
+        <div className="w-full max-w-md p-8 bg-white bg-opacity-95 rounded-2xl border border-neutral-300 ring-1 ring-neutral-300 ring-offset-4 md:ring-offset-8">
           <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-krylon text-[#5d4037] mb-2">
-              Photo Booth
-            </h1>
+            <div className="flex justify-center items-center mb-10">
+              <Logo />
+            </div>
+
             <p className="text-lg text-gray-600">Admin Login</p>
           </div>
 
@@ -104,7 +144,7 @@ function Login() {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-semibold text-gray-700 mb-2 cursor-none"
+                className="block text-sm font-semibold text-gray-700 mb-2 "
               >
                 Username
               </label>
@@ -117,7 +157,7 @@ function Login() {
                   setError("");
                 }}
                 placeholder="Enter username"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e91e63] focus:outline-none text-lg cursor-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-2xl ring-1 ring-neutral-300 ring-offset-2 focus:border-[#FF5900] focus:outline-none text-lg "
                 autoFocus
                 disabled={loading}
                 autoComplete="username"
@@ -127,7 +167,7 @@ function Login() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-semibold text-gray-700 mb-2 cursor-none"
+                className="block text-sm font-semibold text-gray-700 mb-2 "
               >
                 Password
               </label>
@@ -140,7 +180,7 @@ function Login() {
                   setError("");
                 }}
                 placeholder="Enter password"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#e91e63] focus:outline-none text-lg cursor-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-2xl ring-1 ring-neutral-300 ring-offset-2 focus:border-[#FF5900] focus:outline-none text-lg "
                 disabled={loading}
                 autoComplete="current-password"
               />
@@ -152,13 +192,12 @@ function Login() {
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-[#e91e63] text-white rounded-lg font-semibold hover:bg-[#c2185b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-none"
+            <ShinyButton
+              onClick={handleSubmit}
+              className={`w-full !text-lg !py-2 !px-6 ${loading ? "opacity-50 pointer-events-none" : ""}`}
             >
               {loading ? "Logging in..." : "Login"}
-            </button>
+            </ShinyButton>
           </form>
         </div>
       </div>
