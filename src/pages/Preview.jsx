@@ -178,8 +178,8 @@ function Preview() {
       const rightIconSize = 48;
       const fontSize = 32;
   
-      const leftLogoX = 40;
-      const rightIconX = POSTCARD_W - rightIconSize - 40;
+      const leftLogoX = 100;
+      const rightIconX = POSTCARD_W - rightIconSize - 100;
   
       const logoImg = new Image();
       const iconImg = new Image();
