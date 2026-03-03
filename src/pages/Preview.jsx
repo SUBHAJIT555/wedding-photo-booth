@@ -123,6 +123,7 @@ function Preview() {
     const POSTCARD_W = 1200;
     const POSTCARD_H = 1800;
     const LABEL_HEIGHT = 100;
+    const LABEL_OFFSET= 80
   
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -168,7 +169,7 @@ function Preview() {
       ctx.drawImage(img, drawX, drawY, drawW, drawH);
   
       // ✅ Label INSIDE 1800px
-      const labelY = POSTCARD_H - LABEL_HEIGHT;
+      const labelY = POSTCARD_H - LABEL_HEIGHT - LABEL_OFFSET;
   
       ctx.fillStyle = selectedLabel.bgColor;
       ctx.fillRect(0, labelY, POSTCARD_W, LABEL_HEIGHT);
