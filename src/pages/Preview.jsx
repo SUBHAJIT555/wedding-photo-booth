@@ -114,109 +114,117 @@ function Preview() {
     }
   };
 
-  const composeImageWithLabel = useCallback(async () => {
+  const composeImageWithLabel = useCallback(() => {
     if (!savedImage || !canvasRef.current) return;
-
+  
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-
-    // Fixed 4x6 inch postcard size at 300 DPI
-    const POSTCARD_W = 1200; // 4 inches * 300 DPI
-    const POSTCARD_H = 1800; // 6 inches * 300 DPI
-    const LABEL_HEIGHT = 100; // Fixed label height
-
+  
+    const POSTCARD_W = 1200;
+    const POSTCARD_H = 1800;
+    const LABEL_HEIGHT = 100;
+  
     const img = new Image();
     img.crossOrigin = "anonymous";
-
+  
     img.onload = () => {
+      // ✅ Hard guarantee final size
+      canvas.width = POSTCARD_W;
+      canvas.height = POSTCARD_H;
+  
+      console.log("Canvas size:", canvas.width, canvas.height); // should log 1200 1800
+  
+      const IMAGE_AREA_HEIGHT = POSTCARD_H - LABEL_HEIGHT;
+  
+      // Background
+      ctx.fillStyle = selectedLabel?.bgColor || "#ffffff";
+      ctx.fillRect(0, 0, POSTCARD_W, POSTCARD_H);
+  
       const imgW = img.naturalWidth;
       const imgH = img.naturalHeight;
-
-      // Set canvas to postcard size + label
-      canvas.width = POSTCARD_W;
-      canvas.height = POSTCARD_H + LABEL_HEIGHT;
-
-      // Background color follows selected label (default white)
-      const backgroundColor = selectedLabel?.bgColor || "#ffffff";
-      ctx.fillStyle = backgroundColor;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Fit collage inside postcard area with margins so brand background shows
-      const imgRatio = imgW / imgH;
+  
       const marginX = 40;
       const marginY = 60;
+  
       const availableW = POSTCARD_W - marginX * 2;
-      const availableH = POSTCARD_H - marginY * 2;
+      const availableH = IMAGE_AREA_HEIGHT - marginY * 2;
+  
+      const imgRatio = imgW / imgH;
       const areaRatio = availableW / availableH;
-
-      let drawW, drawH, drawX, drawY;
-
+  
+      let drawW, drawH;
+  
       if (imgRatio > areaRatio) {
-        // Image wider than area → fit width
         drawW = availableW;
         drawH = drawW / imgRatio;
       } else {
-        // Image taller than area → fit height
         drawH = availableH;
         drawW = drawH * imgRatio;
       }
-
-      drawX = marginX + (availableW - drawW) / 2;
-      drawY = marginY + (availableH - drawH) / 2;
-
+  
+      const drawX = marginX + (availableW - drawW) / 2;
+      const drawY = marginY + (availableH - drawH) / 2;
+  
       ctx.drawImage(img, drawX, drawY, drawW, drawH);
-
-      // Draw label bar
+  
+      // ✅ Label INSIDE 1800px
+      const labelY = POSTCARD_H - LABEL_HEIGHT;
+  
       ctx.fillStyle = selectedLabel.bgColor;
-      ctx.fillRect(0, POSTCARD_H, POSTCARD_W, LABEL_HEIGHT);
-
-      // Layout: [logo text]  [text centered]  [icon]
+      ctx.fillRect(0, labelY, POSTCARD_W, LABEL_HEIGHT);
+  
       const leftLogoFontSize = 40;
       const rightIconSize = 48;
       const fontSize = 32;
-      const labelCenterY = POSTCARD_H + LABEL_HEIGHT / 2;
+  
       const leftLogoX = 40;
       const rightIconX = POSTCARD_W - rightIconSize - 40;
-      const rightIconY = POSTCARD_H + (LABEL_HEIGHT - rightIconSize) / 2;
-
-      // Load logo and icon images
+  
       const logoImg = new Image();
       const iconImg = new Image();
+  
       logoImg.crossOrigin = "anonymous";
       iconImg.crossOrigin = "anonymous";
-
-      let loadedCount = 0;
+  
+      let loaded = 0;
       const handleLoaded = () => {
-        loadedCount += 1;
-        if (loadedCount < 2) return;
-
-        // Left Talabat logo image
+        loaded++;
+        if (loaded < 2) return;
+  
+        // Left logo
         const logoHeight = leftLogoFontSize + 6;
         const logoRatio = logoImg.naturalWidth / logoImg.naturalHeight || 1;
         const logoWidth = logoHeight * logoRatio;
-        const logoY = POSTCARD_H + (LABEL_HEIGHT - logoHeight) / 2;
+        const logoY = labelY + (LABEL_HEIGHT - logoHeight) / 2;
+  
         ctx.drawImage(logoImg, leftLogoX, logoY, logoWidth, logoHeight);
-
-        // Right small icon
+  
+        // Right icon
+        const rightIconY = labelY + (LABEL_HEIGHT - rightIconSize) / 2;
         ctx.drawImage(iconImg, rightIconX, rightIconY, rightIconSize, rightIconSize);
-
-        // Centered text
+  
+        // Center text
         ctx.fillStyle = selectedLabel.textColor;
         ctx.font = `bold ${fontSize}px Inter, sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(selectedLabel.text, POSTCARD_W / 2, labelCenterY);
-
-        const composedImage = canvas.toDataURL("image/jpeg", 0.85);
+        ctx.fillText(
+          selectedLabel.text,
+          POSTCARD_W / 2,
+          labelY + LABEL_HEIGHT / 2
+        );
+  
+        const composedImage = canvas.toDataURL("image/jpeg", 0.9);
         setFinalImageWithLabel(composedImage);
       };
-
+  
       logoImg.onload = handleLoaded;
       iconImg.onload = handleLoaded;
+  
       logoImg.src = TalabatLogo;
       iconImg.src = TalabatIcon;
     };
-
+  
     img.src = savedImage;
   }, [savedImage, selectedLabel]);
 
