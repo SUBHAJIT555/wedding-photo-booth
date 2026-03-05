@@ -14,13 +14,13 @@ import TalabatIcon from "../assets/logo/talabat-icon.svg";
 import TalabatLogo from "../assets/logo/remix-logo.svg";
 
 const BRAND_LABELS = [
-  {
-    id: 1,
-    name: "Classic",
-    bgColor: "#FF5900",
-    textColor: "#F4EDE3",
-    text: "Powered by Talabat",
-  },
+  // {
+  //   id: 1,
+  //   name: "Classic",
+  //   bgColor: "#FF5900",
+  //   textColor: "#F4EDE3",
+  //   text: "Powered by Talabat",
+  // },
   {
     id: 2,
     name: "Minimal",
@@ -28,13 +28,13 @@ const BRAND_LABELS = [
     textColor: "#FF5900",
     text: "Powered by Talabat",
   },
-  {
-    id: 3,
-    name: "Dark",
-    bgColor: "#411517",
-    textColor: "#FF5900",
-    text: "Powered by Talabat",
-  },
+  // {
+  //   id: 3,
+  //   name: "Dark",
+  //   bgColor: "#411517",
+  //   textColor: "#FF5900",
+  //   text: "Powered by Talabat",
+  // },
 ];
 
 function Preview() {
@@ -102,8 +102,8 @@ function Preview() {
       }
 
       // Fallback to imgbb
-      const imgbbUrl = await uploadToImgbb(imageToUpload);
-      setShortUrl(imgbbUrl);
+      // const imgbbUrl = await uploadToImgbb(imageToUpload);
+      // setShortUrl(imgbbUrl);
       setIsQRModalOpen(true);
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -174,12 +174,9 @@ function Preview() {
       ctx.fillStyle = selectedLabel.bgColor;
       ctx.fillRect(0, labelY, POSTCARD_W, LABEL_HEIGHT);
   
-      const leftLogoFontSize = 40;
-      const rightIconSize = 48;
-      const fontSize = 32;
-  
-      const leftLogoX = 100;
-      const rightIconX = POSTCARD_W - rightIconSize - 100;
+      const centerLogoFontSize = 80;
+      // const rightIconSize = 48;
+      // const fontSize = 32;
   
       const logoImg = new Image();
       const iconImg = new Image();
@@ -193,27 +190,28 @@ function Preview() {
         if (loaded < 2) return;
   
         // Left logo
-        const logoHeight = leftLogoFontSize + 6;
+        const logoHeight = centerLogoFontSize + 6;
         const logoRatio = logoImg.naturalWidth / logoImg.naturalHeight || 1;
         const logoWidth = logoHeight * logoRatio;
+        const centerLogoX = (POSTCARD_W - logoWidth) / 2;
         const logoY = labelY + (LABEL_HEIGHT - logoHeight) / 2;
   
-        ctx.drawImage(logoImg, leftLogoX, logoY, logoWidth, logoHeight);
+        ctx.drawImage(logoImg, centerLogoX, logoY, logoWidth, logoHeight);
   
         // Right icon
-        const rightIconY = labelY + (LABEL_HEIGHT - rightIconSize) / 2;
-        ctx.drawImage(iconImg, rightIconX, rightIconY, rightIconSize, rightIconSize);
+        // const rightIconY = labelY + (LABEL_HEIGHT - rightIconSize) / 2;
+        // ctx.drawImage(iconImg, rightIconX, rightIconY, rightIconSize, rightIconSize);
   
         // Center text
-        ctx.fillStyle = selectedLabel.textColor;
-        ctx.font = `bold ${fontSize}px Inter, sans-serif`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(
-          selectedLabel.text,
-          POSTCARD_W / 2,
-          labelY + LABEL_HEIGHT / 2
-        );
+        // ctx.fillStyle = selectedLabel.textColor;
+        // ctx.font = `bold ${fontSize}px Inter, sans-serif`;
+        // ctx.textAlign = "center";
+        // ctx.textBaseline = "middle";
+        // ctx.fillText(
+        //   selectedLabel.text,
+        //   POSTCARD_W / 2,
+        //   labelY + LABEL_HEIGHT / 2
+        // );
   
         const composedImage = canvas.toDataURL("image/jpeg", 0.9);
         setFinalImageWithLabel(composedImage);
@@ -403,7 +401,7 @@ function Preview() {
         </div>
 
         {/* Brand Label Selection */}
-        <div className="flex flex-col items-center gap-6">
+        {/* <div className="flex flex-col items-center gap-6">
           <p className="text-[#411517] text-3xl font-krylon tracking-widest font-black">Choose Your Brand Label Style:</p>
           <div className="flex gap-5">
             {BRAND_LABELS.map((label) => (
@@ -447,7 +445,7 @@ function Preview() {
               </button>
             ))}
           </div>
-        </div>
+        </div>*/}
 
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-10 justify-center text-zinc-200">
