@@ -13,14 +13,12 @@ import TalabatIcon from "../assets/logo/talabat-icon.svg";
 import TalabatLogo from "../assets/logo/remix-logo.svg";
 
 const BRAND_LABELS = {
-    id: 1,
-    name: "Minimal",
-    bgColor: "#F4EDE3",
-    textColor: "#FF5900",
-    text: "Powered by Talabat",
-  }
-;
-
+  id: 1,
+  name: "Minimal",
+  bgColor: "#F4EDE3",
+  textColor: "#FF5900",
+  text: "Powered by Talabat",
+};
 function Preview() {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,23 +38,27 @@ function Preview() {
   }, [loading]);
 
   const uploadToImgbb = async (base64Image) => {
-    const apiKey = import.meta.env.VITE_IMGBB_API_KEY || "7a9d878e0d570c5d3f4b8c8d8a1e9c2f";
-    
+    const apiKey =
+      import.meta.env.VITE_IMGBB_API_KEY || "7a9d878e0d570c5d3f4b8c8d8a1e9c2f";
+
     // Remove data:image/xxx;base64, prefix if present
-    const base64Data = base64Image.includes(",") 
-      ? base64Image.split(",")[1] 
+    const base64Data = base64Image.includes(",")
+      ? base64Image.split(",")[1]
       : base64Image;
 
     const formData = new FormData();
     formData.append("image", base64Data);
 
-    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-      method: "POST",
-      body: formData,
-    });
+    const response = await fetch(
+      `https://api.imgbb.com/1/upload?key=${apiKey}`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
 
     const data = await response.json();
-    
+
     if (data.success) {
       return data.data.url;
     } else {
@@ -73,7 +75,7 @@ function Preview() {
     setIsUploading(true);
     try {
       const imageToUpload = finalImageWithLabel || savedImage;
-      
+
       // Try server upload first
       try {
         const result = await uploadImage(imageToUpload);
@@ -100,30 +102,30 @@ function Preview() {
 
   const composeImageWithLabel = useCallback(() => {
     if (!savedImage || !canvasRef.current) return;
-  
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-  
+
     const POSTCARD_W = 1200;
     const POSTCARD_H = 1800;
     const LABEL_HEIGHT = 100;
     const LABEL_OFFSET = 140;
-  
+
     const img = new Image();
     img.crossOrigin = "anonymous";
-  
+
     img.onload = () => {
       // ✅ Hard guarantee final size
       canvas.width = POSTCARD_W;
       canvas.height = POSTCARD_H;
-  
+
       console.log("Canvas size:", canvas.width, canvas.height); // should log 1200 1800
-  
+
       const IMAGE_AREA_HEIGHT = POSTCARD_H - LABEL_HEIGHT;
-  
+
       // Background + frame
       const BORDER_COLOR = "#FF5900";
-      const BORDER_THICKNESS = 40;
+      const BORDER_THICKNESS = 70;
       const BOTTOM_BORDER_THICKNESS = 100;
 
       // Base background
@@ -137,24 +139,34 @@ function Preview() {
       // Side borders (stop above thick bottom bar)
       const sideBorderHeight = POSTCARD_H - BOTTOM_BORDER_THICKNESS;
       ctx.fillRect(0, 0, BORDER_THICKNESS, sideBorderHeight);
-      ctx.fillRect(POSTCARD_W - BORDER_THICKNESS, 0, BORDER_THICKNESS, sideBorderHeight);
+      ctx.fillRect(
+        POSTCARD_W - BORDER_THICKNESS,
+        0,
+        BORDER_THICKNESS,
+        sideBorderHeight,
+      );
       // Bottom border (thicker)
-      ctx.fillRect(0, POSTCARD_H - BOTTOM_BORDER_THICKNESS, POSTCARD_W, BOTTOM_BORDER_THICKNESS);
-  
+      ctx.fillRect(
+        0,
+        POSTCARD_H - BOTTOM_BORDER_THICKNESS,
+        POSTCARD_W,
+        BOTTOM_BORDER_THICKNESS,
+      );
+
       const imgW = img.naturalWidth;
       const imgH = img.naturalHeight;
-  
+
       const marginX = 40;
       const marginY = 60;
-  
+
       const availableW = POSTCARD_W - marginX * 2;
       const availableH = IMAGE_AREA_HEIGHT - marginY * 2;
-  
+
       const imgRatio = imgW / imgH;
       const areaRatio = availableW / availableH;
-  
+
       let drawW, drawH;
-  
+
       if (imgRatio > areaRatio) {
         drawW = availableW;
         drawH = drawW / imgRatio;
@@ -162,52 +174,52 @@ function Preview() {
         drawH = availableH;
         drawW = drawH * imgRatio;
       }
-  
+
       const drawX = marginX + (availableW - drawW) / 2;
       const drawY = marginY + (availableH - drawH) / 2;
-  
+
       ctx.drawImage(img, drawX, drawY, drawW, drawH);
-  
+
       // ✅ Label INSIDE 1800px
       const labelY = POSTCARD_H - LABEL_HEIGHT - LABEL_OFFSET;
-  
+
       // Draw label band inside side borders so they stay visible
       ctx.fillStyle = BRAND_LABELS?.bgColor;
       ctx.fillRect(
         BORDER_THICKNESS,
         labelY,
         POSTCARD_W - BORDER_THICKNESS * 2,
-        LABEL_HEIGHT
+        LABEL_HEIGHT,
       );
-  
-      const centerLogoFontSize = 90;
+
+      const centerLogoFontSize = 110;
       // const rightIconSize = 48;
       // const fontSize = 32;
-  
+
       const logoImg = new Image();
       const iconImg = new Image();
-  
+
       logoImg.crossOrigin = "anonymous";
       iconImg.crossOrigin = "anonymous";
-  
+
       let loaded = 0;
       const handleLoaded = () => {
         loaded++;
         if (loaded < 2) return;
-  
+
         // Left logo
         const logoHeight = centerLogoFontSize + 6;
         const logoRatio = logoImg.naturalWidth / logoImg.naturalHeight || 1;
         const logoWidth = logoHeight * logoRatio;
         const centerLogoX = (POSTCARD_W - logoWidth) / 2;
         const logoY = labelY + (LABEL_HEIGHT - logoHeight) / 2;
-  
+
         ctx.drawImage(logoImg, centerLogoX, logoY, logoWidth, logoHeight);
-  
+
         // Right icon
         // const rightIconY = labelY + (LABEL_HEIGHT - rightIconSize) / 2;
         // ctx.drawImage(iconImg, rightIconX, rightIconY, rightIconSize, rightIconSize);
-  
+
         // Center text
         // ctx.fillStyle = selectedLabel.textColor;
         // ctx.font = `bold ${fontSize}px Inter, sans-serif`;
@@ -218,18 +230,18 @@ function Preview() {
         //   POSTCARD_W / 2,
         //   labelY + LABEL_HEIGHT / 2
         // );
-  
+
         const composedImage = canvas.toDataURL("image/jpeg", 0.9);
         setFinalImageWithLabel(composedImage);
       };
-  
+
       logoImg.onload = handleLoaded;
       iconImg.onload = handleLoaded;
-  
+
       logoImg.src = TalabatLogo;
       iconImg.src = TalabatIcon;
     };
-  
+
     img.src = savedImage;
   }, [savedImage, BRAND_LABELS]);
 
@@ -396,7 +408,10 @@ function Preview() {
         <Logo />
 
         {/* Image Preview - 4x6 + label ratio */}
-        <div className="group mx-auto rounded-xl overflow-hidden ring-1 ring-offset-8 ring-neutral-300" style={{ width: "min(80vw, 600px)", maxHeight: "75vh" }}>
+        <div
+          className="group mx-auto rounded-xl overflow-hidden ring-1 ring-offset-8 ring-neutral-300"
+          style={{ width: "min(80vw, 600px)", maxHeight: "75vh" }}
+        >
           {finalUrl && (
             <img
               src={finalUrl}
@@ -468,7 +483,9 @@ function Preview() {
             className={`border-[1px] border-zinc-300 p-2 px-3 rounded-2xl bg-neutral-100 hover:bg-[#FF5900] group transition-all duration-300 ring-1 ring-offset-4 ring-neutral-300 ${isUploading ? "opacity-50" : ""}`}
           >
             {isUploading ? (
-              <div className="text-3xl md:text-5xl text-[#FF5900] animate-spin">⏳</div>
+              <div className="text-3xl md:text-5xl text-[#FF5900] animate-spin">
+                ⏳
+              </div>
             ) : (
               <IoQrCode className="text-3xl md:text-5xl text-[#FF5900] group-hover:text-[#ffffff]" />
             )}
