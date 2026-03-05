@@ -3,7 +3,6 @@ import { ImPrinter } from "react-icons/im";
 import { Link } from "react-router-dom";
 import QRModal from "../component/QRModal";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
 import { PDFDocument } from "pdf-lib";
 import Logo from "../component/Logo";
 import LoadingSwapping from "../component/LoadingSwapping";
@@ -13,35 +12,20 @@ import { uploadImage } from "../utils/uploadImage";
 import TalabatIcon from "../assets/logo/talabat-icon.svg";
 import TalabatLogo from "../assets/logo/remix-logo.svg";
 
-const BRAND_LABELS = [
-  // {
-  //   id: 1,
-  //   name: "Classic",
-  //   bgColor: "#FF5900",
-  //   textColor: "#F4EDE3",
-  //   text: "Powered by Talabat",
-  // },
-  {
-    id: 2,
+const BRAND_LABELS = {
+    id: 1,
     name: "Minimal",
     bgColor: "#F4EDE3",
     textColor: "#FF5900",
     text: "Powered by Talabat",
-  },
-  // {
-  //   id: 3,
-  //   name: "Dark",
-  //   bgColor: "#411517",
-  //   textColor: "#FF5900",
-  //   text: "Powered by Talabat",
-  // },
-];
+  }
+;
 
 function Preview() {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [swaploader, setswaloader] = useState("none");
-  const [selectedLabel, setSelectedLabel] = useState(BRAND_LABELS[0]);
+  // const [selectedLabel, setSelectedLabel] = useState(BRAND_LABELS[0]);
   const [finalImageWithLabel, setFinalImageWithLabel] = useState(null);
   const [uploadedUrl, setUploadedUrl] = useState(null);
   const [shortUrl, setShortUrl] = useState(null);
@@ -123,7 +107,7 @@ function Preview() {
     const POSTCARD_W = 1200;
     const POSTCARD_H = 1800;
     const LABEL_HEIGHT = 100;
-    const LABEL_OFFSET= 80
+    const LABEL_OFFSET = 140;
   
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -137,9 +121,25 @@ function Preview() {
   
       const IMAGE_AREA_HEIGHT = POSTCARD_H - LABEL_HEIGHT;
   
-      // Background
-      ctx.fillStyle = selectedLabel?.bgColor || "#ffffff";
+      // Background + frame
+      const BORDER_COLOR = "#FF5900";
+      const BORDER_THICKNESS = 40;
+      const BOTTOM_BORDER_THICKNESS = 100;
+
+      // Base background
+      ctx.fillStyle = BRAND_LABELS?.bgColor || "#ffffff";
       ctx.fillRect(0, 0, POSTCARD_W, POSTCARD_H);
+
+      // Frame borders (thicker at the bottom)
+      ctx.fillStyle = BORDER_COLOR;
+      // Top border
+      ctx.fillRect(0, 0, POSTCARD_W, BORDER_THICKNESS);
+      // Side borders (stop above thick bottom bar)
+      const sideBorderHeight = POSTCARD_H - BOTTOM_BORDER_THICKNESS;
+      ctx.fillRect(0, 0, BORDER_THICKNESS, sideBorderHeight);
+      ctx.fillRect(POSTCARD_W - BORDER_THICKNESS, 0, BORDER_THICKNESS, sideBorderHeight);
+      // Bottom border (thicker)
+      ctx.fillRect(0, POSTCARD_H - BOTTOM_BORDER_THICKNESS, POSTCARD_W, BOTTOM_BORDER_THICKNESS);
   
       const imgW = img.naturalWidth;
       const imgH = img.naturalHeight;
@@ -171,10 +171,16 @@ function Preview() {
       // ✅ Label INSIDE 1800px
       const labelY = POSTCARD_H - LABEL_HEIGHT - LABEL_OFFSET;
   
-      ctx.fillStyle = selectedLabel.bgColor;
-      ctx.fillRect(0, labelY, POSTCARD_W, LABEL_HEIGHT);
+      // Draw label band inside side borders so they stay visible
+      ctx.fillStyle = BRAND_LABELS?.bgColor;
+      ctx.fillRect(
+        BORDER_THICKNESS,
+        labelY,
+        POSTCARD_W - BORDER_THICKNESS * 2,
+        LABEL_HEIGHT
+      );
   
-      const centerLogoFontSize = 80;
+      const centerLogoFontSize = 90;
       // const rightIconSize = 48;
       // const fontSize = 32;
   
@@ -225,7 +231,7 @@ function Preview() {
     };
   
     img.src = savedImage;
-  }, [savedImage, selectedLabel]);
+  }, [savedImage, BRAND_LABELS]);
 
   useEffect(() => {
     if (savedImage) {
@@ -234,7 +240,7 @@ function Preview() {
       setUploadedUrl(null);
       setShortUrl(null);
     }
-  }, [savedImage, selectedLabel, composeImageWithLabel]);
+  }, [savedImage, BRAND_LABELS, composeImageWithLabel]);
 
   const uint8ArrayToBase64 = (uint8Array) => {
     let binary = "";
