@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import PropTypes from "prop-types";
 import { IoMdClose } from "react-icons/io";
-<<<<<<< HEAD
-import shlogo from "../assets/logo/talabat-icon.svg";
-=======
 import shlogo from "../assets/logo/logo/talabat-icon.svg";
->>>>>>> 00a323c3192686f21f884135ad6247589e1044ef
 
 const QRModal = ({ isOpen, onClose, data }) => {
   const [error, setError] = useState(null);
