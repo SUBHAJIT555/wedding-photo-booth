@@ -363,14 +363,32 @@ function Capture() {
 
         {/* Get Ready modal (between shots) */}
         {prepareForShot && (
-          <div className="fixed inset-0 z-50 flex justify-center items-center p-4 bg-black/70">
-            <div className="bg-[#F4EDE3] text-center rounded-2xl shadow-2xl px-8 py-10 max-w-md border-2 border-[#FF5900]">
+          <div className="fixed inset-0 z-50 flex justify-center items-center p-4 bg-black/50 backdrop-blur-md">
+            <div className="bg-[#FF5900] text-center rounded-2xl shadow-2xl px-12 py-24 max-w-2xl border-2 border-[#FF5900] ring-1 ring-offset-8 ring-neutral-300">
               <p
-                className="text-2xl md:text-3xl font-bold tracking-wide text-[#FF5900]"
+                className="text-2xl md:text-6xl font-bold !leading-[1.2] text-white"
               >
-                {prepareForShot === 2 && "Get Ready for the 2nd Shot"}
-                {prepareForShot === 3 && "Get Ready for the 3rd Shot"}
-                {prepareForShot === 4 && "Get Ready for the Last Shot"}
+                {prepareForShot === 2 && (
+                  <>
+                    Get Ready for the
+                    <br />
+                    2nd Shot
+                  </>
+                )}
+                {prepareForShot === 3 && (
+                  <>
+                    Get Ready for the
+                    <br />
+                    3rd Shot
+                  </>
+                )}
+                {prepareForShot === 4 && (
+                  <>
+                    Get Ready for the
+                    <br />
+                    Last Shot
+                  </>
+                )}
               </p>
             </div>
           </div>
@@ -380,7 +398,7 @@ function Capture() {
             <button
               onClick={loading ? undefined : captureImage}
               disabled={loading}
-              className={`border-[1px] border-[#FF5900] px-8 py-4 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] font-semibold text-lg ${loading ? "opacity-50 pointer-events-none" : ""}`}
+              className={`border-[1px] border-[#FF5900] px-8 py-4 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] font-semibold text-4xl ${loading ? "opacity-50 pointer-events-none" : ""}`}
             >
               {loading
                 ? shots.length < 4

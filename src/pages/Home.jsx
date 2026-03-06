@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "../component/Logo";
-import { ShinyButton } from "../component/shiny-button";
 import BackgroundImage from "../assets/logo/background.png";
 
 function Home() {
@@ -73,9 +72,12 @@ function Home() {
 
       {/* Start Button */}
       <div className="flex justify-center items-center z-[2] mt-[90vw]">
-        <ShinyButton onClick={() => navigate("/instruction")}>
-          <span className="tracking-widest uppercase font-extrabold">Start</span>
-        </ShinyButton>
+        <button
+          onClick={() => navigate("/instruction")}
+          className="border-[1px] border-[#FF5900] px-8 py-4 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] font-semibold text-4xl tracking-widest uppercase"
+        >
+          Start
+        </button>
       </div>
     </div>
   );

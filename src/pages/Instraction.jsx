@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "../component/Logo";
-import { ShinyButton } from "../component/shiny-button";
 
 function Instruction() {
   const navigate = useNavigate();
@@ -91,12 +90,12 @@ function Instruction() {
         </div>
 
         <div className="flex justify-center items-center">
-          <ShinyButton
+          <button
             onClick={() => navigate("/capture")}
-            className="text-[4vw] uppercase font-extrabold"
+            className="border-[1px] border-[#FF5900] px-8 py-4 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] font-semibold text-4xl uppercase"
           >
             Take a Photo
-          </ShinyButton>
+          </button>
         </div>
       </div>
 
