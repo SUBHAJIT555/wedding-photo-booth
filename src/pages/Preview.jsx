@@ -125,8 +125,9 @@ function Preview() {
 
       // Background + frame
       const BORDER_COLOR = "#FF5900";
-      const BORDER_THICKNESS = 80;
-      const BOTTOM_BORDER_THICKNESS = 120;
+      const TOP_BORDER_THICKNESS = 80;
+      const SIDE_BORDER_THICKNESS = 80;
+      const BOTTOM_BORDER_THICKNESS = 110;
 
       // Base background
       ctx.fillStyle = BRAND_LABELS?.bgColor || "#ffffff";
@@ -134,15 +135,15 @@ function Preview() {
 
       // Frame borders (thicker at the bottom)
       ctx.fillStyle = BORDER_COLOR;
-      // Top border
-      ctx.fillRect(0, 0, POSTCARD_W, BORDER_THICKNESS);
-      // Side borders (stop above thick bottom bar)
+      // Top border (manual thickness)
+      ctx.fillRect(0, 0, POSTCARD_W, TOP_BORDER_THICKNESS);
+      // Side borders (manual thickness, stop above thick bottom bar)
       const sideBorderHeight = POSTCARD_H - BOTTOM_BORDER_THICKNESS;
-      ctx.fillRect(0, 0, BORDER_THICKNESS, sideBorderHeight);
+      ctx.fillRect(0, 0, SIDE_BORDER_THICKNESS, sideBorderHeight);
       ctx.fillRect(
-        POSTCARD_W - BORDER_THICKNESS,
+        POSTCARD_W - SIDE_BORDER_THICKNESS,
         0,
-        BORDER_THICKNESS,
+        SIDE_BORDER_THICKNESS,
         sideBorderHeight,
       );
       // Bottom border (thicker)
@@ -186,9 +187,9 @@ function Preview() {
       // Draw label band inside side borders so they stay visible
       ctx.fillStyle = BRAND_LABELS?.bgColor;
       ctx.fillRect(
-        BORDER_THICKNESS,
+        SIDE_BORDER_THICKNESS,
         labelY,
-        POSTCARD_W - BORDER_THICKNESS * 2,
+        POSTCARD_W - SIDE_BORDER_THICKNESS * 2,
         LABEL_HEIGHT,
       );
 
