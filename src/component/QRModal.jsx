@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import PropTypes from "prop-types";
 import { IoMdClose } from "react-icons/io";
-import shlogo from "../assets/images/home/SH-Logo.svg";
+import shlogo from "../assets/logo/logo/talabat-icon.svg";
 
 const QRModal = ({ isOpen, onClose, data }) => {
   const [error, setError] = useState(null);
@@ -91,7 +91,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
       onClick={onClose}
     >
       <div
-        className="relative max-w-4xl p-12 transition-all transform bg-[#e1e1e1] rounded-lg shadow-xl"
+        className="relative max-w-4xl p-12 transition-all transform bg-[#F4EDE3] rounded-lg shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -122,8 +122,8 @@ const QRModal = ({ isOpen, onClose, data }) => {
                 <QRCodeSVG
                   size={600}
                   value={qrValue}
-                  fgColor="#e91e63"
-                  bgColor="#e1e1e1"
+                  fgColor="#FF5900"
+                  bgColor="#F4EDE3"
                   imageSettings={{
                     src: shlogo,
                     x: undefined,
@@ -138,7 +138,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
                   <div className="flex flex-col items-center space-y-2 mt-4">
                     <button
                       onClick={handleCopyUrl}
-                      className="px-4 py-2 bg-[#e91e63] text-white rounded-lg hover:bg-[#c2185b] transition-colors font-semibold text-sm "
+                      className="px-4 py-2 bg-[#FF5900] text-white rounded-lg hover:bg-[#FF5900] transition-colors font-semibold text-sm "
                     >
                       {copied ? "Copied!" : "Copy URL"}
                     </button>
