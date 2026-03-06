@@ -125,8 +125,8 @@ function Preview() {
 
       // Background + frame
       const BORDER_COLOR = "#FF5900";
-      const BORDER_THICKNESS = 70;
-      const BOTTOM_BORDER_THICKNESS = 100;
+      const BORDER_THICKNESS = 80;
+      const BOTTOM_BORDER_THICKNESS = 110;
 
       // Base background
       ctx.fillStyle = BRAND_LABELS?.bgColor || "#ffffff";
