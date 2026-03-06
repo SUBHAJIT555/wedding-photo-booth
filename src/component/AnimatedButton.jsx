@@ -83,12 +83,12 @@ const AnimatedButton = ({
       ref={buttonRef}
       className={`
         relative ${currentSize.padding} z-[2] font-light tracking-tight capitalize 
-        border-2 border-transparent rounded-full text-zinc-200 
-        bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 
+        border-2 border-[#FF5900] rounded-full text-white 
+        bg-[#FF5900] 
         transition-all duration-300 overflow-hidden
-        shadow-[0_0_20px_rgba(99,102,241,0.6)] 
-        hover:shadow-[0_0_35px_rgba(99,102,241,0.8)]
-        active:scale-[0.98] active:shadow-[0_0_25px_rgba(99,102,241,0.9)]
+        shadow-[0_0_20px_rgba(255,89,0,0.6)] 
+        hover:bg-[#e04d00] hover:shadow-[0_0_35px_rgba(255,89,0,0.8)]
+        active:scale-[0.98] active:shadow-[0_0_25px_rgba(255,89,0,0.9)]
         touch-manipulation select-none ${currentSize.minHeight} ${currentSize.minWidth}
         ${className}
       `}
@@ -123,14 +123,14 @@ const AnimatedButton = ({
       </div>
 
       {/* Professional Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-tr rounded-xl from-indigo-600/20 via-purple-500/10 to-indigo-400/20"></div>
+      <div className="absolute inset-0 bg-gradient-to-tr rounded-xl from-[#FF5900]/20 via-[#e04d00]/10 to-[#FF5900]/20"></div>
 
       {/* Button Text with Professional Shadow */}
       <span
         className={`
         relative ${currentSize.textSize} font-golonto uppercase tracking-widest font-extrabold z-10 
         transition-transform duration-200 
-        text-transparent bg-clip-text bg-gradient-to-r from-white to-blue-100
+        text-white
         drop-shadow-[0_2px_3px_rgba(0,0,0,0.2)]
       `}
       >
@@ -180,7 +180,7 @@ const AnimatedButton = ({
           @media (hover: none) and (pointer: coarse) {
             button:active {
               transform: scale(0.98);
-              background: linear-gradient(135deg, #4338ca, #6d28d9);
+              background: #e04d00;
             }
           }
 

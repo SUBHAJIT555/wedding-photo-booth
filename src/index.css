@@ -65,8 +65,11 @@
 }
 
 body {
-  /* cursor: none !important; */
-  /* user-select: none; */
+  cursor: none !important;
+}
+
+* {
+  cursor: none !important;
 }
 
 #root {

@@ -31,7 +31,7 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
           className={`
             px-[14vw] py-[4vw] md:px-16 md:py-5 
             text-[5vw] md:text-[3vw] lg:text-4xl font-semibold 
-            text-white bg-[#e91e63] hover:bg-[#c2185b] 
+            text-white bg-[#FF5900] hover:bg-[#e04d00] 
             transition-all duration-300 shadow-lg hover:shadow-xl 
             rounded-tl-2xl rounded-br-2xl 
             font-krylon tracking-wider 
@@ -61,7 +61,7 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
             ? {
                 scale: 1.05,
                 y: -2,
-                boxShadow: "0 10px 25px rgba(93, 64, 55, 0.3)",
+                boxShadow: "0 10px 25px rgba(255, 89, 0, 0.3)",
               }
             : {}
         }
@@ -70,24 +70,24 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
             ? {
                 scale: 0.92,
                 y: 2,
-                boxShadow: "0 2px 8px rgba(93, 64, 55, 0.2)",
+                boxShadow: "0 2px 8px rgba(255, 89, 0, 0.2)",
               }
             : {}
         }
         className={`
           w-20 h-20 md:w-24 md:h-24
-          border-2 border-[#5d4037] text-[#5d4037] 
+          border-2 border-[#FF5900] text-white 
           rounded-2xl 
-          hover:bg-[#5d4037] hover:text-white 
+          hover:bg-[#e04d00] hover:text-white 
           transition-all duration-200 
           flex items-center justify-center
-          bg-white/80 backdrop-blur-sm
+          bg-[#FF5900]
           relative
           ${isRestarting ? "opacity-75 " : ""}
         `}
         style={{
           boxShadow:
-            "0 8px 16px rgba(93, 64, 55, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
+            "0 8px 16px rgba(255, 89, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
         }}
       >
         {isRestarting ? (
@@ -148,13 +148,13 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
             scale: 1.05,
             y: -2,
             boxShadow: !propsButtonClicked
-              ? "0 10px 25px rgba(93, 64, 55, 0.3), 0 0 20px rgba(255, 215, 0, 0.6)"
-              : "0 10px 25px rgba(93, 64, 55, 0.3)",
+              ? "0 10px 25px rgba(255, 89, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.6)"
+              : "0 10px 25px rgba(255, 89, 0, 0.3)",
           }}
           whileTap={{
             scale: 0.92,
             y: 2,
-            boxShadow: "0 2px 8px rgba(93, 64, 55, 0.2)",
+            boxShadow: "0 2px 8px rgba(255, 89, 0, 0.2)",
           }}
           animate={
             !propsButtonClicked
@@ -173,18 +173,18 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
               : {}
           }
           className="
-            w-full h-full border-2 border-[#5d4037] text-[#5d4037] 
+            w-full h-full border-2 border-[#FF5900] text-white 
             rounded-2xl 
-            hover:bg-[#5d4037] hover:text-white 
+            hover:bg-[#e04d00] hover:text-white 
             transition-all duration-200 
             flex items-center justify-center
             relative overflow-hidden
-            bg-white/80 backdrop-blur-sm
+            bg-[#FF5900]
           "
           style={{
             boxShadow: !propsButtonClicked
-              ? "0 8px 16px rgba(93, 64, 55, 0.25), 0 0 15px rgba(255, 215, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.5)"
-              : "0 8px 16px rgba(93, 64, 55, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
+              ? "0 8px 16px rgba(255, 89, 0, 0.25), 0 0 15px rgba(255, 215, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.5)"
+              : "0 8px 16px rgba(255, 89, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
           }}
         >
           <IoImages className="relative z-10 text-4xl md:text-5xl" />
@@ -209,26 +209,26 @@ const CaptureActionButtons = memo(function CaptureActionButtons({
         whileHover={{
           scale: 1.05,
           y: -2,
-          boxShadow: "0 10px 25px rgba(93, 64, 55, 0.3)",
+          boxShadow: "0 10px 25px rgba(255, 89, 0, 0.3)",
         }}
         whileTap={{
           scale: 0.92,
           y: 2,
-          boxShadow: "0 2px 8px rgba(93, 64, 55, 0.2)",
+          boxShadow: "0 2px 8px rgba(255, 89, 0, 0.2)",
         }}
         className="
           w-20 h-20 md:w-24 md:h-24
-          border-2 border-[#5d4037] text-[#5d4037] 
+          border-2 border-[#FF5900] text-white 
           rounded-2xl 
-          hover:bg-[#5d4037] hover:text-white 
+          hover:bg-[#e04d00] hover:text-white 
           transition-all duration-200 
           flex items-center justify-center
-          bg-white/80 backdrop-blur-sm
+          bg-[#FF5900]
           relative
         "
         style={{
           boxShadow:
-            "0 8px 16px rgba(93, 64, 55, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
+            "0 8px 16px rgba(255, 89, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
         }}
       >
         <IoCheckmarkCircle className="text-4xl md:text-5xl" />

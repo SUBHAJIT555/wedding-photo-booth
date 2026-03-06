@@ -426,28 +426,28 @@ function Preview() {
         <div className="flex flex-wrap gap-10 justify-center text-zinc-200">
           <button
             onClick={printImageAsPDF}
-            className="border-[1px] border-zinc-300 p-3 rounded-2xl bg-neutral-100 hover:bg-[#FF5900] group transition-all duration-300 ring-1 ring-offset-4 ring-neutral-300"
+            className="border-[1px] border-[#FF5900] p-3 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900]"
           >
-            <ImPrinter className="text-3xl md:text-5xl text-[#FF5900] group-hover:text-[#ffffff]" />
+            <ImPrinter className="text-3xl md:text-5xl text-white" />
           </button>
 
           <button
             onClick={handleQRClick}
             disabled={isUploading}
-            className={`border-[1px] border-zinc-300 p-2 px-3 rounded-2xl bg-neutral-100 hover:bg-[#FF5900] group transition-all duration-300 ring-1 ring-offset-4 ring-neutral-300 ${isUploading ? "opacity-50" : ""}`}
+            className={`border-[1px] border-[#FF5900] p-2 px-3 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] ${isUploading ? "opacity-50" : ""}`}
           >
             {isUploading ? (
-              <div className="text-3xl md:text-5xl text-[#FF5900] animate-spin">
+              <div className="text-3xl md:text-5xl text-white animate-spin">
                 ⏳
               </div>
             ) : (
-              <IoQrCode className="text-3xl md:text-5xl text-[#FF5900] group-hover:text-[#ffffff]" />
+              <IoQrCode className="text-3xl md:text-5xl text-white" />
             )}
           </button>
 
           <Link to="/">
-            <button className="border-[1px] border-zinc-300 p-2 rounded-2xl bg-neutral-100 hover:bg-[#FF5900] group transition-all duration-300 ring-1 ring-offset-4 ring-neutral-300">
-              <IoHome className="text-3xl md:text-6xl text-[#FF5900] group-hover:text-[#ffffff]" />
+            <button className="border-[1px] border-[#FF5900] p-2 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900]">
+              <IoHome className="text-3xl md:text-6xl text-white" />
             </button>
           </Link>
         </div>

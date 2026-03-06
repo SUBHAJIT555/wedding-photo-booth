@@ -35,11 +35,11 @@ function BottomSheet({ isOpen, onClose, activeTab, onTabChange, children }) {
             style={{
               maxHeight: "75vh",
               boxShadow:
-                "0 -10px 40px rgba(0, 0, 0, 0.2), 0 -5px 15px rgba(233, 30, 99, 0.1)",
+                "0 -10px 40px rgba(0, 0, 0, 0.2), 0 -5px 15px rgba(255, 89, 0, 0.1)",
             }}
           >
             {/* Decorative Top Border */}
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-transparent via-[#e91e63] to-transparent rounded-full" />
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-transparent via-[#FF5900] to-transparent rounded-full" />
 
             {/* Header with Close Button */}
             <div className="flex relative justify-end items-start px-4 pt-4 pb-2">
@@ -47,10 +47,10 @@ function BottomSheet({ isOpen, onClose, activeTab, onTabChange, children }) {
                 onClick={onClose}
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
-                className="w-9 h-9 flex items-center justify-center rounded-full bg-[#5d4037] text-white shadow-lg hover:bg-[#4a3329] transition-all duration-200 z-10"
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-[#FF5900] text-white shadow-lg hover:bg-[#e04d00] transition-all duration-200 z-10"
                 style={{
                   boxShadow:
-                    "0 4px 12px rgba(93, 64, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                    "0 4px 12px rgba(255, 89, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
                 }}
               >
                 <IoMdClose className="text-lg" />

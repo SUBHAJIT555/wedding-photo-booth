@@ -266,7 +266,7 @@ const PropItem = memo(function PropItem({
             e.stopPropagation();
             onDelete(prop.id);
           }}
-          className="absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600"
+          className="absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center bg-[#FF5900] text-white rounded-full hover:bg-[#e04d00]"
         >
           <FaTrashAlt size={10} />
         </button>

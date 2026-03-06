@@ -220,16 +220,24 @@ function Preview() {
         </div>
 
         <div className="flex gap-10">
-          <button onClick={printImageAsPDF}>
+          <button
+            onClick={printImageAsPDF}
+            className="p-3 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00]"
+          >
             <ImPrinter size={40} />
           </button>
 
-          <button onClick={() => setIsQRModalOpen(true)}>
+          <button
+            onClick={() => setIsQRModalOpen(true)}
+            className="p-3 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00]"
+          >
             <IoQrCode size={40} />
           </button>
 
           <Link to="/">
-            <IoHome size={40} />
+            <button className="p-3 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00]">
+              <IoHome size={40} />
+            </button>
           </Link>
         </div>
 

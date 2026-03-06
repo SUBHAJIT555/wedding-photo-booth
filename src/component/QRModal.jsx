@@ -96,7 +96,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-white rounded-lg border border-neutral-300 ring-1 ring-offset-2 ring-neutral-300 bg-[#FF5900] hover:text-primary hover:bg-white hover:border-primary"
+          className="absolute top-4 right-4 p-2 text-white rounded-lg border border-[#FF5900] ring-1 ring-offset-2 ring-[#FF5900] bg-[#FF5900] hover:bg-[#e04d00] hover:border-[#e04d00]"
         >
           <IoMdClose />
         </button>
@@ -111,7 +111,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
                 {data && data.startsWith("data:image") && (
                   <button
                     onClick={handleDownload}
-                    className="px-6 py-3 bg-[#FF5900] text-white rounded-xl ring-1 ring-offset-2 ring-neutral-300 hover:bg-[#FF8C4D] transition-colors font-semibold"
+                    className="px-6 py-3 bg-[#FF5900] text-white rounded-xl ring-1 ring-offset-2 ring-[#FF5900] hover:bg-[#e04d00] transition-colors font-semibold"
                   >
                     Download Image Instead
                   </button>
@@ -138,7 +138,7 @@ const QRModal = ({ isOpen, onClose, data }) => {
                   <div className="flex flex-col items-center space-y-2 mt-4">
                     <button
                       onClick={handleCopyUrl}
-                      className="px-4 py-2 bg-[#FF5900] text-white rounded-lg hover:bg-[#FF5900] transition-colors font-semibold text-sm "
+                      className="px-4 py-2 bg-[#FF5900] text-white rounded-lg hover:bg-[#e04d00] transition-colors font-semibold text-sm "
                     >
                       {copied ? "Copied!" : "Copy URL"}
                     </button>

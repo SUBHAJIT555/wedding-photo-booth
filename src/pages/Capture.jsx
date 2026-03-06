@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../component/Logo";
-import { ShinyButton } from "../component/shiny-button";
 import { saveData } from "../utils/localStorageDB";
 
 function Capture() {
@@ -353,19 +352,7 @@ function Capture() {
           )}
           {(countdown || prepareForShot) && (
             <div className="flex absolute inset-0 justify-center items-center bg-black bg-opacity-50 rounded-3xl">
-              {prepareForShot ? (
-                <p
-                  className="text-4xl md:text-5xl font-extrabold text-center px-6 tracking-wide drop-shadow-lg bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(90deg, #FF5900, #ffd27f, #FF5900)",
-                  }}
-                >
-                  {prepareForShot === 2 && "Get Ready for the 2nd Shot"}
-                  {prepareForShot === 3 && "Get Ready for the 3rd Shot"}
-                  {prepareForShot === 4 && "Get Ready for the Last Shot"}
-                </p>
-              ) : (
+              {!prepareForShot && (
                 <p className="text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#ff5900] to-[#df8859] animate-ping">
                   {countdown}
                 </p>
@@ -373,21 +360,37 @@ function Capture() {
             </div>
           )}
         </div>
-        <div className="flex gap-x-10 mt-8">
+
+        {/* Get Ready modal (between shots) */}
+        {prepareForShot && (
+          <div className="fixed inset-0 z-50 flex justify-center items-center p-4 bg-black/70">
+            <div className="bg-[#F4EDE3] text-center rounded-2xl shadow-2xl px-8 py-10 max-w-md border-2 border-[#FF5900]">
+              <p
+                className="text-2xl md:text-3xl font-bold tracking-wide text-[#FF5900]"
+              >
+                {prepareForShot === 2 && "Get Ready for the 2nd Shot"}
+                {prepareForShot === 3 && "Get Ready for the 3rd Shot"}
+                {prepareForShot === 4 && "Get Ready for the Last Shot"}
+              </p>
+            </div>
+          </div>
+        )}
+        <div className="flex flex-wrap gap-10 justify-center mt-8">
           {!capturedImage ? (
-            <ShinyButton
+            <button
               onClick={loading ? undefined : captureImage}
-              className={loading ? "opacity-50 pointer-events-none" : ""}
+              disabled={loading}
+              className={`border-[1px] border-[#FF5900] px-8 py-4 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] font-semibold text-lg ${loading ? "opacity-50 pointer-events-none" : ""}`}
             >
               {loading
                 ? shots.length < 4
                   ? `Capturing... ${shots.length + 1}/4`
                   : "Processing photos..."
                 : "Click to Capture"}
-            </ShinyButton>
+            </button>
           ) : (
             <>
-              <ShinyButton
+              <button
                 onClick={async () => {
                   if (isRestarting) return;
                   setIsRestarting(true);
@@ -402,12 +405,18 @@ function Capture() {
                     setIsRestarting(false);
                   }
                 }}
-                className={isRestarting ? "opacity-75 pointer-events-none" : ""}
+                disabled={isRestarting}
+                className={`border-[1px] border-[#FF5900] p-3 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] font-semibold ${isRestarting ? "opacity-75 pointer-events-none" : ""}`}
               >
                 {isRestarting ? "Starting..." : "Retake"}
-              </ShinyButton>
+              </button>
 
-              <ShinyButton onClick={submitImage}>Submit</ShinyButton>
+              <button
+                onClick={submitImage}
+                className="border-[1px] border-[#FF5900] p-3 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] font-semibold"
+              >
+                Submit
+              </button>
             </>
           )}
         </div>

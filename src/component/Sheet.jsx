@@ -50,7 +50,7 @@ export default function Sheet({ isOpen, onClose, children, side = "bottom" }) {
             <div className="flex justify-end p-4">
               <button
                 onClick={onClose}
-                className="w-9 h-9 bg-gray-800 text-white rounded-full flex items-center justify-center"
+                className="w-9 h-9 bg-[#FF5900] text-white rounded-full flex items-center justify-center hover:bg-[#e04d00]"
               >
                 <IoMdClose className="text-lg" />
               </button>

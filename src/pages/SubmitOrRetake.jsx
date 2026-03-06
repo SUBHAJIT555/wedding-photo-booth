@@ -9,12 +9,12 @@ function SubmitOrRetake() {
 
       <div className="flex items-center justify-center gap-6">
         <Link to="/capture">
-          <button className="px-5 py-2 font-light tracking-tight capitalize border-2 border-transparent rounded-full text-zinc-200 bg-zinc-700 hover:bg-zinc-900 hover:border-zinc-200">
+          <button className="px-5 py-2 font-light tracking-tight capitalize border-2 border-[#FF5900] rounded-full text-white bg-[#FF5900] hover:bg-[#e04d00] hover:border-[#e04d00]">
             reatake
           </button>
         </Link>
         <Link to="/avatar">
-          <button className="px-5 py-2 font-light tracking-tight capitalize border-2 border-transparent rounded-full text-zinc-200 bg-zinc-700 hover:bg-zinc-900 hover:border-zinc-200">
+          <button className="px-5 py-2 font-light tracking-tight capitalize border-2 border-[#FF5900] rounded-full text-white bg-[#FF5900] hover:bg-[#e04d00] hover:border-[#e04d00]">
             submit
           </button>
         </Link>

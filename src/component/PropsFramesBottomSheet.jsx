@@ -41,12 +41,12 @@ const PropItem = memo(function PropItem({ prop, isSelected, onToggleProp }) {
       onClick={() => onToggleProp(prop)}
       className={`relative flex flex-col items-center p-3 rounded-xl  ${
         isSelected
-          ? "bg-gradient-to-br from-[#e91e63]/10 to-[#f06292]/10 border-2 border-[#e91e63] shadow-md"
-          : "bg-white border-2 border-gray-200 hover:border-[#e91e63]/50 hover:shadow-md"
+          ? "bg-gradient-to-br from-[#FF5900]/10 to-[#ff8c4d]/10 border-2 border-[#FF5900] shadow-md"
+          : "bg-white border-2 border-gray-200 hover:border-[#FF5900]/50 hover:shadow-md"
       }`}
     >
       {isSelected && (
-        <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-[#e91e63] to-[#f06292] rounded-full flex items-center justify-center shadow-lg z-10">
+        <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-[#FF5900] to-[#ff8c4d] rounded-full flex items-center justify-center shadow-lg z-10">
           <IoCheckmarkCircle className="text-sm text-white" />
         </div>
       )}
@@ -57,7 +57,7 @@ const PropItem = memo(function PropItem({ prop, isSelected, onToggleProp }) {
       />
       <span
         className={`text-xs text-center font-krylon ${
-          isSelected ? "text-[#e91e63] font-semibold" : "text-gray-700"
+          isSelected ? "text-[#FF5900] font-semibold" : "text-gray-700"
         }`}
       >
         {prop.name}
@@ -79,12 +79,12 @@ const FrameItem = memo(function FrameItem({
       onClick={() => (isSelected ? onRemoveFrame() : onApplyFrame(frame))}
       className={`relative flex flex-col items-center p-2 rounded-xl  ${
         isSelected
-          ? "bg-gradient-to-br from-[#e91e63]/10 to-[#f06292]/10 border-2 border-[#e91e63] shadow-lg"
-          : "bg-white border-2 border-gray-200 hover:border-[#e91e63]/50 hover:shadow-md"
+          ? "bg-gradient-to-br from-[#FF5900]/10 to-[#ff8c4d]/10 border-2 border-[#FF5900] shadow-lg"
+          : "bg-white border-2 border-gray-200 hover:border-[#FF5900]/50 hover:shadow-md"
       }`}
     >
       {isSelected && (
-        <div className="absolute -top-2 -right-2 w-6 h-6 md:w-7 md:h-7 bg-gradient-to-br from-[#e91e63] to-[#f06292] rounded-full flex items-center justify-center shadow-lg z-10">
+        <div className="absolute -top-2 -right-2 w-6 h-6 md:w-7 md:h-7 bg-gradient-to-br from-[#FF5900] to-[#ff8c4d] rounded-full flex items-center justify-center shadow-lg z-10">
           <IoCheckmarkCircle className="text-xs text-white md:text-base" />
         </div>
       )}
@@ -95,7 +95,7 @@ const FrameItem = memo(function FrameItem({
       />
       <span
         className={`text-xs md:text-sm text-center font-krylon ${
-          isSelected ? "text-[#e91e63] font-semibold" : "text-gray-700"
+          isSelected ? "text-[#FF5900] font-semibold" : "text-gray-700"
         }`}
       >
         {frame.name}
@@ -177,7 +177,7 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
         <button
           onClick={() => onTabChange("frames")}
           className={`flex-1 py-3 px-4 rounded-xl  ${
-            activeTab === "frames" ? "bg-[#e91e63] text-white" : "bg-gray-200"
+            activeTab === "frames" ? "bg-[#FF5900] text-white" : "bg-gray-200"
           }`}
         >
           Frames
@@ -185,7 +185,7 @@ const PropsFramesBottomSheet = memo(function PropsFramesBottomSheet({
         <button
           onClick={() => onTabChange("props")}
           className={`flex-1 py-3 px-4 rounded-xl  ${
-            activeTab === "props" ? "bg-[#e91e63] text-white" : "bg-gray-200"
+            activeTab === "props" ? "bg-[#FF5900] text-white" : "bg-gray-200"
           }`}
         >
           Props
