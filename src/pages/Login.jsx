@@ -19,51 +19,51 @@ function Login() {
       setLoading(false);
       return;
     }
-     sessionStorage.setItem("authenticated", "true");
+    //  sessionStorage.setItem("authenticated", "true");
+    //   sessionStorage.setItem("username", data.data.username || username);
+
+      // navigate("/");
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || "";
+      let authUrl;
+
+      if (apiUrl) {
+        const baseUrl = apiUrl.replace(/\/+$/, "");
+        authUrl = `${baseUrl}/auth.php`;
+      } else {
+        authUrl = "/auth.php";
+      }
+
+      const response = await fetch(authUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          username: username.trim(),
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setError(data.message || "Invalid username or password");
+        setLoading(false);
+        return;
+      }
+
+      sessionStorage.setItem("authenticated", "true");
       sessionStorage.setItem("username", data.data.username || username);
 
       navigate("/");
-
-    // try {
-    //   const apiUrl = import.meta.env.VITE_API_URL || "";
-    //   let authUrl;
-
-    //   if (apiUrl) {
-    //     const baseUrl = apiUrl.replace(/\/+$/, "");
-    //     authUrl = `${baseUrl}/auth.php`;
-    //   } else {
-    //     authUrl = "/auth.php";
-    //   }
-
-    //   const response = await fetch(authUrl, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     credentials: "include",
-    //     body: JSON.stringify({
-    //       username: username.trim(),
-    //       password: password,
-    //     }),
-    //   });
-
-    //   const data = await response.json();
-
-    //   if (!response.ok || !data.success) {
-    //     setError(data.message || "Invalid username or password");
-    //     setLoading(false);
-    //     return;
-    //   }
-
-    //   sessionStorage.setItem("authenticated", "true");
-    //   sessionStorage.setItem("username", data.data.username || username);
-
-    //   navigate("/");
-    // } catch (error) {
-    //   console.error("Login error:", error);
-    //   setError("Failed to connect to server. Please try again.");
-    //   setLoading(false);
-    // }
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("Failed to connect to server. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
