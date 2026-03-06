@@ -37,34 +37,34 @@ function Preview() {
     setswaloader(loading ? "block" : "none");
   }, [loading]);
 
-  const uploadToImgbb = async (base64Image) => {
-    const apiKey =
-      import.meta.env.VITE_IMGBB_API_KEY || "7a9d878e0d570c5d3f4b8c8d8a1e9c2f";
+  // const uploadToImgbb = async (base64Image) => {
+  //   const apiKey =
+  //     import.meta.env.VITE_IMGBB_API_KEY || "7a9d878e0d570c5d3f4b8c8d8a1e9c2f";
 
-    // Remove data:image/xxx;base64, prefix if present
-    const base64Data = base64Image.includes(",")
-      ? base64Image.split(",")[1]
-      : base64Image;
+  //   // Remove data:image/xxx;base64, prefix if present
+  //   const base64Data = base64Image.includes(",")
+  //     ? base64Image.split(",")[1]
+  //     : base64Image;
 
-    const formData = new FormData();
-    formData.append("image", base64Data);
+  //   const formData = new FormData();
+  //   formData.append("image", base64Data);
 
-    const response = await fetch(
-      `https://api.imgbb.com/1/upload?key=${apiKey}`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
+  //   const response = await fetch(
+  //     `https://api.imgbb.com/1/upload?key=${apiKey}`,
+  //     {
+  //       method: "POST",
+  //       body: formData,
+  //     },
+  //   );
 
-    const data = await response.json();
+  //   const data = await response.json();
 
-    if (data.success) {
-      return data.data.url;
-    } else {
-      throw new Error(data.error?.message || "Upload failed");
-    }
-  };
+  //   if (data.success) {
+  //     return data.data.url;
+  //   } else {
+  //     throw new Error(data.error?.message || "Upload failed");
+  //   }
+  // };
 
   const handleQRClick = async () => {
     if (shortUrl) {
@@ -420,53 +420,6 @@ function Preview() {
             />
           )}
         </div>
-
-        {/* Brand Label Selection */}
-        {/* <div className="flex flex-col items-center gap-6">
-          <p className="text-[#411517] text-3xl font-krylon tracking-widest font-black">Choose Your Brand Label Style:</p>
-          <div className="flex gap-5">
-            {BRAND_LABELS.map((label) => (
-              <button
-                key={label.id}
-                onClick={() => setSelectedLabel(label)}
-                className={`relative flex items-center gap-3 px-6 py-4 rounded-2xl border-2 transition-all duration-300 ${
-                  selectedLabel.id === label.id
-                    ? "border-[#FF5900] ring-1 ring-[#FF5900] ring-offset-2"
-                    : "border-neutral-300 border-1 ring-1 ring-offset-2 hover:border-[#FF5900]"
-                }`}
-                style={{ backgroundColor: label.bgColor }}
-              >
-                {selectedLabel.id === label.id && (
-                  <motion.div
-                    className="absolute -top-3 -right-3 flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white shadow-md"
-                    animate={{ rotate: [0, -10, 10, -8, 8, 0] }}
-                    transition={{
-                      duration: 0.8,
-                      repeat: Infinity,
-                      repeatDelay: 1.2,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      width="24" 
-                      height="24" 
-                      viewBox="0 0 24 24" 
-                      fill="#22c55e"
-                    >
-                      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                      <path d="M12.01 2.011a3.2 3.2 0 0 1 2.113 .797l.154 .145l.698 .698a1.2 1.2 0 0 0 .71 .341l.135 .008h1a3.2 3.2 0 0 1 3.195 3.018l.005 .182v1c0 .27 .092 .533 .258 .743l.09 .1l.697 .698a3.2 3.2 0 0 1 .147 4.382l-.145 .154l-.698 .698a1.2 1.2 0 0 0 -.341 .71l-.008 .135v1a3.2 3.2 0 0 1 -3.018 3.195l-.182 .005h-1a1.2 1.2 0 0 0 -.743 .258l-.1 .09l-.698 .697a3.2 3.2 0 0 1 -4.382 .147l-.154 -.145l-.698 -.698a1.2 1.2 0 0 0 -.71 -.341l-.135 -.008h-1a3.2 3.2 0 0 1 -3.195 -3.018l-.005 -.182v-1a1.2 1.2 0 0 0 -.258 -.743l-.09 -.1l-.697 -.698a3.2 3.2 0 0 1 -.147 -4.382l.145 -.154l.698 -.698a1.2 1.2 0 0 0 .341 -.71l.008 -.135v-1l.005 -.182a3.2 3.2 0 0 1 3.013 -3.013l.182 -.005h1a1.2 1.2 0 0 0 .743 -.258l.1 -.09l.698 -.697a3.2 3.2 0 0 1 2.269 -.944zm3.697 7.282a1 1 0 0 0 -1.414 0l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.32 1.497l2 2l.094 .083a1 1 0 0 0 1.32 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z" />
-                    </svg>
-                  </motion.div>
-                )}
-                <img src={TalabatIcon} alt="Talabat" className="w-8 h-8 border border-neutral-300 rounded-xl ring-1 ring-offset-2 ring-neutral-300" />
-                <span style={{ color: label.textColor }} className="font-semibold text-base">
-                  {label.name}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>*/}
 
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-10 justify-center text-zinc-200">
