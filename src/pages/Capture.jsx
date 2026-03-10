@@ -424,14 +424,14 @@ function Capture() {
                   }
                 }}
                 disabled={isRestarting}
-                className={`border-[1px] border-[#FF5900] p-3 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] font-semibold ${isRestarting ? "opacity-75 pointer-events-none" : ""}`}
+                className={`border-[1px] border-[#FF5900] px-8 py-4 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] font-semibold  text-4xl ${isRestarting ? "opacity-75 pointer-events-none" : ""}`}
               >
                 {isRestarting ? "Starting..." : "Retake"}
               </button>
 
               <button
                 onClick={submitImage}
-                className="border-[1px] border-[#FF5900] p-3 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] font-semibold"
+                className="border-[1px] border-[#FF5900] px-8 py-4 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] font-semibold text-4xl"
               >
                 Submit
               </button>
