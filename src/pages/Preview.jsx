@@ -79,12 +79,15 @@ function Preview() {
       // Try server upload first
       try {
         const result = await uploadImage(imageToUpload);
+        console.log("Result:", result);
         setUploadedUrl(result.url);
         setShortUrl(result.shortUrl);
         setIsQRModalOpen(true);
         return;
-      } catch (serverError) {
-        console.log("Server upload failed, trying imgbb...");
+      } catch (error) {
+        console.error("Server upload failed:", error);
+        // TODO: NEED TO REMOVE THIS ALERT AND SHOW A MODAL WITH THE ERROR MESSAGE
+        alert("Server upload failed, please try again later.");
       }
 
       // Fallback to imgbb

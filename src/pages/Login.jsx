@@ -22,7 +22,7 @@ function Login() {
     //  sessionStorage.setItem("authenticated", "true");
     //   sessionStorage.setItem("username", data.data.username || username);
 
-      // navigate("/");
+    // navigate("/");
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || "";
@@ -40,7 +40,7 @@ function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
+        // credentials: "include",
         body: JSON.stringify({
           username: username.trim(),
           password: password,
