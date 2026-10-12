@@ -6,10 +6,9 @@ export default {
   ],
   theme: {
     extend: {
-      // aspectRatio: {
-      //   '2/3': '2 / 3',
-      // }
-      
+      fontFamily: {
+        sans: ["Geist", "sans-serif"],
+      },
     },
   },
   

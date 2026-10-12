@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import Instruction from "../pages/Instraction";
 import Capture from "../pages/Capture";
+import PropsEditor from "../pages/PropsEditor";
 import Avatar from "../pages/Avatar";
 import Preview from "../pages/Preview";
 import ErrorPage from "../pages/ErrorPage";
@@ -51,6 +52,14 @@ export const router = createBrowserRouter([
       //   path: "/submitorretake",
       //   element: <SubmitOrRetake />,
       // },
+      {
+        path: "/edit",
+        element: (
+          <ProtectedRoute>
+            <PropsEditor />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "/preview",
         element: (

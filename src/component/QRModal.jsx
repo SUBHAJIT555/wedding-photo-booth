@@ -4,10 +4,9 @@ import PropTypes from "prop-types";
 import { IoMdClose } from "react-icons/io";
 import shlogo from "../assets/logo/logo/talabat-icon.svg";
 
-const QRModal = ({ isOpen, onClose, data }) => {
+const QRModal = ({ isOpen, onClose, data, message }) => {
   const [error, setError] = useState(null);
   const [qrValue, setQrValue] = useState("");
-  const [copied, setCopied] = useState(false);
 
   // Maximum characters a QR code can hold (Version 40, alphanumeric mode)
   const MAX_QR_LENGTH = 4296;
@@ -27,7 +26,6 @@ const QRModal = ({ isOpen, onClose, data }) => {
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
       setError(null);
-      setCopied(false);
 
       if (!data) {
         setQrValue("");
@@ -71,18 +69,6 @@ const QRModal = ({ isOpen, onClose, data }) => {
     }
   };
 
-  const handleCopyUrl = async () => {
-    if (qrValue) {
-      try {
-        await navigator.clipboard.writeText(qrValue);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      } catch (err) {
-        console.error("Failed to copy:", err);
-      }
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -117,11 +103,16 @@ const QRModal = ({ isOpen, onClose, data }) => {
                   </button>
                 )}
               </div>
+            ) : message ? (
+              <div className="text-[#FF5900] text-center text-xl font-semibold p-6">
+                {message}
+              </div>
             ) : qrValue ? (
               <>
                 <QRCodeSVG
                   size={600}
                   value={qrValue}
+                  level="H"
                   fgColor="#FF5900"
                   bgColor="#F4EDE3"
                   imageSettings={{
@@ -134,19 +125,6 @@ const QRModal = ({ isOpen, onClose, data }) => {
                     excavate: true,
                   }}
                 />
-                {isUrl(qrValue) && (
-                  <div className="flex flex-col items-center space-y-2 mt-4">
-                    <button
-                      onClick={handleCopyUrl}
-                      className="px-4 py-2 bg-[#FF5900] text-white rounded-lg hover:bg-[#e04d00] transition-colors font-semibold text-sm "
-                    >
-                      {copied ? "Copied!" : "Copy URL"}
-                    </button>
-                    <p className="text-xs text-gray-600 text-center max-w-md break-all">
-                      {qrValue}
-                    </p>
-                  </div>
-                )}
               </>
             ) : (
               <div className="text-gray-600 text-center">No data available</div>
@@ -162,6 +140,7 @@ QRModal.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func,
   data: PropTypes.string,
+  message: PropTypes.string,
 };
 
 export default QRModal;

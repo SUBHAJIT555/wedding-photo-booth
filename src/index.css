@@ -3,6 +3,22 @@
 @tailwind utilities;
 
 @font-face {
+  font-family: "Geist";
+  src: url("./assets/fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("./assets/fonts/Geist-Variable-Italic.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Dynalight";
   src: url("./assets/fonts/Dynalight-Regular.ttf") format("truetype");
   font-weight: normal;
@@ -31,24 +47,18 @@
 }
 
 @theme {
-  --font-family-dynalight: "Dynalight", sans-serif;
-  --font-family-krylon: "Krylon", sans-serif;
-  --font-family-dm-serif: "DMSerifDisplay", serif;
+  --font-family-dynalight: "Geist", sans-serif;
+  --font-family-krylon: "Geist", sans-serif;
+  --font-family-dm-serif: "Geist", sans-serif;
   --color-primary: #e91e63;
 }
 
 /* Font utility classes */
 @layer utilities {
-  .font-dynalight {
-    font-family: "Dynalight", sans-serif;
-  }
-
-  .font-krylon {
-    font-family: "Krylon", sans-serif;
-  }
-
+  .font-dynalight,
+  .font-krylon,
   .font-dm-serif {
-    font-family: "DMSerifDisplay", serif;
+    font-family: "Geist", sans-serif;
   }
 
   .text-primary {
@@ -64,8 +74,13 @@
   }
 }
 
+html {
+  font-family: "Geist", sans-serif;
+}
+
 body {
   cursor: none !important;
+  font-family: "Geist", sans-serif;
 }
 
 * {
@@ -102,6 +117,15 @@ body {
   }
   100% {
     left: 100%;
+  }
+}
+
+@keyframes text-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
   }
 }
 

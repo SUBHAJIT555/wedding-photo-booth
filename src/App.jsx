@@ -6,7 +6,12 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
-      <Toaster position="top-center" />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: { fontFamily: "Geist, sans-serif" },
+        }}
+      />
     </>
     // <Router>
     //   <Routes>

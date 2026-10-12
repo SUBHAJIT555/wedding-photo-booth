@@ -1,4 +1,4 @@
-import { IoHome, IoQrCode } from "react-icons/io5";
+import { IoArrowBack, IoHome, IoQrCode } from "react-icons/io5";
 import { ImPrinter } from "react-icons/im";
 import { Link } from "react-router-dom";
 import QRModal from "../component/QRModal";
@@ -25,8 +25,8 @@ function Preview() {
   const [swaploader, setswaloader] = useState("none");
   // const [selectedLabel, setSelectedLabel] = useState(BRAND_LABELS[0]);
   const [finalImageWithLabel, setFinalImageWithLabel] = useState(null);
-  const [uploadedUrl, setUploadedUrl] = useState(null);
   const [shortUrl, setShortUrl] = useState(null);
+  const [qrMessage, setQrMessage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const canvasRef = useRef(null);
 
@@ -68,35 +68,27 @@ function Preview() {
 
   const handleQRClick = async () => {
     if (shortUrl) {
+      setQrMessage(null);
+      setIsQRModalOpen(true);
+      return;
+    }
+
+    const imageToUpload = finalImageWithLabel;
+    if (!imageToUpload) {
+      setQrMessage("Photo is still preparing. Try again in a moment.");
       setIsQRModalOpen(true);
       return;
     }
 
     setIsUploading(true);
+    setQrMessage(null);
     try {
-      const imageToUpload = finalImageWithLabel || savedImage;
-
-      // Try server upload first
-      try {
-        const result = await uploadImage(imageToUpload);
-        console.log("Result:", result);
-        setUploadedUrl(result.url);
-        setShortUrl(result.shortUrl);
-        setIsQRModalOpen(true);
-        return;
-      } catch (error) {
-        console.error("Server upload failed:", error);
-        // TODO: NEED TO REMOVE THIS ALERT AND SHOW A MODAL WITH THE ERROR MESSAGE
-        alert("Server upload failed, please try again later.");
-      }
-
-      // Fallback to imgbb
-      // const imgbbUrl = await uploadToImgbb(imageToUpload);
-      // setShortUrl(imgbbUrl);
+      const result = await uploadImage(imageToUpload);
+      setShortUrl(result.url);
       setIsQRModalOpen(true);
     } catch (error) {
-      console.error("Error uploading image:", error);
-      // If all uploads fail, still open modal with base64 (will show download option)
+      console.error("Server upload failed:", error);
+      setQrMessage("Could not save the photo. Please try again.");
       setIsQRModalOpen(true);
     } finally {
       setIsUploading(false);
@@ -111,7 +103,7 @@ function Preview() {
 
     const POSTCARD_W = 1200;
     const POSTCARD_H = 1800;
-    const LABEL_HEIGHT = 100;
+    const LABEL_HEIGHT = 110;
     const LABEL_OFFSET = 140;
 
     const img = new Image();
@@ -124,13 +116,12 @@ function Preview() {
 
       console.log("Canvas size:", canvas.width, canvas.height); // should log 1200 1800
 
-      const IMAGE_AREA_HEIGHT = POSTCARD_H - LABEL_HEIGHT;
-
       // Background + frame
       const BORDER_COLOR = "#FF5900";
       const TOP_BORDER_THICKNESS = 90;
       const SIDE_BORDER_THICKNESS = 80;
       const BOTTOM_BORDER_THICKNESS = 120;
+      const INNER_WHITE_BORDER = 48;
 
       // Base background
       ctx.fillStyle = BRAND_LABELS?.bgColor || "#ffffff";
@@ -159,33 +150,58 @@ function Preview() {
 
       const imgW = img.naturalWidth;
       const imgH = img.naturalHeight;
+      const labelY = POSTCARD_H - LABEL_HEIGHT - LABEL_OFFSET;
 
-      const marginX = 40;
-      const marginY = 60;
-
-      const availableW = POSTCARD_W - marginX * 2;
-      const availableH = IMAGE_AREA_HEIGHT - marginY * 2;
+      // Photo sits inside a cream mat, inside the orange frame.
+      const innerLeft = SIDE_BORDER_THICKNESS + INNER_WHITE_BORDER;
+      const innerTop = TOP_BORDER_THICKNESS + INNER_WHITE_BORDER;
+      const innerW =
+        POSTCARD_W - (SIDE_BORDER_THICKNESS + INNER_WHITE_BORDER) * 2;
+      const innerH = labelY - INNER_WHITE_BORDER - innerTop;
 
       const imgRatio = imgW / imgH;
-      const areaRatio = availableW / availableH;
+      const areaRatio = innerW / innerH;
 
-      let drawW, drawH;
+      let drawW;
+      let drawH;
+      let drawX;
+      let drawY;
 
       if (imgRatio > areaRatio) {
-        drawW = availableW;
-        drawH = drawW / imgRatio;
-      } else {
-        drawH = availableH;
+        drawH = innerH;
         drawW = drawH * imgRatio;
+        drawX = innerLeft + (innerW - drawW) / 2;
+        drawY = innerTop;
+      } else {
+        drawW = innerW;
+        drawH = drawW / imgRatio;
+        drawX = innerLeft;
+        drawY = innerTop + (innerH - drawH) / 2;
       }
 
-      const drawX = marginX + (availableW - drawW) / 2;
-      const drawY = marginY + (availableH - drawH) / 2;
-
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(innerLeft, innerTop, innerW, innerH);
+      ctx.clip();
       ctx.drawImage(img, drawX, drawY, drawW, drawH);
+      ctx.restore();
 
-      // ✅ Label INSIDE 1800px
-      const labelY = POSTCARD_H - LABEL_HEIGHT - LABEL_OFFSET;
+      // Keep the orange frame on top of the photo edges.
+      ctx.fillStyle = BORDER_COLOR;
+      ctx.fillRect(0, 0, POSTCARD_W, TOP_BORDER_THICKNESS);
+      ctx.fillRect(0, 0, SIDE_BORDER_THICKNESS, sideBorderHeight);
+      ctx.fillRect(
+        POSTCARD_W - SIDE_BORDER_THICKNESS,
+        0,
+        SIDE_BORDER_THICKNESS,
+        sideBorderHeight,
+      );
+      ctx.fillRect(
+        0,
+        POSTCARD_H - BOTTOM_BORDER_THICKNESS,
+        POSTCARD_W,
+        BOTTOM_BORDER_THICKNESS,
+      );
 
       // Draw label band inside side borders so they stay visible
       ctx.fillStyle = BRAND_LABELS?.bgColor;
@@ -216,7 +232,7 @@ function Preview() {
         const logoRatio = logoImg.naturalWidth / logoImg.naturalHeight || 1;
         const logoWidth = logoHeight * logoRatio;
         const centerLogoX = (POSTCARD_W - logoWidth) / 2;
-        const logoY = labelY + (LABEL_HEIGHT - logoHeight) / 2;
+        const logoY = labelY - 12;
 
         ctx.drawImage(logoImg, centerLogoX, logoY, logoWidth, logoHeight);
 
@@ -252,8 +268,6 @@ function Preview() {
   useEffect(() => {
     if (savedImage) {
       composeImageWithLabel();
-      // Reset uploaded URL when label changes
-      setUploadedUrl(null);
       setShortUrl(null);
     }
   }, [savedImage, BRAND_LABELS, composeImageWithLabel]);
@@ -408,6 +422,16 @@ function Preview() {
 
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
+      <Link
+        to="/edit"
+        aria-label="Back to props"
+        className="absolute left-6 top-6 z-[3]"
+      >
+        <button className="border-[1px] border-[#FF5900] p-2 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900]">
+          <IoArrowBack className="text-3xl md:text-6xl text-white" />
+        </button>
+      </Link>
+
       <div className="flex flex-col justify-evenly items-center w-full flex-1 relative z-[2] text-white px-4 min-h-screen">
         <Logo />
 
@@ -429,28 +453,28 @@ function Preview() {
         <div className="flex flex-wrap gap-10 justify-center text-zinc-200">
           <button
             onClick={printImageAsPDF}
-            className="border-[1px] border-[#FF5900] p-3 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900]"
+            className="flex size-20 items-center justify-center rounded-2xl border-[1px] border-[#FF5900] bg-[#FF5900] text-white ring-1 ring-offset-4 ring-[#FF5900] transition-all duration-300 hover:bg-[#e04d00] md:size-24"
           >
-            <ImPrinter className="text-3xl md:text-5xl text-white" />
+            <ImPrinter className="text-4xl text-white md:text-5xl" />
           </button>
 
           <button
             onClick={handleQRClick}
             disabled={isUploading}
-            className={`border-[1px] border-[#FF5900] p-2 px-3 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900] ${isUploading ? "opacity-50" : ""}`}
+            className={`flex size-20 items-center justify-center rounded-2xl border-[1px] border-[#FF5900] bg-[#FF5900] text-white ring-1 ring-offset-4 ring-[#FF5900] transition-all duration-300 hover:bg-[#e04d00] md:size-24 ${isUploading ? "opacity-50" : ""}`}
           >
             {isUploading ? (
-              <div className="text-3xl md:text-5xl text-white animate-spin">
+              <div className="animate-spin text-4xl text-white md:text-5xl">
                 ⏳
               </div>
             ) : (
-              <IoQrCode className="text-3xl md:text-5xl text-white" />
+              <IoQrCode className="text-4xl text-white md:text-5xl" />
             )}
           </button>
 
           <Link to="/">
-            <button className="border-[1px] border-[#FF5900] p-2 rounded-2xl bg-[#FF5900] text-white hover:bg-[#e04d00] transition-all duration-300 ring-1 ring-offset-4 ring-[#FF5900]">
-              <IoHome className="text-3xl md:text-6xl text-white" />
+            <button className="flex size-20 items-center justify-center rounded-2xl border-[1px] border-[#FF5900] bg-[#FF5900] text-white ring-1 ring-offset-4 ring-[#FF5900] transition-all duration-300 hover:bg-[#e04d00] md:size-24">
+              <IoHome className="text-4xl text-white md:text-5xl" />
             </button>
           </Link>
         </div>
@@ -458,7 +482,8 @@ function Preview() {
         <QRModal
           isOpen={isQRModalOpen}
           onClose={() => setIsQRModalOpen(false)}
-          data={shortUrl || finalUrl}
+          data={shortUrl}
+          message={qrMessage}
         />
       </div>
     </div>
